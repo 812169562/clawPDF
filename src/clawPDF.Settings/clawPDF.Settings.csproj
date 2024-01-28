@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>clawSoft.clawPDF.Core.Settings</RootNamespace>
     <AssemblyName>clawPDF.Settings</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -34,7 +34,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>signClawPDF.pfx</AssemblyOriginatorKeyFile>
@@ -99,6 +99,7 @@
     <Compile Include="Enums\UpdateInterval.cs" />
     <Compile Include="Ftp.cs" />
     <Compile Include="Ghostscript.cs" />
+    <Compile Include="HttpUploader.cs" />
     <Compile Include="JobPasswords.cs" />
     <Compile Include="JpegSettings.cs" />
     <Compile Include="clawPDFSettings.cs" />

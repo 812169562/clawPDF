@@ -58,7 +58,7 @@ namespace SystemWrapper.IO.Compression
 
         public Task FlushAsync()
         {
-            return DeflateStreamInstance.FlushAsync();
+            return Task.Factory.StartNew(() => DeflateStreamInstance.Flush());
         }
 
         /// <inheritdoc />
@@ -69,12 +69,12 @@ namespace SystemWrapper.IO.Compression
 
         public Task<int> ReadAsync(byte[] buffer, int offset, int count)
         {
-            return DeflateStreamInstance.ReadAsync(buffer, offset, count);
+            return Task.Factory.StartNew(() => DeflateStreamInstance.Read(buffer, offset, count));
         }
 
         public Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return DeflateStreamInstance.ReadAsync(buffer, offset, count, cancellationToken);
+            return Task.Factory.StartNew(() => DeflateStreamInstance.Read(buffer, offset, count), cancellationToken);
         }
 
         public int ReadByte()
@@ -108,12 +108,12 @@ namespace SystemWrapper.IO.Compression
 
         public Task WriteAsync(byte[] buffer, int offset, int count)
         {
-            return DeflateStreamInstance.WriteAsync(buffer, offset, count);
+            return TaskEx.Run(() => DeflateStreamInstance.Write(buffer, offset, count));
         }
 
         public Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return DeflateStreamInstance.WriteAsync(buffer, offset, count, cancellationToken);
+            return TaskEx.Run(() => DeflateStreamInstance.Write(buffer, offset, count), cancellationToken);
         }
 
         public void WriteByte(byte value)
@@ -133,17 +133,17 @@ namespace SystemWrapper.IO.Compression
 
         public Task CopyToAsync(IStream destination)
         {
-            return DeflateStreamInstance.CopyToAsync(destination.StreamInstance);
+            return TaskEx.Run(() => DeflateStreamInstance.CopyTo(destination.StreamInstance));
         }
 
         public Task CopyToAsync(IStream destination, int bufferSize)
         {
-            return DeflateStreamInstance.CopyToAsync(destination.StreamInstance, bufferSize);
+            return TaskEx.Run(() => DeflateStreamInstance.CopyTo(destination.StreamInstance, bufferSize));
         }
 
         public Task CopyToAsync(IStream destination, int bufferSize, CancellationToken cancellationToken)
         {
-            return DeflateStreamInstance.CopyToAsync(destination.StreamInstance, bufferSize, cancellationToken);
+            return TaskEx.Run(() => DeflateStreamInstance.CopyTo(destination.StreamInstance, bufferSize), cancellationToken);
         }
 
         public void EndWrite(IAsyncResult asyncResult)

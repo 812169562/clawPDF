@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>clawSoft.clawPDF</RootNamespace>
     <AssemblyName>clawPDF</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -54,7 +54,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> -->
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>clawPDF.ico</ApplicationIcon>
@@ -126,17 +126,20 @@
     <Reference Include="DynamicTranslator">
       <HintPath>..\lib\DynamicTranslator.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework">
       <Private>False</Private>
     </Reference>
-    <Reference Include="PresentationFramework.Aero2">
-      <Private>False</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="PresentationFramework.Aero2, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PresentationFramework.Aero2.1.0.1\lib\PresentationFramework.Aero2.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -345,6 +348,7 @@
     <None Include="languages\English.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="signClawPDF.pfx" />
     <Content Include="docs\licenses\MIT License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -414,6 +418,14 @@
     <ProjectReference Include="..\PDFProcessor\PDFProcessing.csproj">
       <Project>{35cb4221-e0ff-46ab-b30c-a414095821ac}</Project>
       <Name>PDFProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.IO.Compression.FileSystem\System.IO.Compression.FileSystem.csproj">
+      <Project>{90e35422-bdaa-4aa7-94cc-43616907b5f4}</Project>
+      <Name>System.IO.Compression.FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.IO.Compression\System.IO.Compression.csproj">
+      <Project>{5bf268ce-5d87-416b-ade7-c267eb2728f9}</Project>
+      <Name>System.IO.Compression</Name>
     </ProjectReference>
     <ProjectReference Include="..\SystemWrapper\SystemInterface\SystemInterface.csproj">
       <Project>{6634e69d-1b08-4d6b-8c2f-5f88ebde53b4}</Project>
@@ -517,11 +529,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NLog">
-      <Version>5.1.4</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

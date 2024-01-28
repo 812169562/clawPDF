@@ -177,7 +177,8 @@ namespace clawSoft.clawPDF.Utilities.Communication
         private void ReleaseMutex()
         {
             if (!_dispatcher.CheckAccess())
-                _dispatcher.Invoke(ReleaseMutex);
+                _dispatcher.Invoke((Action)ReleaseMutex);
+            //_dispatcher.Invoke(ReleaseMutex);
 
             try
             {

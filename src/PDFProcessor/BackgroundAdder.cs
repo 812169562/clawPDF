@@ -2,10 +2,8 @@
 using System.IO;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Core.Settings.Enums;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Xobject;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using NLog;
 
 namespace clawSoft.clawPDF.PDFProcessing
@@ -25,11 +23,11 @@ namespace clawSoft.clawPDF.PDFProcessing
         /// <param name="stamper">Stamper with document</param>
         /// <param name="profile">Profile with backgroundpage settings</param>
         /// <exception cref="ProcessingException">In case of any error.</exception>
-        public static void AddBackground(PdfDocument pdfDocument, ConversionProfile profile)
+        public static void AddBackground(PdfStamper stamper, ConversionProfile profile)
         {
             try
             {
-                DoAddBackground(pdfDocument, profile);
+                DoAddBackground(stamper, profile);
             }
             catch (ProcessingException)
             {
@@ -42,22 +40,21 @@ namespace clawSoft.clawPDF.PDFProcessing
             }
         }
 
-        private static void DoAddBackground(PdfDocument pdfDocument, ConversionProfile profile)
+        private static void DoAddBackground(PdfStamper stamper, ConversionProfile profile)
         {
             if (!profile.BackgroundPage.Enabled)
                 return;
 
             Logger.Debug("Start adding background.");
 
-            var nFile = pdfDocument.GetNumberOfPages();
+            var nFile = stamper.Reader.NumberOfPages;
 
-            var backgroundPdfDoc = new PdfDocument(new PdfReader(profile.BackgroundPage.File));
+            var backgroundPdfReader =
+                new PdfReader(profile.BackgroundPage
+                    .File); //ExtractPages(profile.BackgroundPage.File); //new PdfReader(profile.BackgroundPage.File);
 
-            // Get the first page of the background PDF document as a template
-            var backgroundPage = backgroundPdfDoc.GetFirstPage().CopyAsFormXObject(pdfDocument);
-
-            Logger.Debug("BackgroundFile: " + System.IO.Path.GetFullPath(profile.BackgroundPage.File));
-            var nBackground = backgroundPdfDoc.GetNumberOfPages();
+            Logger.Debug("BackgroundFile: " + Path.GetFullPath(profile.BackgroundPage.File));
+            var nBackground = backgroundPdfReader.NumberOfPages;
 
             int numberOfFrontPagesWithoutBackground;
             try
@@ -84,31 +81,107 @@ namespace clawSoft.clawPDF.PDFProcessing
                     "\r\n" + ex, 17201);
             }
 
-            // Iterate through all pages of the main PDF
-            for (int i = 1; i <= nFile; i++)
+            for (var i = 1; i <= nFile; i++)
             {
                 var backgroundPageNumber = GetBackgroundPageNumber(i, nBackground, profile.BackgroundPage.Repetition,
                     numberOfFrontPagesWithoutBackground, lastPageWithBackground);
                 if (backgroundPageNumber < 1)
                     continue;
 
-                var documentPage = pdfDocument.GetPage(i);
+                var backgroundPage = stamper.GetImportedPage(backgroundPdfReader, backgroundPageNumber);
+                var backgroundPageSize = backgroundPdfReader.GetPageSize(backgroundPageNumber);
 
-                // Create a canvas for the current page
-                var canvas = new PdfCanvas(documentPage.NewContentStreamBefore(), documentPage.GetResources(), pdfDocument);
+                var backgroundPageRotation = backgroundPdfReader.GetPageRotation(backgroundPageNumber);
 
-                // Add the background to the canvas as a template
-                canvas.AddXObjectAt(backgroundPage, 0, 0);
+                var documentPage = stamper.GetUnderContent(i);
+                var documentPageSize = stamper.Reader.GetPageSize(i);
 
-                // Add the content of the current page to the canvas
-                canvas.AddXObjectAt(documentPage.CopyAsFormXObject(pdfDocument), 0, 0);
+                if (stamper.Reader.GetPageRotation(i) == 90 || stamper.Reader.GetPageRotation(i) == 270)
+                {
+                    //Turn with document page...
+                    //*
+                    backgroundPageRotation += 90;
+                    backgroundPageRotation = backgroundPageRotation % 360;
+                    //*/
+                    documentPageSize = new Rectangle(documentPageSize.Height, documentPageSize.Width);
+                }
 
-                // Release the canvas
-                canvas.Release();
+                AddPageWithRotationAndScaling(documentPage, documentPageSize, backgroundPage, backgroundPageSize,
+                    backgroundPageRotation);
             }
-
-            backgroundPdfDoc.Close();
         }
+
+        private static void AddPageWithRotationAndScaling(PdfContentByte documentPage, Rectangle documentPageSize,
+            PdfImportedPage backgroundPage, Rectangle backgroundPageSize, int rotation)
+        {
+            float scaleWidth;
+            float scaleHeight;
+            float scale;
+            float backgroundHeight;
+            float backgroundWidth;
+
+            switch (rotation)
+            {
+                case 90:
+                    scaleWidth = documentPageSize.Width / backgroundPageSize.Height;
+                    scaleHeight = documentPageSize.Height / backgroundPageSize.Width;
+                    scale = scaleWidth < scaleHeight ? scaleWidth : scaleHeight;
+
+                    backgroundHeight = scale * backgroundPageSize.Height;
+                    backgroundWidth = scale * backgroundPageSize.Width;
+
+                    documentPage.AddTemplate(backgroundPage, 0, -scale, scale, 0,
+                        (documentPageSize.Width - backgroundHeight) / 2,
+                        backgroundWidth + (documentPageSize.Height - backgroundWidth) / 2);
+                    break;
+
+                case 180:
+                    scaleWidth = documentPageSize.Width / backgroundPageSize.Width;
+                    scaleHeight = documentPageSize.Height / backgroundPageSize.Height;
+                    scale = scaleWidth < scaleHeight ? scaleWidth : scaleHeight;
+
+                    backgroundHeight = scale * backgroundPageSize.Height;
+                    backgroundWidth = scale * backgroundPageSize.Width;
+
+                    documentPage.AddTemplate(backgroundPage, -scale, 0, 0, -scale,
+                        backgroundWidth + (documentPageSize.Width - backgroundWidth) / 2,
+                        backgroundHeight + (documentPageSize.Height - backgroundHeight) / 2);
+                    break;
+
+                case 270:
+                    scaleWidth = documentPageSize.Width / backgroundPageSize.Height;
+                    scaleHeight = documentPageSize.Height / backgroundPageSize.Width;
+                    scale = scaleWidth < scaleHeight ? scaleWidth : scaleHeight;
+
+                    backgroundHeight = scale * backgroundPageSize.Height;
+                    backgroundWidth = scale * backgroundPageSize.Width;
+
+                    documentPage.AddTemplate(backgroundPage, 0, scale, -scale, 0,
+                        backgroundHeight + (documentPageSize.Width - backgroundHeight) / 2,
+                        (documentPageSize.Height - backgroundWidth) / 2);
+                    break;
+
+                case 0:
+                default:
+                    scaleWidth = documentPageSize.Width / backgroundPageSize.Width;
+                    scaleHeight = documentPageSize.Height / backgroundPageSize.Height;
+                    scale = scaleWidth < scaleHeight ? scaleWidth : scaleHeight;
+
+                    backgroundHeight = scale * backgroundPageSize.Height;
+                    backgroundWidth = scale * backgroundPageSize.Width;
+
+                    documentPage.AddTemplate(backgroundPage, scale, 0, 0, scale,
+                        (documentPageSize.Width - backgroundWidth) / 2,
+                        (documentPageSize.Height - backgroundHeight) / 2);
+                    break;
+            }
+        }
+
+        // -- clockwise --              cos  sin  -sin  cos  dx  dy
+        //background.AddTemplate(page,  1f,   0,    0,  1f,  0,  0 ); //0°
+        //background.AddTemplate(page,  0,  -1f,   1f,   0,  0,  0 ); //90°
+        //background.AddTemplate(page, -1f,   0,    0, -1f,  0,  0 ); //180°
+        //background.AddTemplate(page,  0,   1f,  -1f,   0,  0,  0 ); //270°
 
         /// <summary>
         ///     Determine the number of pages at the beginning of the document, that do not get a background,
@@ -124,8 +197,7 @@ namespace clawSoft.clawPDF.PDFProcessing
                 if (!profile.BackgroundPage.OnCover)
                 {
                     var coverPdfReader = new PdfReader(profile.CoverPage.File);
-                    var coverPdf = new PdfDocument(coverPdfReader);
-                    nCover = coverPdf.GetNumberOfPages();
+                    nCover = coverPdfReader.NumberOfPages;
                 }
 
             return nCover;
@@ -145,8 +217,7 @@ namespace clawSoft.clawPDF.PDFProcessing
                 if (!profile.BackgroundPage.OnAttachment)
                 {
                     var attachmentPdfReader = new PdfReader(profile.AttachmentPage.File);
-                    var attachmentPdf = new PdfDocument(attachmentPdfReader);
-                    nAttachment = attachmentPdf.GetNumberOfPages();
+                    nAttachment = attachmentPdfReader.NumberOfPages;
                 }
 
             return nAttachment;

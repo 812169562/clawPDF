@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime;
 using System.Text;
 using clawSoft.clawPDF.Core.Settings.Enums;
@@ -162,8 +164,12 @@ namespace clawSoft.clawPDF.Core.Settings
         // START_CUSTOM_SECTION:GENERAL
         public bool IsDefault => Guid == ProfileGuids.DEFAULT_PROFILE_GUID;
 
+
+        public HttpUploader HttpUploader { get; set; }
+
         private void Init()
         {
+            HttpUploader = new HttpUploader();
             AttachmentPage = new AttachmentPage();
             AutoSave = new AutoSave();
             BackgroundPage = new BackgroundPage();
@@ -195,6 +201,7 @@ namespace clawSoft.clawPDF.Core.Settings
 
         public void ReadValues(Data data, string path)
         {
+            HttpUploader.ReadValues(data, path + @"HttpUploader\");
             AttachmentPage.ReadValues(data, path + @"AttachmentPage\");
             AutoSave.ReadValues(data, path + @"AutoSave\");
             BackgroundPage.ReadValues(data, path + @"BackgroundPage\");
@@ -298,6 +305,7 @@ namespace clawSoft.clawPDF.Core.Settings
 
         public void StoreValues(Data data, string path)
         {
+            HttpUploader.StoreValues(data, path + @"HttpUploader\");
             AttachmentPage.StoreValues(data, path + @"AttachmentPage\");
             AutoSave.StoreValues(data, path + @"AutoSave\");
             BackgroundPage.StoreValues(data, path + @"BackgroundPage\");
@@ -330,7 +338,7 @@ namespace clawSoft.clawPDF.Core.Settings
         public ConversionProfile Copy()
         {
             var copy = new ConversionProfile();
-
+            copy.HttpUploader = HttpUploader.Copy();
             copy.AttachmentPage = AttachmentPage.Copy();
             copy.AutoSave = AutoSave.Copy();
             copy.BackgroundPage = BackgroundPage.Copy();

@@ -616,7 +616,6 @@
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsGrouping" Value="true" />
-                    <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                 </MultiTrigger.Conditions>
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
             </MultiTrigger>
@@ -717,7 +716,6 @@
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsGrouping" Value="true" />
-                    <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                 </MultiTrigger.Conditions>
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
             </MultiTrigger>
@@ -1278,7 +1276,6 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsGrouping" Value="true" />
-                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                         </MultiTrigger>
@@ -1320,7 +1317,6 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsGrouping" Value="true" />
-                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                         </MultiTrigger>
@@ -1411,7 +1407,6 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsGrouping" Value="true" />
-                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                         </MultiTrigger>
@@ -1955,8 +1950,6 @@
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true" />
-                    <Condition Property="IsSelectionActive" Value="false" />
                 </MultiTrigger.Conditions>
                 <Setter Property="SelectionBrush" Value="{StaticResource ControlDisabledGlythColour}" />
             </MultiTrigger>
@@ -2157,8 +2150,6 @@
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true" />
-                    <Condition Property="IsSelectionActive" Value="false" />
                 </MultiTrigger.Conditions>
                 <Setter Property="SelectionBrush" Value="{StaticResource ControlDisabledGlythColour}" />
             </MultiTrigger>
@@ -3570,8 +3561,8 @@
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true" />
-                    <Condition Property="IsSelectionActive" Value="false" />
+                    <!--<Condition Property="IsInactiveSelectionHighlightEnabled" Value="true" />
+                    <Condition Property="IsSelectionActive" Value="false" />-->
                 </MultiTrigger.Conditions>
                 <Setter Property="SelectionBrush" Value="{StaticResource ControlDisabledGlythColour}" />
             </MultiTrigger>
@@ -4007,16 +3998,6 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="WindowStyle" Value="SingleBorderWindow" />
-        <Setter Property="WindowChrome.WindowChrome">
-            <Setter.Value>
-                <WindowChrome CaptionHeight="26"
-                              ResizeBorderThickness="6"
-                              CornerRadius="0"
-                              GlassFrameThickness="1"
-                              NonClientFrameEdges="None"
-                              UseAeroCaptionButtons="False" />
-            </Setter.Value>
-        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
@@ -4049,7 +4030,6 @@
                                                 BorderBrush="Transparent"
                                                 Width="40"
                                                 VerticalContentAlignment="Bottom"
-                                                WindowChrome.IsHitTestVisibleInChrome="True"
                                                 Click="Minimize_Event">
                                             <Rectangle Width="10"
                                                        VerticalAlignment="Center"
@@ -4062,14 +4042,12 @@
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
                                                 Width="40"
-                                                WindowChrome.IsHitTestVisibleInChrome="True"
                                                 Click="AutoMinimize_Event" />
                                         <Button x:Name="btnClose"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
                                                 Template="{DynamicResource CloseWindowButton}"
                                                 Width="40"
-                                                WindowChrome.IsHitTestVisibleInChrome="True"
                                                 Click="CloseWindow_Event">
                                             <Grid Margin="0 1 0 0">
                                                 <Line X1="0" Y1="0" X2="11" Y2="11" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" />
@@ -4141,7 +4119,7 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="WindowStyle" Value="SingleBorderWindow" />
-        <Setter Property="WindowChrome.WindowChrome">
+        <!--<Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome CaptionHeight="26"
                               ResizeBorderThickness="0"
@@ -4150,7 +4128,7 @@
                               NonClientFrameEdges="None"
                               UseAeroCaptionButtons="False" />
             </Setter.Value>
-        </Setter>
+        </Setter>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
@@ -4182,7 +4160,6 @@
                                                 BorderBrush="Transparent"
                                                 Width="40"
                                                 VerticalContentAlignment="Bottom"
-                                                WindowChrome.IsHitTestVisibleInChrome="True"
                                                 Click="Minimize_Event">
                                             <Rectangle Width="10"
                                                        VerticalAlignment="Center"
@@ -4195,7 +4172,6 @@
                                                 BorderBrush="Transparent"
                                                 Template="{DynamicResource CloseWindowButton}"
                                                 Width="40"
-                                                WindowChrome.IsHitTestVisibleInChrome="True"
                                                 Click="CloseWindow_Event">
                                             <Grid Margin="0 1 0 0">
                                                 <Line X1="0" Y1="0" X2="11" Y2="11" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" />
@@ -4290,23 +4266,14 @@
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Background" TargetName="Bd" Value="{StaticResource ControlDisabledBackground}" />
                         </Trigger>
-                        <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
+                        <!--<Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
                             <Setter Property="CanContentScroll" TargetName="_tv_scrollviewer_" Value="true" />
-                        </Trigger>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="TreeViewItemFocusVisual">
@@ -4440,15 +4407,6 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
         </Style.Triggers>
     </Style>
 

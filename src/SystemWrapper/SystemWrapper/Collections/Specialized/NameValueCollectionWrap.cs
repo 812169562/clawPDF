@@ -1,8 +1,9 @@
-namespace SystemWrapper.Collections.Specialized
+﻿namespace SystemWrapper.Collections.Specialized
 {
     using System;
     using System.Collections;
     using System.Collections.Specialized;
+
     using SystemInterface.Collections.Specialized;
 
     public class NameValueCollectionWrap : INameValueCollection
@@ -80,7 +81,7 @@ namespace SystemWrapper.Collections.Specialized
             this.Initialize(capacity, col);
         }
 
-        #endregion Constructors and Destructors
+        #endregion
 
         #region Public Properties
 
@@ -113,7 +114,7 @@ namespace SystemWrapper.Collections.Specialized
         }
 
         /// <summary>
-        ///     Returns a <see cref='System.Collections.Specialized.NameObjectCollectionBase.KeysCollection'/> instance containing all the keys
+        ///     Returns a <see cref='System.Collections.Specialized.NameObjectCollectionBase.KeysCollection'/> instance containing all the keys 
         ///     in the <see cref='System.Collections.Specialized.NameObjectCollectionBase'/> instance.
         /// </summary>
         public NameObjectCollectionBase.KeysCollection Keys
@@ -129,7 +130,7 @@ namespace SystemWrapper.Collections.Specialized
         /// </summary>
         public NameValueCollection NameValueCollectionInstance { get; private set; }
 
-        #endregion Public Properties
+        #endregion
 
         #region Explicit Interface Indexers
 
@@ -178,7 +179,7 @@ namespace SystemWrapper.Collections.Specialized
             }
         }
 
-        #endregion Explicit Interface Indexers
+        #endregion
 
         #region Public Methods and Operators
 
@@ -237,7 +238,7 @@ namespace SystemWrapper.Collections.Specialized
         }
 
         /// <summary>
-        ///     Gets the values at the specified index of the <see cref='System.Collections.Specialized.NameValueCollection'/> combined into one
+        ///     Gets the values at the specified index of the <see cref='System.Collections.Specialized.NameValueCollection'/> combined into one 
         ///     comma-separated list.
         /// </summary>
         /// <param name="index">
@@ -341,7 +342,7 @@ namespace SystemWrapper.Collections.Specialized
             this.NameValueCollectionInstance.Set(name, value);
         }
 
-        #endregion Public Methods and Operators
+        #endregion
 
         #region Methods
 
@@ -377,6 +378,6 @@ namespace SystemWrapper.Collections.Specialized
             this.NameValueCollectionInstance = new NameValueCollection(capacity, col);
         }
 
-        #endregion Methods
+        #endregion
     }
 }

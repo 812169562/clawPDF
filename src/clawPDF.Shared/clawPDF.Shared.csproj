@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>clawSoft.clawPDF.Shared</RootNamespace>
     <AssemblyName>clawPDF.Shared</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -34,7 +34,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>signClawPDF.pfx</AssemblyOriginatorKeyFile>
@@ -69,7 +69,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -215,6 +214,14 @@
       <Project>{35cb4221-e0ff-46ab-b30c-a414095821ac}</Project>
       <Name>PDFProcessing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\System.IO.Compression.FileSystem\System.IO.Compression.FileSystem.csproj">
+      <Project>{90e35422-bdaa-4aa7-94cc-43616907b5f4}</Project>
+      <Name>System.IO.Compression.FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.IO.Compression\System.IO.Compression.csproj">
+      <Project>{5bf268ce-5d87-416b-ade7-c267eb2728f9}</Project>
+      <Name>System.IO.Compression</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SystemWrapper\SystemInterface\SystemInterface.csproj">
       <Project>{6634e69d-1b08-4d6b-8c2f-5f88ebde53b4}</Project>
       <Name>SystemInterface</Name>
@@ -343,11 +350,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NLog">
-      <Version>5.1.4</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="signClawPDF.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -377,15 +379,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0')">
-      <ItemGroup>
-        <Reference Include="NLog">
-          <HintPath>..\Libraries\NLog.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0')" />
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')" />
     <When Condition="$(TargetFrameworkIdentifier) == 'Silverlight' And $(TargetFrameworkVersion) == 'v4.0'">
       <ItemGroup>

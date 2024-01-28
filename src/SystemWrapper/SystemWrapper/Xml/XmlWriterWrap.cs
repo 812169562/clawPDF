@@ -268,7 +268,8 @@ namespace SystemWrapper.Xml
         /// <param name="disposing">Indicates whether or not unmanaged resources should be disposed.</param>
         protected virtual void Dispose(bool disposing)
         {
-            this.instance.Dispose();
+            this.Close();
+            GC.SuppressFinalize(true);
         }
 
         /// <summary>

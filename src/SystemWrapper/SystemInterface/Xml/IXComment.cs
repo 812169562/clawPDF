@@ -1,4 +1,4 @@
-namespace SystemInterface.Xml
+﻿namespace SystemInterface.Xml
 {
     using System;
     using System.Xml;
@@ -32,7 +32,7 @@ namespace SystemInterface.Xml
         /// </exception>
         string Value { get; set; }
 
-        #endregion Public Properties
+        #endregion
 
         #region Public Methods and Operators
 
@@ -44,6 +44,6 @@ namespace SystemInterface.Xml
         /// </param>
         void WriteTo(XmlWriter writer);
 
-        #endregion Public Methods and Operators
+        #endregion
     }
 }

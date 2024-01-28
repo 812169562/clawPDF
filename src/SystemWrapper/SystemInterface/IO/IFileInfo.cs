@@ -9,7 +9,8 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="T:System.IO.FileInfo"/> class.
     /// </summary>
-    [CLSCompliant(false)]
+    //[CLSCompliant(false)]
+    // TODO
     public interface IFileInfo
     {
         /// <summary>

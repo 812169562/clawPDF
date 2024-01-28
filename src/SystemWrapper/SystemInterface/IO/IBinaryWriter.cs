@@ -7,7 +7,8 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="T:System.IO.BinaryWriter"/> class.
     /// </summary>
-    [CLSCompliant(false)]
+    //[CLSCompliant(false)]
+    // TODO
     public interface IBinaryWriter : IDisposable
     {
         /// <summary>

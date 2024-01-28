@@ -89,7 +89,7 @@ namespace clawSoft.clawPDF.Shared.Helper
                 if (!_directoryWrap.Exists(createdDirectory))
                     continue;
 
-                if (_directoryWrap.EnumerateFiles(createdDirectory).Any())
+                if (_directoryWrap.GetFiles(createdDirectory).Any())
                     break;
 
                 try

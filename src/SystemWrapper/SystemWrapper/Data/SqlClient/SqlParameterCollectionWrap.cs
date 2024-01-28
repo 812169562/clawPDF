@@ -223,7 +223,7 @@
         public SqlParameter Add(string parameterName,
                                 object value)
         {
-            return this.SqlParameterCollectionInstance.Add(parameterName, value);
+            return this.SqlParameterCollectionInstance.AddWithValue(parameterName, value);
         }
 
         /// <summary>

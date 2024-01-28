@@ -174,7 +174,7 @@ namespace clawSoft.clawPDF
             var osHelper = new OsHelper();
             var verHelper = new VersionHelper();
 
-            var rm = new ResourceManager(typeof(Resources));
+            var rm = new ResourceManager(typeof(Properties.Resources));
             var sb = new StringBuilder(rm.GetString("TestPage"));
             // HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion -> ProductName
 

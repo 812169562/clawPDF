@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using SystemInterface.Security.AccessControl;
@@ -9,7 +8,8 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="System.IO.Directory"/> class.
     /// </summary>
-    [CLSCompliant(false)]
+    //[CLSCompliant(false)]
+    // TODO
     public partial interface IDirectory
     {
         /// <summary>

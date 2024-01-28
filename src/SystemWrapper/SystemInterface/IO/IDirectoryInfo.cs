@@ -9,7 +9,8 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="T:System.IO.DirectoryInfo"/> class.
     /// </summary>
-    [CLSCompliant(false)]
+    //[CLSCompliant(false)]
+    // TODO
     public interface IDirectoryInfo
     {
         /// <summary>

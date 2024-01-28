@@ -1,7 +1,8 @@
-namespace SystemWrapper.ServiceModel
+﻿namespace SystemWrapper.ServiceModel
 {
     using System.ServiceModel;
     using System.ServiceModel.Web;
+
     using SystemInterface.ServiceModel;
 
     /// <summary>
@@ -24,6 +25,6 @@ namespace SystemWrapper.ServiceModel
             return new WebChannelFactory<TService>(endpointConfigurationName);
         }
 
-        #endregion Methods
+        #endregion
     }
 }

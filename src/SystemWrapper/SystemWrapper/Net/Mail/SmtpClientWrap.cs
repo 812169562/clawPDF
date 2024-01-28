@@ -69,15 +69,15 @@ namespace SystemWrapper.Net.Mail
         }
 
         [HostProtection(SecurityAction.LinkDemand, ExternalThreading = true)]
-        public Task SendMailAsync(MailMessage message)
+        public void SendMailAsync(MailMessage message)
         {
-            return Instance.SendMailAsync(message);
+            this.SendMailAsync(message.From.ToString(), message.To.ToString(), message.Subject, message.Body);
         }
 
         [HostProtection(SecurityAction.LinkDemand, ExternalThreading = true)]
-        public Task SendMailAsync(string from, string recipients, string subject, string body)
+        public void SendMailAsync(string from, string recipients, string subject, string body)
         {
-            return Instance.SendMailAsync(from, recipients, subject, body);
+            Instance.SendAsync(from, recipients, subject, body, null);
         }
 
         #endregion
@@ -95,11 +95,11 @@ namespace SystemWrapper.Net.Mail
             set { Instance.Credentials = value; }
         }
 
-        public SmtpDeliveryFormat DeliveryFormat
-        {
-            get { return Instance.DeliveryFormat; }
-            set { Instance.DeliveryFormat = value; }
-        }
+        //public SmtpDeliveryFormat DeliveryFormat
+        //{
+        //    get { return  1; }
+        //    set { Instance.DeliveryFormat = value; }
+        //}
 
         public SmtpDeliveryMethod DeliveryMethod
         {
@@ -207,6 +207,16 @@ namespace SystemWrapper.Net.Mail
                 Instance.Dispose();
             }
             _Disposed = true;
+        }
+
+        Task ISmtpClient.SendMailAsync(MailMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task ISmtpClient.SendMailAsync(string from, string recipients, string subject, string body)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

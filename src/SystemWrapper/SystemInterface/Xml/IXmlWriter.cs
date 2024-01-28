@@ -70,7 +70,7 @@ namespace SystemInterface.Xml
         ///     Releases all resources used by the current instance of the <see cref="T:System.Xml.XmlWriter"/> class.
         /// </summary>
         /// <exception cref="T:System.InvalidOperationException">An <see cref="T:System.Xml.XmlWriter"/> method was called before a previous asynchronous operation finished. In this case, <see cref="T:System.InvalidOperationException"/> is thrown with the message “An asynchronous operation is already in progress.”</exception>
-        void Dispose();
+        new void Dispose();
 
         /// <summary>
         /// When overridden in a derived class, flushes whatever is in the buffer to the underlying streams and also flushes the underlying stream.

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>clawSoft.clawPDF.Core</RootNamespace>
     <AssemblyName>clawPDF.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -36,7 +36,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>signClawPDF.pfx</AssemblyOriginatorKeyFile>
@@ -66,7 +66,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
@@ -75,6 +75,7 @@
     <Compile Include="Actions\ActionResult.cs" />
     <Compile Include="Actions\EMailClientAction.cs" />
     <Compile Include="Actions\FtpAction.cs" />
+    <Compile Include="Actions\HttpUploadAction.cs" />
     <Compile Include="Actions\ICheckable.cs" />
     <Compile Include="Actions\SmtpMailAction.cs" />
     <Compile Include="Actions\IAction.cs" />
@@ -123,6 +124,8 @@
     <Compile Include="Jobs\Metadata.cs" />
     <Compile Include="Jobs\SourceFileInfo.cs" />
     <Compile Include="Jobs\TitleReplacer.cs" />
+    <Compile Include="Logs\Date.cs" />
+    <Compile Include="Logs\Log.cs" />
     <Compile Include="OutputFormatHelper.cs" />
     <Compile Include="Printer\PortType.cs" />
     <Compile Include="Printer\PrinterPort.cs" />
@@ -153,6 +156,14 @@
       <Project>{35cb4221-e0ff-46ab-b30c-a414095821ac}</Project>
       <Name>PDFProcessing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\System.IO.Compression.FileSystem\System.IO.Compression.FileSystem.csproj">
+      <Project>{90e35422-bdaa-4aa7-94cc-43616907b5f4}</Project>
+      <Name>System.IO.Compression.FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.IO.Compression\System.IO.Compression.csproj">
+      <Project>{5bf268ce-5d87-416b-ade7-c267eb2728f9}</Project>
+      <Name>System.IO.Compression</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SystemWrapper\SystemInterface\SystemInterface.csproj">
       <Project>{6634e69d-1b08-4d6b-8c2f-5f88ebde53b4}</Project>
       <Name>SystemInterface</Name>
@@ -163,6 +174,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Resources\eciRGB_v2.icc" />
     <None Include="Resources\ISOcoated_v2_300_eci.icc" />
     <None Include="Resources\ISOcoated_v2_grey1c_bas.ICC" />
@@ -177,11 +191,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NLog">
-      <Version>5.1.4</Version>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="PdfToSvg.NET">
       <Version>0.8.2</Version>
+    </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>105.2.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

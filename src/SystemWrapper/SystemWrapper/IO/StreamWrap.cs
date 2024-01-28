@@ -262,7 +262,7 @@
 
         public async Task FlushAsync()
         {
-            await StreamInstance.FlushAsync();
+            await TaskEx.Run(StreamInstance.Flush);
         }
 
         /// <summary>
@@ -292,16 +292,16 @@
 
         public async Task<int> ReadAsync(byte[] buffer, int offset, int count)
         {
-            return await StreamInstance.ReadAsync(buffer, offset, count);
+            return await TaskEx.Run(() => StreamInstance.Read(buffer, offset, count));
         }
 
         public async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return await StreamInstance.ReadAsync(buffer, offset, count, cancellationToken);
+            return await TaskEx.Run(() => StreamInstance.Read(buffer, offset, count), cancellationToken);
         }
 
         /// <summary>
-        ///     Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream. 
+        ///     Reads a byte from the stream and advances the position within the stream by one bytes, or returns -1 if at the end of the stream. 
         /// </summary>
         /// <returns>
         ///     The unsigned byte cast to an Int32, or -1 if at the end of the stream.
@@ -376,12 +376,12 @@
 
         public async Task WriteAsync(byte[] buffer, int offset, int count)
         {
-            await StreamInstance.WriteAsync(buffer, offset, count);
+            await TaskEx.Run(() => StreamInstance.Write(buffer, offset, count));
         }
 
         public async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            await StreamInstance.WriteAsync(buffer, offset, count, cancellationToken);
+            await TaskEx.Run(() => StreamInstance.Write(buffer, offset, count), cancellationToken);
         }
 
         /// <summary>
@@ -407,17 +407,17 @@
 
         public async Task CopyToAsync(IStream destination)
         {
-            await StreamInstance.CopyToAsync(destination.StreamInstance);
+            await TaskEx.Run(()=>StreamInstance.CopyTo(destination.StreamInstance));
         }
 
         public async Task CopyToAsync(IStream destination, int bufferSize)
         {
-            await StreamInstance.CopyToAsync(destination.StreamInstance, bufferSize);
+            await TaskEx.Run(()=>StreamInstance.CopyTo(destination.StreamInstance, bufferSize));
         }
 
         public async Task CopyToAsync(IStream destination, int bufferSize, CancellationToken cancellationToken)
         {
-            await StreamInstance.CopyToAsync(destination.StreamInstance, bufferSize, cancellationToken);
+            await TaskEx.Run(() => StreamInstance.CopyTo(destination.StreamInstance, bufferSize), cancellationToken);
         }
 
         #endregion
