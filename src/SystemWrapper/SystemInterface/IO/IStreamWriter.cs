@@ -9,8 +9,7 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="T:System.IO.StreamWriter"/> class.
     /// </summary>
-    //[CLSCompliant(false)]
-    // TODO
+    [CLSCompliant(false)]
     public interface IStreamWriter : IDisposable
     {
         /// <summary>

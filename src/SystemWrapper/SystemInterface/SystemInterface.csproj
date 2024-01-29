@@ -1,10 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="16.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\Microsoft.Build.Tasks.Git.1.1.1\build\Microsoft.Build.Tasks.Git.props" Condition="Exists('..\..\packages\Microsoft.Build.Tasks.Git.1.1.1\build\Microsoft.Build.Tasks.Git.props')" />
-  <Import Project="..\..\packages\Microsoft.SourceLink.Common.1.1.1\build\Microsoft.SourceLink.Common.props" Condition="Exists('..\..\packages\Microsoft.SourceLink.Common.1.1.1\build\Microsoft.SourceLink.Common.props')" />
-  <Import Project="..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.props" Condition="Exists('..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.props')" />
-  <Import Project="..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.props" Condition="Exists('..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.props')" />
-  <Import Project="..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.props" Condition="Exists('..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.props')" />
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,64 +11,41 @@
     <AssemblyName>SystemInterface</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\_Build\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET450</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
-    <NoWarn>1591,3002,3001,0618,0067</NoWarn>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <DebugType>portable</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\_Build\Release\</OutputPath>
-    <DefineConstants>TRACE;NET40;NET45</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Build\SystemWrapper.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\ARM64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NET40;NET45</DefineConstants>
-    <DocumentationFile>..\bin\Debug\SystemInterface.XML</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>ARM64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
-    <OutputPath>bin\ARM64\Release\</OutputPath>
-    <DefineConstants>TRACE;NET40;NET45</DefineConstants>
-    <DocumentationFile>..\bin\Release\SystemInterface.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>portable</DebugType>
-    <PlatformTarget>ARM64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Build\AssemblySharedInfo.cs">
-      <Link>Properties\AssemblySharedInfo.cs</Link>
-    </Compile>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="ActiveDirectory\IDirectoryEntry.cs" />
     <Compile Include="ActiveDirectory\IDirectoryEntryFactory.cs" />
     <Compile Include="ActiveDirectory\IDirectorySearcher.cs" />
@@ -85,8 +57,8 @@
     <Compile Include="Attributes\GenerateFactoryAttribute.cs" />
     <Compile Include="Collections\Specialized\INameValueCollection.cs" />
     <Compile Include="Collections\Specialized\INameValueCollectionFactory.cs" />
-    <Compile Include="Configuration\IConfigurationManager.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Configuration\IConfigurationManager.cs" />
     <Compile Include="Data\DataTable\IDataTable.cs" />
     <Compile Include="Data\DataTable\IDataTableFactory.cs" />
     <Compile Include="Data\SqlClient\ISqlCommand.cs" />
@@ -101,8 +73,8 @@
     <Compile Include="Diagnostics\IFileVersionInfoFactory.cs" />
     <Compile Include="Diagnostics\IProcess.cs" />
     <Compile Include="Diagnostics\IProcessStartInfo.cs" />
-    <Compile Include="Diagnostics\ITraceSource.cs" />
     <Compile Include="Diagnostics\IStopwatch.cs" />
+    <Compile Include="Diagnostics\ITraceSource.cs" />
     <Compile Include="Globalization\ICultureInfo.cs" />
     <Compile Include="IAppDomain.cs" />
     <Compile Include="IConsole.cs" />
@@ -116,8 +88,8 @@
     <Compile Include="IO\Compression\IZipFile.cs" />
     <Compile Include="IO\IBinaryReader.cs" />
     <Compile Include="IO\IBinaryWriter.cs" />
-    <Compile Include="IO\IDirectory.Net45.cs" />
     <Compile Include="IO\IDirectory.cs" />
+    <Compile Include="IO\IDirectory.Net45.cs" />
     <Compile Include="IO\IDirectoryInfo.cs" />
     <Compile Include="IO\IDirectoryInfoFactory.cs" />
     <Compile Include="IO\IFile.cs" />
@@ -194,47 +166,18 @@
     <Compile Include="Xml\IXmlWriterFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Build\SystemWrapper.snk">
-      <Link>SystemWrapper.snk</Link>
-    </None>
-    <None Include="packages.config" />
-    <None Include="Settings.StyleCop" />
-    <None Include="SystemInterface.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\AsyncBridge\AsyncBridge.csproj">
+      <Project>{af1ca416-657f-4811-a0b1-9989fc790d60}</Project>
+      <Name>AsyncBridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\System.IO.Compression.FileSystem\System.IO.Compression.FileSystem.csproj">
+      <Project>{90e35422-bdaa-4aa7-94cc-43616907b5f4}</Project>
+      <Name>System.IO.Compression.FileSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\System.IO.Compression\System.IO.Compression.csproj">
       <Project>{5bf268ce-5d87-416b-ade7-c267eb2728f9}</Project>
       <Name>System.IO.Compression</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  -->
-  <Target Name="AfterBuild">
-    <!-- Load up the information from the assembly -->
-    <GetAssemblyIdentity AssemblyFiles="$(OutputPath)$(AssemblyName).dll">
-      <Output TaskParameter="Assemblies" ItemName="OutputAssemblyInfo" />
-    </GetAssemblyIdentity>
-    <Message Text="Assembly version: %(OutputAssemblyInfo.Version)" />
-  </Target>
-  <Target Name="Package" DependsOnTargets="AfterBuild">
-    <!-- Ensure the Package directory exists for this project -->
-    <MakeDir Directories="$(MSBuildThisFileDirectory)..\publish" Condition=" !Exists('$(MSBuildThisFileDirectory)..\publish') " />
-    <!-- Package the project -->
-    <Exec WorkingDirectory="$(MSBuildThisFileDirectory)" Command="$(MSBuildThisFileDirectory)..\.nuget\NuGet.exe pack &quot;$(MSBuildProjectName).nuspec&quot; -Verbosity detailed -Symbols -OutputDir &quot;$(MSBuildThisFileDirectory)..\publish&quot; -Version %(OutputAssemblyInfo.Version) -Properties &quot;Configuration=Release&quot;" />
-  </Target>
 </Project>

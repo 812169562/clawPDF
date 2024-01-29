@@ -11,8 +11,7 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="T:System.IO.File"/> class.
     /// </summary>
-    //[CLSCompliant(false)]
-    // TODO
+    [CLSCompliant(false)]
     public interface IFile
     {
         // Methods

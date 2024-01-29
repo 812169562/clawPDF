@@ -46,11 +46,7 @@ namespace System.IO.Compression
         /// relative or absolute path information. Relative path information is interpreted as relative to the current working directory.</param>
         /// <param name="entryName">The name of the entry to be created.</param>
         /// <returns>A wrapper for the newly created entry.</returns>
-#pragma warning disable CS3002 // 返回类型不符合 CLS
-#pragma warning disable CS3001 // 参数类型不符合 CLS
         public static ZipArchiveEntry CreateEntryFromFile(this ZipArchive destination, String sourceFileName, String entryName)
-#pragma warning restore CS3001 // 参数类型不符合 CLS
-#pragma warning restore CS3002 // 返回类型不符合 CLS
         {
             Contract.Ensures(Contract.Result<ZipArchiveEntry>() != null);
             Contract.EndContractBlock();
@@ -86,9 +82,7 @@ namespace System.IO.Compression
         /// <param name="entryName">The name of the entry to be created.</param>
         /// <param name="compressionLevel">The level of the compression (speed/memory vs. compressed size trade-off).</param>
         /// <returns>A wrapper for the newly created entry.</returns>   
-#pragma warning disable CS3002 // 返回类型不符合 CLS
         public static ZipArchiveEntry CreateEntryFromFile(this ZipArchive destination,
-#pragma warning restore CS3002 // 返回类型不符合 CLS
                                                           String sourceFileName, String entryName, CompressionLevel compressionLevel)
         {
             // Checking of compressionLevel is passed down to DeflateStream and the IDeflater implementation
@@ -243,9 +237,7 @@ namespace System.IO.Compression
         /// <param name="destinationFileName">The name of the file that will hold the contents of the entry.
         /// The path is permitted to specify relative or absolute path information.
         /// Relative path information is interpreted as relative to the current working directory.</param>
-#pragma warning disable CS3001 // 参数类型不符合 CLS
         public static void ExtractToFile(this ZipArchiveEntry source, String destinationFileName)
-#pragma warning restore CS3001 // 参数类型不符合 CLS
         {
             ExtractToFile(source, destinationFileName, false);
         }

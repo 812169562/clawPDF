@@ -156,9 +156,7 @@ namespace System.IO.Compression
         ///     otherwise an <see cref="ArgumentException"/> is thrown.</para>
         /// </param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]  // See comment in the body.
-#pragma warning disable CS3001 // 参数类型不符合 CLS
         public static ZipArchive Open(String archiveFileName, ZipArchiveMode mode, Encoding entryNameEncoding)
-#pragma warning restore CS3001 // 参数类型不符合 CLS
         {
             // Relies on FileStream's ctor for checking of archiveFileName
 
@@ -299,9 +297,7 @@ namespace System.IO.Compression
         /// be included at the root of the archive. <code>false</code> to indicate that the files and directories in <code>sourceDirectoryName</code>
         /// should be included directly in the archive.</param>
         public static void CreateFromDirectory(String sourceDirectoryName, String destinationArchiveFileName,
-#pragma warning disable CS3001 // 参数类型不符合 CLS
                                                CompressionLevel compressionLevel, Boolean includeBaseDirectory)
-#pragma warning restore CS3001 // 参数类型不符合 CLS
         {
             DoCreateFromDirectory(sourceDirectoryName, destinationArchiveFileName, compressionLevel, includeBaseDirectory, entryNameEncoding: null);
         }
@@ -374,9 +370,7 @@ namespace System.IO.Compression
         ///     otherwise an <see cref="ArgumentException"/> is thrown.</para>
         /// </param>
         public static void CreateFromDirectory(String sourceDirectoryName, String destinationArchiveFileName,
-#pragma warning disable CS3001 // 参数类型不符合 CLS
                                                CompressionLevel compressionLevel, Boolean includeBaseDirectory,
-#pragma warning restore CS3001 // 参数类型不符合 CLS
                                                Encoding entryNameEncoding)
         {
             DoCreateFromDirectory(sourceDirectoryName, destinationArchiveFileName, compressionLevel, includeBaseDirectory, entryNameEncoding);

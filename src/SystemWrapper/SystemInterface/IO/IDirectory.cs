@@ -8,8 +8,7 @@ namespace SystemInterface.IO
     /// <summary>
     /// Wrapper for <see cref="System.IO.Directory"/> class.
     /// </summary>
-    //[CLSCompliant(false)]
-    // TODO
+    [CLSCompliant(false)]
     public partial interface IDirectory
     {
         /// <summary>
