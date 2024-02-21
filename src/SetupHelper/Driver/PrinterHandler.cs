@@ -35,16 +35,20 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
         #endregion Printer Driver Win32 API Constants
 
         private const string ENVIRONMENT = null;
-        private const string PRINTERNAME = "clawPDF";
-        private const string DRIVERNAME = "clawPDF Virtual Printer";
-        private const string HARDWAREID = "clawPDF_Driver";
+        private const string PRINTERNAME = "SZYX";
+        private const string DRIVERNAME = "SZYX Virtual Printer";
+        private const string HARDWAREID = "SZYX_Driver";
         private const string PORTMONITOR = "CLAWMON";
-        private const string MONITORDLL = "clawmon.dll";
-        private const string MONITORUIDLL = "clawmonui.dll";
-        private const string PORTNAME = "CLAWMON:";
+        private static string MONITORDLL = "clawmon.dll";
+        private static string MONITORUIDLL = "clawmonui.dll";
+        private const string PORTNAME = "SZYX:";
         private const string PRINTPROCESOR = "winprint";
 
-        private const string DRIVERMANUFACTURER = "Andrew Hess // clawSoft";
+
+        private const string XPMONITORDLL = "mfilemon.dll";
+        private const string XPMONITORUIDLL = "mfilemonUI.dll";
+
+        private const string DRIVERMANUFACTURER = "SZYXSoft";
 
         private const string DRIVERFILE = "PSCRIPT5.DLL";
         private const string DRIVERUIFILE = "PS5UI.DLL";
@@ -95,6 +99,11 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
 
         public clawPDFInstaller()
         {
+            if (Environment.OSVersion.Version.Major==5)
+            {
+                MONITORDLL = XPMONITORDLL;
+                MONITORUIDLL = XPMONITORUIDLL;
+            }
         }
 
         #endregion Constructors
@@ -962,25 +971,14 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             RegistryKey portConfiguration;
             try
             {
-                portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR);
-                portConfiguration.SetValue("LogLevel", 0, RegistryValueKind.DWord);
-                portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR + "\\" + PORTMONITOR + ":");
-                portConfiguration.SetValue("Domain", ".", RegistryValueKind.String);
-                portConfiguration.SetValue("ExecPath", Path.GetDirectoryName(Application.ExecutablePath), RegistryValueKind.String);
-                portConfiguration.SetValue("FilePattern", "", RegistryValueKind.String);
-                portConfiguration.SetValue("HideProcess", 0, RegistryValueKind.DWord);
-                portConfiguration.SetValue("OutputPath", "", RegistryValueKind.String);
-                portConfiguration.SetValue("Overwrite", 1, RegistryValueKind.DWord);
-                portConfiguration.SetValue("Password", new byte[] { 0000, 00, 00, 00, 00, 00 }, RegistryValueKind.Binary);
-                portConfiguration.SetValue("PipeData", 0, RegistryValueKind.DWord);
-                portConfiguration.SetValue("RunAsPUser", 1, RegistryValueKind.DWord);
-                portConfiguration.SetValue("User", "", RegistryValueKind.String);
-                portConfiguration.SetValue("WaitTermination", 0, RegistryValueKind.DWord);
-                portConfiguration.SetValue("WaitTimeout", 0, RegistryValueKind.DWord);
-                portConfiguration.SetValue("Description", "clawPDF", RegistryValueKind.String);
-                portConfiguration.SetValue("UserCommand", "\"" + Path.GetDirectoryName(Application.ExecutablePath) + @"\clawPDF.Bridge.exe" + "\"", RegistryValueKind.String);
-                portConfiguration.SetValue("Printer", PRINTERNAME, RegistryValueKind.String);
-                registryChangesMade = true;
+                if (Environment.OSVersion.Version.Major == 5)
+                {
+                    XP(out registryChangesMade, out portConfiguration);
+                }
+                else
+                {
+                    XPLater(out registryChangesMade, out portConfiguration);
+                }
             }
             catch (UnauthorizedAccessException unauthorizedEx)
             {
@@ -992,6 +990,54 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             }
 
             return registryChangesMade;
+        }
+
+        private static void XPLater(out bool registryChangesMade, out RegistryKey portConfiguration)
+        {
+            portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR);
+            portConfiguration.SetValue("LogLevel", 0, RegistryValueKind.DWord);
+            portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR + "\\" + PORTMONITOR + ":");
+            portConfiguration.SetValue("Domain", ".", RegistryValueKind.String);
+            portConfiguration.SetValue("ExecPath", Path.GetDirectoryName(Application.ExecutablePath), RegistryValueKind.String);
+            portConfiguration.SetValue("FilePattern", "", RegistryValueKind.String);
+            portConfiguration.SetValue("HideProcess", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("OutputPath", "", RegistryValueKind.String);
+            portConfiguration.SetValue("Overwrite", 1, RegistryValueKind.DWord);
+            portConfiguration.SetValue("Password", new byte[] { 0000, 00, 00, 00, 00, 00 }, RegistryValueKind.Binary);
+            portConfiguration.SetValue("PipeData", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("RunAsPUser", 1, RegistryValueKind.DWord);
+            portConfiguration.SetValue("User", "", RegistryValueKind.String);
+            portConfiguration.SetValue("WaitTermination", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("WaitTimeout", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("Description", "clawPDF", RegistryValueKind.String);
+            portConfiguration.SetValue("UserCommand", "\"" + Path.GetDirectoryName(Application.ExecutablePath) + @"\clawPDF.Bridge.exe" + "\"", RegistryValueKind.String);
+            portConfiguration.SetValue("Printer", PRINTERNAME, RegistryValueKind.String);
+            registryChangesMade = true;
+        }
+
+
+        private static void XP(out bool registryChangesMade, out RegistryKey portConfiguration)
+        {
+            portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR);
+            portConfiguration.SetValue("LogLevel", 0, RegistryValueKind.DWord);
+            portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR + "\\" + PORTMONITOR + ":");
+            portConfiguration.SetValue("Domain", ".", RegistryValueKind.String);
+            //portConfiguration.SetValue("ExecPath", Path.GetDirectoryName(Application.ExecutablePath), RegistryValueKind.String);
+            portConfiguration.SetValue("ExecPath", ".", RegistryValueKind.String);
+            portConfiguration.SetValue("FilePattern", "", RegistryValueKind.String);
+            portConfiguration.SetValue("HideProcess", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("OutputPath", "", RegistryValueKind.String);
+            portConfiguration.SetValue("Overwrite", 1, RegistryValueKind.DWord);
+            portConfiguration.SetValue("Password", new byte[] { 0000, 00, 00, 00, 00, 00 }, RegistryValueKind.Binary);
+            portConfiguration.SetValue("PipeData", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("RunAsPUser", 1, RegistryValueKind.DWord);
+            portConfiguration.SetValue("User", "", RegistryValueKind.String);
+            portConfiguration.SetValue("WaitTermination", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("WaitTimeout", 0, RegistryValueKind.DWord);
+            portConfiguration.SetValue("Description", "clawPDF", RegistryValueKind.String);
+            portConfiguration.SetValue("UserCommand", Path.GetDirectoryName(Application.ExecutablePath) + @"\clawPDF.Bridge.exec", RegistryValueKind.String);
+            portConfiguration.SetValue("Printer", PRINTERNAME, RegistryValueKind.String);
+            registryChangesMade = true;
         }
 
         private bool RemoveclawPDFPortConfig()
