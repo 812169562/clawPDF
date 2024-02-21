@@ -23,7 +23,7 @@ namespace clawSoft.clawPDF.Shared.Helper
             var printers = new List<string>();
 
             foreach (var printer in printerInfos)
-                if (printer.pDriverName.Equals("clawPDF Virtual Printer", StringComparison.OrdinalIgnoreCase))
+                if (printer.pDriverName.Equals("StandAloneRis Virtual Printer", StringComparison.OrdinalIgnoreCase))
                     printers.Add(printer.pPrinterName);
 
             printers.Sort();

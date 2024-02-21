@@ -31,7 +31,7 @@ namespace clawSoft.clawPDF.Core.Settings
 
         private void Init()
         {
-            OCRLanguage = "eng+deu";
+            OCRLanguage = "eng+chi_sim+chi_sim_vertc";
         }
 
         public void ReadValues(Data data, string path)
@@ -42,7 +42,7 @@ namespace clawSoft.clawPDF.Core.Settings
             }
             catch
             {
-                OCRLanguage = "eng+deu";
+                OCRLanguage = "eng+chi_sim+chi_sim_vertc";
             }
         }
 

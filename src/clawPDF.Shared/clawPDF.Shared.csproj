@@ -145,6 +145,9 @@
     <Compile Include="Views\ActionControls\FtpActionControl.xaml.cs">
       <DependentUpon>FtpActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ActionControls\HttpUploadActionControl.xaml.cs">
+      <DependentUpon>HttpUploadActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ActionControls\PrintActionControl.xaml.cs">
       <DependentUpon>PrintActionControl.xaml</DependentUpon>
     </Compile>
@@ -277,6 +280,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ActionControls\FtpActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ActionControls\HttpUploadActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -21,7 +21,7 @@ namespace clawSoft.clawPDF.Shared.ViewModels.UserControls
             get
             {
                 if (CurrentProfile == null)
-                    return "eng+deu";
+                    return "eng+chi_sim+chi_sim_vertc";
                 return PDFProcessor.DeterminePdfVersion(CurrentProfile);
             }
             set => CurrentProfile.OCRSettings.OCRLanguage = value;

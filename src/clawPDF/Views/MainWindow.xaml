@@ -1,7 +1,7 @@
 ﻿<Window x:Class="clawSoft.clawPDF.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="clawPDF" Height="344" Width="513"
+        Title="单机RIS" Height="344" Width="513"
         Background="{StaticResource ContainerBackground}"
         Loaded="MainWindow_OnLoaded"
         AllowDrop="True"

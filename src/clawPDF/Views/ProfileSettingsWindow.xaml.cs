@@ -76,6 +76,7 @@ namespace clawSoft.clawPDF.Views
             AddAction(new EmailSmtpActionControl());
             AddAction(new ScriptActionControl());
             AddAction(new FtpActionControl(_tokenReplacer));
+            AddAction(new HttpUploadActionControl());
         }
 
         private void AddAction(ActionControl action)

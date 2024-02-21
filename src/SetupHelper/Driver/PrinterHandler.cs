@@ -35,20 +35,20 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
         #endregion Printer Driver Win32 API Constants
 
         private const string ENVIRONMENT = null;
-        private const string PRINTERNAME = "SZYX";
-        private const string DRIVERNAME = "SZYX Virtual Printer";
-        private const string HARDWAREID = "SZYX_Driver";
-        private const string PORTMONITOR = "CLAWMON";
+        private const string PRINTERNAME = "StandAloneRis";
+        private const string DRIVERNAME = "StandAloneRis Virtual Printer";
+        private const string HARDWAREID = "StandAloneRis_Driver";
+        private const string PORTMONITOR = "StandAloneRis";
         private static string MONITORDLL = "clawmon.dll";
         private static string MONITORUIDLL = "clawmonui.dll";
-        private const string PORTNAME = "SZYX:";
+        private const string PORTNAME = "StandAloneRis:";
         private const string PRINTPROCESOR = "winprint";
 
 
         private const string XPMONITORDLL = "mfilemon.dll";
         private const string XPMONITORUIDLL = "mfilemonUI.dll";
 
-        private const string DRIVERMANUFACTURER = "SZYXSoft";
+        private const string DRIVERMANUFACTURER = "StandAloneRis // Soft";
 
         private const string DRIVERFILE = "PSCRIPT5.DLL";
         private const string DRIVERUIFILE = "PS5UI.DLL";
@@ -1023,8 +1023,8 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             portConfiguration = Registry.LocalMachine.CreateSubKey("SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\" + PORTMONITOR + "\\" + PORTMONITOR + ":");
             portConfiguration.SetValue("Domain", ".", RegistryValueKind.String);
             //portConfiguration.SetValue("ExecPath", Path.GetDirectoryName(Application.ExecutablePath), RegistryValueKind.String);
-            portConfiguration.SetValue("ExecPath", ".", RegistryValueKind.String);
-            portConfiguration.SetValue("FilePattern", "", RegistryValueKind.String);
+            portConfiguration.SetValue("ExecPath", "D:\\temp", RegistryValueKind.String);
+            portConfiguration.SetValue("FilePattern", "file%i.ps", RegistryValueKind.String);
             portConfiguration.SetValue("HideProcess", 0, RegistryValueKind.DWord);
             portConfiguration.SetValue("OutputPath", "", RegistryValueKind.String);
             portConfiguration.SetValue("Overwrite", 1, RegistryValueKind.DWord);
@@ -1035,7 +1035,7 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             portConfiguration.SetValue("WaitTermination", 0, RegistryValueKind.DWord);
             portConfiguration.SetValue("WaitTimeout", 0, RegistryValueKind.DWord);
             portConfiguration.SetValue("Description", "clawPDF", RegistryValueKind.String);
-            portConfiguration.SetValue("UserCommand", Path.GetDirectoryName(Application.ExecutablePath) + @"\clawPDF.Bridge.exec", RegistryValueKind.String);
+            portConfiguration.SetValue("UserCommand", Path.GetDirectoryName(Application.ExecutablePath) + @"\clawPDF.Bridge.exe filename=%f", RegistryValueKind.String);
             portConfiguration.SetValue("Printer", PRINTERNAME, RegistryValueKind.String);
             registryChangesMade = true;
         }
