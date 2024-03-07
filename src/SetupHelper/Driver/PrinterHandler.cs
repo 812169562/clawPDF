@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using clawSoft.clawPDF.SetupHelper.Helper;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using SetupHelper;
 
 namespace clawSoft.clawPDF.SetupHelper.Driver
@@ -100,11 +101,15 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
 
         public clawPDFInstaller()
         {
+           //og.Debug(Environment.OSVersion.Version.Major.ToString());
             if (Environment.OSVersion.Version.Major == 5)
             {
+                //MONITORDLL = XPMONITORDLL;
+                //MONITORUIDLL = XPMONITORUIDLL;
                 MONITORDLL = XPMONITORDLL;
                 MONITORUIDLL = XPMONITORUIDLL;
                 DRIVERDATAFILE = "SCPDFPRN.ppd";
+                printerDriverFiles = new String[] { DRIVERFILE, DRIVERUIFILE, DRIVERHELPFILE, DRIVERDATAFILE };
                 //PORTNAME = "CLAWMON:";
             }
         }

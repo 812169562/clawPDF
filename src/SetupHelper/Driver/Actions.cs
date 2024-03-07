@@ -99,7 +99,7 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             {
                 if (Environment.OSVersion.Version.Major == 5)
                 {
-                    clawmonpath = Path.GetDirectoryName(Application.ExecutablePath) + @"\clawmon\xp\";
+                    clawmonpath = Path.GetDirectoryName(Application.ExecutablePath) + @"\clawmon\xp84\";
                 }
                 else if (Environment.Is64BitOperatingSystem && !osHelper.IsArm64())
                 {

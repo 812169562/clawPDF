@@ -325,7 +325,7 @@ namespace clawSoft.clawPDF.Helper
             pdfOCR24Profile.Guid = ProfileGuids.PDFOCR24_PROFILE_GUID;
 
             pdfOCR24Profile.OutputFormat = OutputFormat.PdfOCR24;
-            pdfOCR24Profile.OCRSettings.OCRLanguage = "eng+chi_sim+chi_sim_vertc";
+            pdfOCR24Profile.OCRSettings.OCRLanguage = "eng+chi_sim+chi_sim_vert";
             pdfOCR24Profile.PdfSettings.CompressColorAndGray.Enabled = true;
             pdfOCR24Profile.PdfSettings.CompressColorAndGray.Compression = CompressionColorAndGray.Automatic;
             pdfOCR24Profile.PdfSettings.CompressMonochrome.Enabled = true;

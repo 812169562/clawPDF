@@ -18,7 +18,7 @@ namespace clawPDF.Core
 
         public static void Bat(List<string> messages, string name)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "bat" + $"";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "bat" + $"";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -39,20 +39,16 @@ namespace clawPDF.Core
                 {
                     sw.WriteLine(stringBuilder.ToString());
                 }
-
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Batch(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "batch" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "batch" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -74,16 +70,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Info(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "info" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "info" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -98,24 +91,34 @@ namespace clawPDF.Core
                 //stringBuilder.AppendLine($"输出：{output}");
                 stringBuilder.AppendLine($"info：{message}");
                 stringBuilder.AppendLine($"-------------------------------------------------------");
-                using (StreamWriter sw = new StreamWriter($"{path}//{Date.yyyyMMddHH}.log", true, System.Text.Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter($"{path}//{Date.yyyyMMdd}.log", true, System.Text.Encoding.UTF8))
                 {
                     sw.WriteLine(stringBuilder.ToString());
                 }
             }
             catch (System.Exception ex)
             {
+                SystemLog(path, ex);
+            }
+        }
+
+        public static void SystemLog(string path, Exception ex)
+        {
+            try
+            {
                 using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
                 {
                     sw.WriteLine(ex.Message + ex.StackTrace);
                 }
             }
+            catch (Exception)
+            {
+            }
         }
-
 
         public static void Print(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "print" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "print" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -137,16 +140,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void PrintError(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "print_error" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "print_error" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -168,16 +168,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Sql(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "sql" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "sql" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -199,16 +196,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Error(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "error" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "error" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -230,10 +224,32 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
+                SystemLog(path, ex);
+            }
+        }
+
+        public static void Bridge(string message)
+        {
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "bridge" + $"//{Date.yyyyMMdd}";
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            try
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine($"-------------------------------------------------------");
+                stringBuilder.AppendLine($"交易日期：{Date._yyyyMMddHHmmssSSS}");
+                stringBuilder.AppendLine($"交易内容：{message}");
+                stringBuilder.AppendLine($"-------------------------------------------------------");
+                using (StreamWriter sw = new StreamWriter($"{path}//{Date.yyyyMMdd}.log", true, System.Text.Encoding.UTF8))
                 {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
+                    sw.WriteLine(stringBuilder.ToString());
                 }
+            }
+            catch (System.Exception ex)
+            {
+                SystemLog(path, ex);
             }
         }
         public static void Fatal(Exception ex)
@@ -242,7 +258,7 @@ namespace clawPDF.Core
         }
         public static void Fatal(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "fatal" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "fatal" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -264,16 +280,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Write<T>(T t)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + $"//log";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + $"//log";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -299,16 +312,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Write2(string t)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "log" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "log" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -327,16 +337,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Write(string code, string input, string output, string name, string mdtrtCertNo)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "log" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "log" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -359,16 +366,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Debug(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "debug" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "debug" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -390,16 +394,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Warn(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "warn" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "warn" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -421,16 +422,13 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
 
         public static void Trace(string message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "trace" + $"//{Date.yyyyMMdd}";
+            var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "trace" + $"//{Date.yyyyMMdd}";
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -452,10 +450,7 @@ namespace clawPDF.Core
             }
             catch (System.Exception ex)
             {
-                using (StreamWriter sw = new StreamWriter($"{path}//systemerror.log", true, System.Text.Encoding.UTF8))
-                {
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                SystemLog(path, ex);
             }
         }
     }

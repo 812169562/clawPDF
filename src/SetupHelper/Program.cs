@@ -4,6 +4,8 @@ using System.Reflection;
 using Microsoft.Win32;
 using clawSoft.clawPDF.SetupHelper.Driver;
 using clawSoft.clawPDF.Utilities;
+using SetupHelper;
+using Newtonsoft.Json;
 
 namespace clawSoft.clawPDF.SetupHelper
 {
@@ -14,7 +16,7 @@ namespace clawSoft.clawPDF.SetupHelper
             var showUsage = true;
 
             var clp = new CommandLineParser(args);
-
+            Log.Debug(JsonConvert.SerializeObject(clp));
             if (clp.HasArgument("Driver"))
             {
                 showUsage = false;

@@ -14,7 +14,11 @@ using clawSoft.clawPDF.Threading;
 using clawSoft.clawPDF.Utilities.Communication;
 using clawSoft.clawPDF.Utilities.Registry;
 using NLog;
+using Log = clawPDF.Core.Log;
 using Application = System.Windows.Forms.Application;
+using System.Net;
+using RestSharp;
+using System.Printing;
 
 namespace clawSoft.clawPDF
 {
@@ -30,19 +34,30 @@ namespace clawSoft.clawPDF
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+            //var client = new RestClient("https://betainner.51trust.com/ris/hospital/reportDoc/queryPatientInfo");
+            //var request = new RestRequest("", Method.POST);
+            //client.Proxy = WebRequest.DefaultWebProxy;  // <== Add this line in your code?
+            //IRestResponse result = client.Execute(request);
+            Log.Debug("开始启动1");
             var globalMutex = new GlobalMutex("clawPDF-137a7751-1070-4db4-a407-83c1625762c7");
             globalMutex.Acquire();
-
+            Log.Debug("开始启动2");
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
+            Log.Debug("开始启动3");
             Thread.CurrentThread.Name = "ProgramThread";
 
             try
             {
+                Log.Debug("开始启动4");
                 LoggingHelper.InitFileLogger("clawPDF", LoggingLevel.Error);
+                Log.Debug("开始启动4");
                 ThemeHelper.CurrentTheme = SettingsHelper.Settings.ApplicationSettings.Theme;
+                Log.Debug("开始启动5");
                 ThemeHelper.ChangeTheme();
+                Log.Debug("开始启动6");
                 RunApplication(e.Args);
+                Log.Debug("开始启动7");
+
             }
             catch (Exception ex)
             {
@@ -86,17 +101,18 @@ namespace clawSoft.clawPDF
 
         private void RunApplication(string[] commandLineArguments)
         {
+            Log.Debug("开始启动8");
             CheckSpoolerRunning();
-
+            Log.Debug("开始启动9");
             // Must be done before the other checks to initialize the translator
             SettingsHelper.Init();
-
+            Log.Debug("开始启动10");
             // Check translations and Ghostscript. Exit if there is a problem
             CheckInstallation();
-
+            Log.Debug("开始启动11");
             var appStartFactory = new AppStartFactory();
             var appStart = appStartFactory.CreateApplicationStart(commandLineArguments);
-
+            Log.Debug("开始启动12");
             // PrintFile needs to be started before initializing the JonbInfoQueue
             if (appStart is PrintFileStart)
             {
