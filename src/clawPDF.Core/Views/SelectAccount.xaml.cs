@@ -1,20 +1,12 @@
 ﻿using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
+using clawSoft.clawPDF.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace clawSoft.clawPDF.Core.Views
 {
@@ -62,8 +54,9 @@ namespace clawSoft.clawPDF.Core.Views
         {
             if (dataGrid.SelectedItem == null) return;
             LoginUser user = (LoginUser)dataGrid.SelectedItem;
-            SystemConfig._accountName = user.AccountName;
-            SystemConfig.userJson = JsonConvert.SerializeObject(user);
+            SystemSetting setting = SystemConfig.Setting;
+            setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
+            SystemConfig.Save(setting);
             this.Close();
         }
 

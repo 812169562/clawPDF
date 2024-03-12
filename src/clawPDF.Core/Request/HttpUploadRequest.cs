@@ -1,6 +1,7 @@
 ﻿using clawPDF.Core;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
+using clawSoft.clawPDF.Utilities;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -80,13 +81,13 @@ namespace clawSoft.clawPDF.Core.Request
         {
             if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
                 throw new Exception("未配置单机系统请求路径！");
-            if (string.IsNullOrEmpty(SystemConfig.userJson))
-                throw new Exception("请选择登录账号！");
             var client = new RestClient(SystemConfig.Setting.RisUrl);
             var request = new RestRequest(QueryPatientsUrl, Method.POST);
             request.AddHeader("Content-Type", "application/json");
             //request.AddParameter("JSESSIONID_RIS", "sqOCPPJD171jbE9NPtp1TLstty96MGfHsvE_JZ-P", ParameterType.Cookie);
-            LoginUser loginUser = JsonConvert.DeserializeObject<LoginUser>(SystemConfig.userJson);
+            LoginUser loginUser = GetLoginUser();
+            if (loginUser == null)
+                throw new Exception("请选择登录账号！");
             var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, HiscaDepartmentId = loginUser.HiscaDepartmentId };
             request.AddJsonBody(body);
             IRestResponse response = client.Execute(request);
@@ -108,9 +109,9 @@ namespace clawSoft.clawPDF.Core.Request
             object patientDto = null;
             if (patient != null)
             {
-                if (string.IsNullOrEmpty(SystemConfig.userJson))
+                loginUser = GetLoginUser();
+                if (loginUser == null)
                     throw new Exception("请选择登录账号！");
-                loginUser = JsonConvert.DeserializeObject<LoginUser>(SystemConfig.userJson);
                 patientDto = new
                 {
                     PatientCode = patient.InpatientNum,
@@ -146,6 +147,16 @@ namespace clawSoft.clawPDF.Core.Request
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 throw new Exception(response.StatusDescription + response.ErrorMessage);
             return response.Content;
+        }
+        /// <summary>
+        /// 获取解密后的登录用户信息
+        /// </summary>
+        /// <returns></returns>
+        public LoginUser GetLoginUser()
+        {
+            if (string.IsNullOrEmpty(SystemConfig.Setting.LoginUser)) return null;
+            var userJson = Encrypt.DesDecrypt(SystemConfig.Setting.LoginUser);
+            return JsonConvert.DeserializeObject<LoginUser>(userJson);
         }
         /// <summary>
         /// 获取mac

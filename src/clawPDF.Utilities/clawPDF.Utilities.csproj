@@ -69,6 +69,7 @@
     <Compile Include="Communication\GlobalMutex.cs" />
     <Compile Include="Communication\PipeClient.cs" />
     <Compile Include="Communication\PipeServer.cs" />
+    <Compile Include="Encrypt.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="HashUtil.cs" />
     <Compile Include="IO\FolderCleaner.cs" />

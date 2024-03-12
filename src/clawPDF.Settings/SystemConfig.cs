@@ -9,11 +9,6 @@ namespace clawSoft.clawPDF.Core.Settings
 {
     public static class SystemConfig
     {
-        /// <summary>
-        /// 单机系统登录用户
-        /// </summary>
-        public static string userJson;
-        public static string _accountName;
         public static SystemSetting _settings;
         public static string _file;
         public static string _file2;

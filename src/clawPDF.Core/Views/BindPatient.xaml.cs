@@ -1,10 +1,7 @@
 ﻿using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
-using clawSoft.clawPDF.Core.Settings;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace clawSoft.clawPDF.Core.Views
 {
@@ -15,10 +12,12 @@ namespace clawSoft.clawPDF.Core.Views
     {
         private readonly HttpUploadRequest _request;
         public PatientModel _patient;
+        public LoginUser _user;
         public BindPatient()
         {
             InitializeComponent();
             _request = new HttpUploadRequest();
+            _user = _request.GetLoginUser();
         }
         /// <summary>
         /// 窗口加载
@@ -27,12 +26,12 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(SystemConfig._accountName))
+            if (_user == null)
             {
                 MessageBox.Show("请选择医师账号！");
                 return;
             }
-            txtAccount.Text = SystemConfig._accountName;
+            txtAccount.Text = _user.AccountName;
         }
         /// <summary>
         /// 跳过
@@ -101,7 +100,8 @@ namespace clawSoft.clawPDF.Core.Views
             form.Width = 300;
             form.Height = 400;
             form.ShowDialog();
-            txtAccount.Text = SystemConfig._accountName;
+            _user = _request.GetLoginUser();
+            txtAccount.Text = _user == null ? "" : _user.AccountName;
         }
         /// <summary>
         /// 清空
