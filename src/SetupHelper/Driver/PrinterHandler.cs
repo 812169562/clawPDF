@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using clawSoft.clawPDF.SetupHelper.Helper;
 using Microsoft.Win32;
+using SetupHelper;
 
 namespace clawSoft.clawPDF.SetupHelper.Driver
 {
@@ -41,7 +42,7 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
         private const string PORTMONITOR = "StandAloneRis";
         private static string MONITORDLL = "clawmon.dll";
         private static string MONITORUIDLL = "clawmonui.dll";
-        private const string PORTNAME = "StandAloneRis:";
+        private static string PORTNAME = "StandAloneRis:";
         private const string PRINTPROCESOR = "winprint";
 
 
@@ -100,11 +101,12 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
 
         public clawPDFInstaller()
         {
-            if (Environment.OSVersion.Version.Major==5)
+            if (Environment.OSVersion.Version.Major == 5)
             {
                 MONITORDLL = XPMONITORDLL;
                 MONITORUIDLL = XPMONITORUIDLL;
                 DRIVERDATAFILE = XPDRIVERDATAFILE;
+                //PORTNAME = "CLAWMON:";
             }
         }
 
@@ -503,52 +505,52 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             ConfigureclawPDFPort(outputHandlerCommand);
             if (AddclawPDFPortMonitor(driverSourceDirectory))
             {
-                Console.WriteLine("Port monitor successfully installed.");
+                Log.Info("Port monitor successfully installed.");
                 undoInstallActions.Push(this.RemoveclawPDFPortMonitor);
                 if (CopyPrinterDriverFiles(driverSourceDirectory, printerDriverFiles.Concat(printerDriverDependentFiles).ToArray()))
                 {
-                    Console.WriteLine("Printer drivers copied or already exist.");
+                    Log.Info("Printer drivers copied or already exist.");
                     undoInstallActions.Push(this.RemoveclawPDFPortMonitor);
                     if (AddclawPDFPort())
                     {
-                        Console.WriteLine("Redirection port added.");
+                        Log.Info("Redirection port added.");
                         undoInstallActions.Push(this.RemoveclawPDFPrinterDriver);
                         if (InstallclawPDFPrinterDriver())
                         {
-                            Console.WriteLine("Printer driver installed.");
+                            Log.Info("Printer driver installed.");
                             undoInstallActions.Push(this.DeleteclawPDFPrinter);
                             if (AddclawPDFPrinter())
                             {
-                                Console.WriteLine("Virtual printer installed.");
+                                Log.Info("Virtual printer installed.");
                                 undoInstallActions.Push(this.RemoveclawPDFPortConfig);
                                 if (ConfigureclawPDFPort(outputHandlerCommand))
                                 {
-                                    Console.WriteLine("Printer configured.");
+                                    Log.Info("Printer configured.");
                                     printerInstalled = true;
                                 }
                                 else
                                     // Failed to configure port
-                                    Console.WriteLine(INFO_INSTALLCONFIGPORT_FAILED);
+                                    Log.Info(INFO_INSTALLCONFIGPORT_FAILED);
                             }
                             else
                                 // Failed to install printer
-                                Console.WriteLine(INFO_INSTALLPRINTER_FAILED);
+                                Log.Info(INFO_INSTALLPRINTER_FAILED);
                         }
                         else
                             // Failed to install printer driver
-                            Console.WriteLine(INFO_INSTALLPRINTERDRIVER_FAILED);
+                            Log.Info(INFO_INSTALLPRINTERDRIVER_FAILED);
                     }
                     else
                         // Failed to add printer port
-                        Console.WriteLine(INFO_INSTALLPORT_FAILED);
+                        Log.Info(INFO_INSTALLPORT_FAILED);
                 }
                 else
                     //Failed to copy printer driver files
-                    Console.WriteLine(INFO_INSTALLCOPYDRIVER_FAILED);
+                    Log.Info(INFO_INSTALLCOPYDRIVER_FAILED);
             }
             else
                 //Failed to add port monitor
-                Console.WriteLine(INFO_INSTALLPORTMONITOR_FAILED);
+                Log.Info(INFO_INSTALLPORTMONITOR_FAILED);
 
             //if (printerInstalled == false)
             //{

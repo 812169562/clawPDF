@@ -117,6 +117,8 @@
     <Compile Include="Driver\PrinterHandler.cs" />
     <Compile Include="Driver\NativeMethods.cs" />
     <Compile Include="Helper\Spooler.cs" />
+    <Compile Include="Logs\Date.cs" />
+    <Compile Include="Logs\Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
