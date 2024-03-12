@@ -27,18 +27,18 @@
         <DockPanel Background="{StaticResource WindowBorderColour}" Height="64" VerticalAlignment="Top"
                    LastChildFill="True">
             <ContentControl Margin="10" Content="" Height="45" IsTabStop="False" />
-            <TextBlock Name="ApplicationNameText" Text="clawPDF" HorizontalAlignment="Left"
+            <TextBlock Name="ApplicationNameText" Text="StandAloneRis" HorizontalAlignment="Left"
                        VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Foreground="{StaticResource ControlDefaultForeground}"
                        FontFamily="Calibri"
                        x:FieldModifier="private" />
         </DockPanel>
         <StackPanel Height="140" Margin="30 20">
             <TextBlock Name="IntroductionText" TextWrapping="Wrap" Margin="0 0 0 10">
-                clawPDF allows to create PDF files from any application that is able to print.
+                StandAloneRis allows to create PDF files from any application that is able to print.
                 Creating a PDF file is easy:
             </TextBlock>
             <TextBlock Name="IntroductionStep1Text" Margin="20 3">1. Set up your profiles and settings here.</TextBlock>
-            <TextBlock Name="IntroductionStep2Text" Margin="20 3">2. Print any document to the printer "clawPDF".</TextBlock>
+            <TextBlock Name="IntroductionStep2Text" Margin="20 3">2. Print any document to the printer "StandAloneRis".</TextBlock>
             <TextBlock Name="IntroductionStep3Text" Margin="20 3">3. Save your PDF or send it as mail.</TextBlock>
         </StackPanel>
         <DockPanel VerticalAlignment="Bottom">
@@ -55,6 +55,8 @@
                     MinWidth="150" Click="ProfileSettingsButton_OnClick" HorizontalAlignment="Right" />
             <Button DockPanel.Dock="Right" Name="AppSettingsButton" BorderThickness="0" Content="Application Settings"
                     MinWidth="150" Click="AppSettingsButton_OnClick" HorizontalAlignment="Right" />
+            <!--<Button DockPanel.Dock="Right" Name="test" BorderThickness="0" Content="test"
+                    MinWidth="40" HorizontalAlignment="Right" Click="test_Click" />-->
         </DockPanel>
     </Grid>
 </Window>

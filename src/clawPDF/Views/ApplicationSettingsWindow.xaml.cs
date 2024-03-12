@@ -52,6 +52,8 @@ namespace clawSoft.clawPDF.Views
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            SystemSetting setting = new SystemSetting { RisUrl = RisSystemTabUserControl.txtRisUrl.Text };
+            SystemConfig.Save(setting);
             DialogResult = true;
         }
 

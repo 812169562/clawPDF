@@ -231,6 +231,9 @@
     <Compile Include="Views\UserControls\PrinterTab.xaml.cs">
       <DependentUpon>PrinterTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\RisSystemTab.xaml.cs">
+      <DependentUpon>RisSystemTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\SaveTab.xaml.cs">
       <DependentUpon>SaveTab.xaml</DependentUpon>
     </Compile>
@@ -486,6 +489,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\PrinterTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\RisSystemTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

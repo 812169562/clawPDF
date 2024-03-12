@@ -81,6 +81,14 @@
                 </TabItem.Header>
                 <userControls:DebugTab x:Name="DebugTabUserControl" />
             </TabItem>
+            <TabItem Template="{StaticResource FancyTabItem}" Name="RisSystemTab" IsEnabled="{Binding RisSystemTabIsEnabled}">
+                <TabItem.Header>
+                    <userControls1:TabHeaderControl x:Name="RisSystemTabText" Text="系统配置">
+                        <ContentControl Content="{StaticResource GeneralSettings}" />
+                    </userControls1:TabHeaderControl>
+                </TabItem.Header>
+                <userControls:RisSystemTab x:Name="RisSystemTabUserControl" />
+            </TabItem>
         </TabControl>
         <DockPanel Grid.Row="2" LastChildFill="False">
             <Button Name="CancelButton" DockPanel.Dock="Right" MinWidth="150" Margin="10" IsCancel="True" TabIndex="0">Cancel</Button>

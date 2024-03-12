@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="clawSoft.clawPDF.Views.UserControls.RisSystemTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:clawSoft.clawPDF.Views.UserControls"
+             mc:Ignorable="d" 
+             Loaded="UserControl_Loaded"
+             d:DesignHeight="400" d:DesignWidth="500">
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">单机设备管理系统地址：</TextBlock>
+            <TextBox Name="txtRisUrl" Height="24"  />
+        </StackPanel>
+    </Grid>
+</UserControl>

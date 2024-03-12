@@ -1,7 +1,11 @@
 ﻿using clawPDF.Core;
 using clawSoft.clawPDF.Core.Jobs;
+using clawSoft.clawPDF.Core.Request;
+using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
+using clawSoft.clawPDF.Core.Views;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -19,7 +23,7 @@ namespace clawSoft.clawPDF.Core.Actions
     public class HttpUploadAction : IAction, ICheckable
     {
         private const int ActionId = 19;
-        private static readonly Logger Logger =Logger.GetCurrentClassLogger();
+        private static readonly Logger Logger = Logger.GetCurrentClassLogger();
         public ActionResult Check(ConversionProfile profile)
         {
             var actionResult = new ActionResult();
@@ -96,7 +100,7 @@ namespace clawSoft.clawPDF.Core.Actions
             //    Logger.Error("No Http Upload Url specified in action");
             //    return new ActionResult(ActionId, 102);
             //}
-            //if (job.Profile.HttpUploader.Enabled)
+            if (job.Profile.HttpUploader.Enabled)
             {
                 String url = job.Profile.HttpUploader.HttpUploadUrl;
                 if (url == null || url.Trim().Length == 0)
@@ -111,12 +115,59 @@ namespace clawSoft.clawPDF.Core.Actions
                 {
                     return new ActionResult();
                 }
+                // 根据配置弹出窗口绑定患者信息
+                HttpUploadRequest request = new HttpUploadRequest();
+                PatientModel patient = null;
+                if (request.GetPrintSetting())
+                {
+                    BindPatient dialog = new BindPatient();
+                    dialog.Height = 460;
+                    dialog.Width = 800;
+                    dialog.ShowDialog();
+                    patient = dialog._patient;
+                }
+                int i = 0;
                 foreach (var file in job.OutputFiles)
                 {
-
                     try
                     {
-                        using (var client = new WebClient())
+                        var fileName = job.JobInfo.SourceFiles[i].DocumentTitle;
+                        if (!string.IsNullOrEmpty(fileName))
+                        {
+                            int lastIndex = fileName.LastIndexOf('\\');
+                            if (lastIndex != -1)
+                                fileName = fileName.Substring(lastIndex + 1);
+                        }
+                        Log.Print("打印开始");
+                        foxitReaderPrintPdf(file);
+                        Log.Print(file);
+                        string mac = GetMacByWMI();
+                        var response = request.Upload(job.Profile.HttpUploader.HttpUploadUrl, file, fileName, patient);
+                        Log.Print(response);
+                        ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response);
+                        string status = model.Status;
+                        if (!status.Equals("0"))
+                        {
+                            MessageBox.Show(mac + " 上传失败:" + model.Message, "警告");
+                            Log.PrintError(response);
+                        }
+                        else
+                        {
+                            if (job.Profile.HttpUploader.HttpUploadUrl == null || job.Profile.HttpUploader.HttpUploadUrl.Trim().Length == 0)
+                                MessageBox.Show(mac + " 上传成功", "提示");
+                            if (File.Exists(file))
+                            {
+                                try
+                                {
+                                    File.Delete(file);
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+                            }
+                        }
+                        /*using (var client = new WebClient())
                         {
                             client.Encoding = Encoding.UTF8;
                             //client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
@@ -168,7 +219,8 @@ namespace clawSoft.clawPDF.Core.Actions
                                     }
                                 }
                             }
-                        }
+                        }*/
+                        i++;
                     }
                     catch (Exception ex)
                     {
@@ -191,7 +243,8 @@ namespace clawSoft.clawPDF.Core.Actions
                 processStartInfo.CreateNoWindow = true;
                 processStartInfo.UseShellExecute = true;
                 processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                var printProcess = new Process {
+                var printProcess = new Process
+                {
                     StartInfo = processStartInfo
                 };
                 printProcess.Start();

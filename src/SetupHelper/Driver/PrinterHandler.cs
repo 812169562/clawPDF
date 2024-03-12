@@ -47,13 +47,14 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
 
         private const string XPMONITORDLL = "mfilemon.dll";
         private const string XPMONITORUIDLL = "mfilemonUI.dll";
+        private const string XPDRIVERDATAFILE = "SCPDFPRN.ppd";
 
         private const string DRIVERMANUFACTURER = "StandAloneRis // Soft";
 
         private const string DRIVERFILE = "PSCRIPT5.DLL";
         private const string DRIVERUIFILE = "PS5UI.DLL";
         private const string DRIVERHELPFILE = "PSCRIPT.HLP";
-        private const string DRIVERDATAFILE = "ghostpdf.ppd";
+        private static string DRIVERDATAFILE = "ghostpdf.ppd";
 
         private enum DriverFileIndex
         {
@@ -103,6 +104,7 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             {
                 MONITORDLL = XPMONITORDLL;
                 MONITORUIDLL = XPMONITORUIDLL;
+                DRIVERDATAFILE = XPDRIVERDATAFILE;
             }
         }
 
