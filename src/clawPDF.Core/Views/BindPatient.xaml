@@ -1,0 +1,95 @@
+﻿<Window x:Class="clawSoft.clawPDF.Core.Views.BindPatient"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:clawSoft.clawPDF.Core.Views"
+             mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+             d:DesignHeight="450" d:DesignWidth="800" ResizeMode="NoResize"
+        Loaded="Window_Loaded" Title="单机设备文档管理系统采集引擎">
+    <Window.Resources>
+        <Style TargetType="DataGridRow" x:Key="patDataGridRow">
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <!--  隔行换色  -->
+                <!--<Trigger Property="AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="#fde2e2" />
+                </Trigger>-->
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#d9ecff" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0,0,10,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock VerticalAlignment="Center" Margin="0,0,10,0">当前登录：</TextBlock>
+                <TextBlock x:Name="txtAccount" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold"></TextBlock>
+                <TextBlock x:Name="textBlock" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="Blue" MouseLeftButtonUp="textBlock_MouseLeftButtonUp">切换账号</TextBlock>
+            </StackPanel>
+            <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock VerticalAlignment="Center" Margin="0,0,10,0">当前用户：</TextBlock>
+                <uc:SelectControl x:Name="cbxUser" Columns="{Binding}" ItemsSource="{Binding}" SelectionChanged="cbxUser_SelectionChanged" TextChanged="cbxUser_TextChanged"></uc:SelectControl>
+            </StackPanel>-->
+        </Grid>
+        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="16">请选择打印文件所属于患者，完成报告绑定：</TextBlock>
+        </Grid>
+        <Grid Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center">门诊/住院号：</TextBlock>
+                <TextBox x:Name="txtNo" MinWidth="120" />
+                <TextBlock VerticalAlignment="Center" Margin="10,0,0,0">患者姓名：</TextBlock>
+                <TextBox x:Name="txtName" MinWidth="120" />
+                <TextBlock VerticalAlignment="Center" Margin="10,0,0,0">申请单号：</TextBlock>
+                <TextBox x:Name="txtAppNo" MinWidth="120" />
+                <Button x:Name="query" Content="查询" Margin="10,0,0,0" MinWidth="70" Click="query_Click" />
+                <Button x:Name="clear" Content="清空" Margin="10,0,0,0" MinWidth="70" Click="clear_Click" Background="White" />
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="3">
+            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" HeadersVisibility ="Column" LoadingRow="dataGrid_LoadingRow" IsReadOnly="True" CanUserAddRows="False" MouseDoubleClick="dataGrid_MouseDoubleClick" AlternationCount="2" RowStyle="{StaticResource patDataGridRow}" SelectionMode="Single" SelectionUnit="FullRow">
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="#909399" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="序号" Width="40" MinWidth="10" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}},Path=Header}"></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn MinWidth="60" Header="患者类型" Binding="{Binding PatientTypeStr}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="100" Header="门诊/住院号" Binding="{Binding InpatientNum}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="60" Header="住院次数" Binding="{Binding Times}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="80" Header="姓名" Binding="{Binding PatientName}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="50" Header="性别" Binding="{Binding Sex}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="50" Header="年龄" Binding="{Binding Age}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="100" Header="检查项目" Binding="{Binding CheckItem}"></DataGridTextColumn>
+                    <DataGridTextColumn MinWidth="100" Header="申请单号" Binding="{Binding RequestNum}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="Auto" Header="申请时间" Binding="{Binding RequestTimeStr}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="ok" Content="绑定" Margin="10,0,0,0.4" MinWidth="70" Click="ok_Click" Height="18" VerticalAlignment="Bottom" />
+                <Button x:Name="clear1" Content="跳过" Margin="10,0,0,0" MinWidth="70" Click="clear1_Click" Background="White" />
+            </StackPanel>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="100" Margin="992,73.4,-318.4,0" Grid.Row="3" VerticalAlignment="Top" Width="100"/>
+    </Grid>
+</Window>

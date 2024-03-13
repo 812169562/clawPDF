@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Interop;
+using clawSoft.clawPDF.Core.Views;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
 using clawSoft.clawPDF.Shared.Helper.Logging;
@@ -61,7 +62,7 @@ namespace clawSoft.clawPDF.Views
 
             TranslationHelper.Instance.TranslatorInstance.Translate(this);
 
-            ApplicationNameText.Text = "clawPDF " + VersionHelper.Instance.FormatWithThreeDigits();
+            //ApplicationNameText.Text = "clawPDF " + VersionHelper.Instance.FormatWithThreeDigits();
 
             var welcomeSettingsHelper = new WelcomeSettingsHelper();
             if (welcomeSettingsHelper.IsFirstRun())
@@ -117,6 +118,14 @@ namespace clawSoft.clawPDF.Views
         private void MainWindow_OnClose(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void test_Click(object sender, RoutedEventArgs e)
+        {
+            BindPatient dialog = new BindPatient();
+            dialog.Height = 460;
+            dialog.Width = 800;
+            dialog.ShowDialog();
         }
     }
 }

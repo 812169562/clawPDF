@@ -101,7 +101,7 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
 
         public clawPDFInstaller()
         {
-           //og.Debug(Environment.OSVersion.Version.Major.ToString());
+            //og.Debug(Environment.OSVersion.Version.Major.ToString());
             if (Environment.OSVersion.Version.Major == 5)
             {
                 //MONITORDLL = XPMONITORDLL;
