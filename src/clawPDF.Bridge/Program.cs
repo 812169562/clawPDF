@@ -1,8 +1,12 @@
-﻿using clawSoft.clawPDF.Utilities;
+﻿using clawPDF.Core;
+using clawPDF.Core.Helper;
+using clawSoft.clawPDF.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
@@ -19,109 +23,92 @@ namespace clawPDF.Bridge
 
         private static void Main(string[] args)
         {
-            var clp = new CommandLineParser(args);
-
-            var showUsage = true;
-
-            if (clp.HasArgument("Networkprinter"))
+            if (Environment.OSVersion.Version.Major==5)
             {
-                showUsage = false;
-
-                try
-                {
-                    switch (clp.GetArgument("Networkprinter").ToLower())
-                    {
-                        case "enable":
-                            Console.WriteLine("");
-                            Console.WriteLine("> Use only an account with the minimum required permissions");
-                            Console.WriteLine("");
-                            string username = clp.GetArgument("Username");
-                            string domain = ".";
-                            if (clp.HasArgument("Domain")) domain = !string.IsNullOrEmpty(clp.GetArgument("Domain")) ? clp.GetArgument("Domain") : ".";
-                            Console.Write("Enter the password of the user '" + username + "': ");
-                            string password = GetPassword();
-                            Console.Write("Repeat the password of the user '" + username + "': ");
-                            string repeat = GetPassword();
-                            if (password == repeat)
-                            {
-                                SaveLogon(username, domain, password);
-                                Console.WriteLine("");
-                                Console.WriteLine("> Authentication validation");
-                                IntPtr token = IntPtr.Zero;
-
-                                if (LogonUserW(username, domain, password, (int)LOGON_TYPE.LOGON32_LOGON_NETWORK, (int)LOGON_PROVIDER.LOGON32_PROVIDER_DEFAULT, out token))
-                                {
-                                    Console.WriteLine("");
-                                    Console.WriteLine("Network printing was set up successfully");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("");
-                                    Console.WriteLine("Incorrect credentials");
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("");
-                                Console.Write("Error: Password doesn't match");
-                            }
-                            break;
-
-                        case "disable":
-                            DeleteLogon();
-                            break;
-
-                        default:
-                            showUsage = true;
-                            break;
-                    }
-                }
-                catch
-                {
-                    showUsage = true;
-                    Environment.ExitCode = 1;
-                }
+                XP(args);
             }
-
-            if (clp.HasArgument("INFODATAFILE"))
+            else
             {
-                showUsage = false;
-                try
-                {
-                    string infFile = clp.GetArgument("INFODATAFILE");
+                Win7(args);
+            }
+        }
 
-                    showUsage = false;
-                    if (File.Exists(infFile))
+        private static void XP(string[] args)
+        {
+            try
+            {
+                Log.Error("启动");
+                //这是一种曲线救国的方式等待研究
+                if (args != null || args.Length != 0)
+                {
+                    try
                     {
-                        Dictionary<string, Dictionary<string, string>> iniData = ReadIniFile(infFile);
-                        string clientComputer = iniData["0"]["ClientComputer"];
-                        if (clientComputer.ToLower() == Environment.MachineName.ToLower())
+                        string inffile = args[0].Split('=')[1];
+                        Log.Info("参数1" + args[0]);
+                        var infFileTemp = inffile.Replace("ps", "inf");
+                        CreateInf(infFileTemp, inffile);
+                        if (File.Exists(infFileTemp))
                         {
-                            StartAsPrintedUser(infFile);
+                            start(infFileTemp);
                         }
                         else
                         {
-                            StartAsNetworkPrinter(infFile);
+                            Log.Info("未找到文件--" + inffile);
                         }
                     }
-                    Environment.Exit(0);
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex);
+                        Log.Error("错误的桥接 参数--" + args[0]);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine(ex);
-                    Environment.ExitCode = 1;
+                    Log.Error("未获取到参数");
                 }
+                Log.Error("结束");
             }
+            catch (Exception ex2)
+            {
+                Log.Error(ex2);
+            }
+        }
 
-            if (showUsage) Usage();
+        private static void start(string infFile)
+        {
+            Log.Info("进入桥接--" + infFile);
+            INIFile iniFile = new INIFile(infFile);
+            string username = iniFile.Read("0", "Username");
+            Log.Info("进入桥接1--" + username);
+            Log.Info("进入桥接2--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe");
+            Log.Info("进入桥接3--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile);
+            Log.Info("进入桥接4--" + Path.GetDirectoryName(Application.ExecutablePath));
+            ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
+        }
+
+        private static void CreateInf(string infFile, string sourceFile)
+        {
+            var path = Path.GetDirectoryName(Application.ExecutablePath) + @"\template.inf";
+            InfHelper.WriteString("0", "SpoolFileName", Path.GetFileName(sourceFile), path);
+            InfHelper.WriteString("0", "DocumentTitle", sourceFile + "-SZYXPrint", path);
+            try
+            {
+                string[] text = File.ReadLines(sourceFile).ToArray();
+                var totalPages = text[text.Length - 4].Replace("%%Pages: ", "").Trim();
+                InfHelper.WriteString("0", "TotalPages", totalPages, path);
+            }
+            catch (Exception)
+            {
+                InfHelper.WriteString("0", "TotalPages", "1", path);
+            }
+            File.Copy(path, infFile.Replace(".ps", ".inf"), true);
         }
 
         private static void Usage()
         {
-            Console.WriteLine("clawPDF.Bridge " + Assembly.GetExecutingAssembly().GetName().Version);
-            Console.WriteLine();
-            Console.WriteLine("usage:");
-            Console.WriteLine("clawPDF.Bridge.exe [/Networkprinter=Enable|Disable /Username=user [/Domain=domain]]");
+            Log.Bridge("clawPDF.Bridge " + Assembly.GetExecutingAssembly().GetName().Version);
+            Log.Bridge("usage:");
+            Log.Bridge("clawPDF.Bridge.exe [/Networkprinter=Enable|Disable /Username=user [/Domain=domain]]");
         }
 
         private static string GetPassword()
@@ -227,6 +214,7 @@ namespace clawPDF.Bridge
         {
             Dictionary<string, Dictionary<string, string>> iniData = ReadIniFile(infFile);
             string username = iniData["0"]["Username"];
+            Log.Bridge(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + "\"" + infFile + "\"");
             StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + "\"" + infFile + "\"", Path.GetDirectoryName(Application.ExecutablePath), true);
         }
 
@@ -281,6 +269,106 @@ namespace clawPDF.Bridge
                 Process.Start(startInfo);
             }
             catch { }
+        }
+
+        public static void Win7(string[] args)
+        {
+            Log.Bridge("启动");
+            var clp = new CommandLineParser(args);
+            var showUsage = true;
+            Log.Bridge(JsonConvert.SerializeObject(args));
+
+            if (clp.HasArgument("Networkprinter"))
+            {
+                showUsage = false;
+
+                try
+                {
+                    switch (clp.GetArgument("Networkprinter").ToLower())
+                    {
+                        case "enable":
+                            Log.Bridge("");
+                            Log.Bridge("> Use only an account with the minimum required permissions");
+                            Log.Bridge("");
+                            string username = clp.GetArgument("Username");
+                            string domain = ".";
+                            if (clp.HasArgument("Domain")) domain = !string.IsNullOrEmpty(clp.GetArgument("Domain")) ? clp.GetArgument("Domain") : ".";
+                            Log.Bridge("Enter the password of the user '" + username + "': ");
+                            string password = GetPassword();
+                            Log.Bridge("Repeat the password of the user '" + username + "': ");
+                            string repeat = GetPassword();
+                            if (password == repeat)
+                            {
+                                SaveLogon(username, domain, password);
+                                Log.Bridge("");
+                                Log.Bridge("> Authentication validation");
+                                IntPtr token = IntPtr.Zero;
+
+                                if (LogonUserW(username, domain, password, (int)LOGON_TYPE.LOGON32_LOGON_NETWORK, (int)LOGON_PROVIDER.LOGON32_PROVIDER_DEFAULT, out token))
+                                {
+                                    Log.Bridge("");
+                                    Log.Bridge("Network printing was set up successfully");
+                                }
+                                else
+                                {
+                                    Log.Bridge("");
+                                    Log.Bridge("Incorrect credentials");
+                                }
+                            }
+                            else
+                            {
+                                Log.Bridge("");
+                                Log.Bridge("Error: Password doesn't match");
+                            }
+                            break;
+
+                        case "disable":
+                            DeleteLogon();
+                            break;
+
+                        default:
+                            showUsage = true;
+                            break;
+                    }
+                }
+                catch
+                {
+                    showUsage = true;
+                    Environment.ExitCode = 1;
+                }
+            }
+
+            if (clp.HasArgument("INFODATAFILE"))
+            {
+                showUsage = false;
+                try
+                {
+                    string infFile = clp.GetArgument("INFODATAFILE");
+
+                    showUsage = false;
+                    if (File.Exists(infFile))
+                    {
+                        Dictionary<string, Dictionary<string, string>> iniData = ReadIniFile(infFile);
+                        string clientComputer = iniData["0"]["ClientComputer"];
+                        if (clientComputer.ToLower() == Environment.MachineName.ToLower())
+                        {
+                            StartAsPrintedUser(infFile);
+                        }
+                        else
+                        {
+                            StartAsNetworkPrinter(infFile);
+                        }
+                    }
+                    Environment.Exit(0);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    Environment.ExitCode = 1;
+                }
+            }
+
+            if (showUsage) Usage();
         }
     }
 

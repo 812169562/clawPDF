@@ -109,6 +109,7 @@
     <Compile Include="Ghostscript\OutputDevices\SvgDevice.cs" />
     <Compile Include="Ghostscript\OutputDevices\TextDevice.cs" />
     <Compile Include="Helper\EncodingHelper.cs" />
+    <Compile Include="Helper\InfHelper.cs" />
     <Compile Include="Jobs\ITempPathProvider.cs" />
     <Compile Include="Jobs\JobCleanUp.cs" />
     <Compile Include="Jobs\JobFactory.cs" />

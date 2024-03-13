@@ -490,7 +490,7 @@ BOOL WINAPI MfmAddPortUI(PCWSTR pszServer, HWND hWnd, PCWSTR pszMonitorNameIn,
 
 		BOOL bPortExists;
 
-		//controlliamo se la porta esiste già
+		//controlliamo se la porta esiste gi?
 		bRes = XcvDataW(printer, L"PortExists", (PBYTE)pc.szPortName, sizeof(pc.szPortName),
 			(PBYTE)&bPortExists, sizeof(bPortExists), &cbOutputNeeded, &dwStatus);
 		if (!bRes || dwStatus != ERROR_SUCCESS)
@@ -655,7 +655,7 @@ BOOL WINAPI MfmDeletePortUI(PCWSTR pszServer, HWND hWnd, PCWSTR pszPortName)
 		return FALSE;
 	}
 
-	//avvisiamo che la porta è stata cancellata, così il server può liberare
+	//avvisiamo che la porta ?stata cancellata, cos?il server pu?liberare
 	//la memoria occupata da XCVDATA
 	bRes = XcvDataW(printer, L"PortDeleted", NULL, 0,
 		NULL, 0, &cbOutputNeeded, &dwStatus);

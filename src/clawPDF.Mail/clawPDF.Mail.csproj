@@ -81,6 +81,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="signClawPDF.pfx" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\System.IO.Compression.FileSystem\System.IO.Compression.FileSystem.csproj">
       <Project>{90e35422-bdaa-4aa7-94cc-43616907b5f4}</Project>
       <Name>System.IO.Compression.FileSystem</Name>
@@ -97,9 +100,6 @@
       <Project>{b8deece0-6074-47c2-9af4-123ee324d212}</Project>
       <Name>SystemWrapper</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="signClawPDF.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

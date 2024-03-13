@@ -18,6 +18,7 @@ namespace clawSoft.clawPDF.Core.Actions
         public PrintingAction(GhostScript ghostscript)
         {
             _ghostscript = ghostscript;
+
         }
 
         /// <summary>

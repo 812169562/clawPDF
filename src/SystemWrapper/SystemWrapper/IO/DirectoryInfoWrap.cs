@@ -97,7 +97,7 @@ namespace SystemWrapper.IO
         /// <inheritdoc />
         public string FullName
         {
-            get { return DirectoryInfo.FullName; }
+            get { return DirectoryInfo?.FullName; }
         }
 
         /// <inheritdoc />
