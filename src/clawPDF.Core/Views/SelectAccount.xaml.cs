@@ -19,6 +19,7 @@ namespace clawSoft.clawPDF.Core.Views
         public SelectAccount()
         {
             InitializeComponent();
+            this.Topmost = true;
             _request = new HttpUploadRequest();
         }
 

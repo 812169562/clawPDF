@@ -16,6 +16,7 @@ namespace clawSoft.clawPDF.Core.Views
         public BindPatient()
         {
             InitializeComponent();
+            this.Topmost = true;
             _request = new HttpUploadRequest();
             _user = _request.GetLoginUser();
         }
