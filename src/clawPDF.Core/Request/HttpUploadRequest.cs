@@ -1,4 +1,5 @@
 ﻿using clawPDF.Core;
+using clawSoft.clawPDF.Core.Printer;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
@@ -129,6 +130,7 @@ namespace clawSoft.clawPDF.Core.Request
                     BindSource = patient.BindSource
                 };
             }
+            //var list = SplitFileUpload(file);
             var client = new RestClient(uploadUrl);
             var request = new RestRequest("", Method.POST);
             request.AddHeader("Content-Type", "application/json");
@@ -138,6 +140,7 @@ namespace clawSoft.clawPDF.Core.Request
             {
                 Mac = mac,
                 PdfBase64 = Convert.ToBase64String(File.ReadAllBytes(file)),
+                //PdfBase64List = list,
                 FileName = fileName,
                 BandPatientDto = patientDto,
                 LoginCache = loginUser
@@ -187,6 +190,48 @@ namespace clawSoft.clawPDF.Core.Request
             }
 
             return macs;
+        }
+        public List<string> SplitFileUpload(string filePath)
+        {
+            List<string> fileList = new List<string>();
+            var key = Date.Number4();
+            var temFolder = $"D:\\szyx\\partFile\\{key}";
+            // 确保目标文件夹存在
+            if (!Directory.Exists(temFolder))
+                Directory.CreateDirectory(temFolder);
+
+            // 计算分片大小（字节）
+            int chunkSizeBytes = 1 * 1024 * 1024;
+            // 打开源文件
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                int fileLength = (int)fileStream.Length;
+                int chunkCount = (int)Math.Ceiling((double)fileLength / chunkSizeBytes);
+                for (int i = 0; i < chunkCount; i++)
+                {
+                    int chunkStart = i * chunkSizeBytes;
+                    int chunkLength = Math.Min(chunkSizeBytes, fileLength - chunkStart);
+
+                    // 创建分片文件
+                    string chunkFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_temp_{i}{Path.GetExtension(filePath)}";
+                    string chunkFilePath = Path.Combine(temFolder, chunkFileName);
+                    using (FileStream chunkFileStream = new FileStream(chunkFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        fileStream.Position = chunkStart;
+                        byte[] buffer = new byte[chunkLength];
+                        int bytesRead = fileStream.Read(buffer, 0, chunkLength);
+                        chunkFileStream.Write(buffer, 0, bytesRead);
+                        chunkFileStream.Close();
+                        fileList.Add(Convert.ToBase64String(buffer));
+                        if (File.Exists(chunkFilePath))
+                            File.Delete(chunkFilePath);
+                    }
+                }
+                if (Directory.Exists(temFolder))
+                    Directory.Delete(temFolder);
+                fileStream.Close();
+            }
+            return fileList;
         }
     }
 }

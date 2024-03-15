@@ -102,7 +102,7 @@ namespace clawSoft.clawPDF.Core.Actions
             //}
             if (job.Profile.HttpUploader.Enabled)
             {
-                String url = job.Profile.HttpUploader.HttpUploadUrl;
+                string url = job.Profile.HttpUploader.HttpUploadUrl;
                 if (url == null || url.Trim().Length == 0)
                 {
                     //url = "http://192.168.126.51:8866/ris/hospital/reportDoc/syn";
@@ -139,6 +139,8 @@ namespace clawSoft.clawPDF.Core.Actions
                                 fileName = fileName.Substring(lastIndex + 1);
                         }
                         Log.Print("打印开始");
+                        //var key = Date.Number4();
+                        //PrintQueue.Add(key, file);
                         foxitReaderPrintPdf(file);
                         Log.Print(file);
                         string mac = GetMacByWMI();

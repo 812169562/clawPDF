@@ -20,6 +20,12 @@
                 <Trigger Property="AlternationIndex" Value="1">
                     <Setter Property="Background" Value="#d9ecff" />
                 </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource ControlMouseOverBackground}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource ControlPrimaryColourBackground}" />
+                </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
