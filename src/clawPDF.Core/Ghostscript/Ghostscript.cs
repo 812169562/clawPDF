@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using clawPDF.Core;
 using clawSoft.clawPDF.Core.Ghostscript.OutputDevices;
-using NLog;
-
+using Log = clawPDF.Core.Log;
 namespace clawSoft.clawPDF.Core.Ghostscript
 {
     /// <summary>
@@ -13,7 +13,7 @@ namespace clawSoft.clawPDF.Core.Ghostscript
     /// </summary>
     public class GhostScript
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = Logger.GetCurrentClassLogger();
 
         public GhostScript(GhostscriptVersion ghostscriptVersion)
         {
@@ -37,6 +37,7 @@ namespace clawSoft.clawPDF.Core.Ghostscript
             p.StartInfo.CreateNoWindow = true;
 
             var ghostScriptArguments = parameters.ToArray();
+            Log.Print(ghostScriptArguments);
             GhostscriptCall.CallAPI(ghostScriptArguments);
 
             return true;
@@ -50,7 +51,7 @@ namespace clawSoft.clawPDF.Core.Ghostscript
         public bool Run(OutputDevice output, string tempOutputFolder)
         {
             var parameters = (List<string>)output.GetGhostScriptParameters(GhostscriptVersion);
-            var success = Run(parameters.ToArray(), tempOutputFolder);
+                var success = Run(parameters.ToArray(), tempOutputFolder);
 
             var outputFolder = Path.GetDirectoryName(output.Job.OutputFilenameTemplate);
 

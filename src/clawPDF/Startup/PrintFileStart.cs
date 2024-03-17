@@ -1,12 +1,12 @@
 ﻿using System.IO;
+using clawPDF.Core;
 using clawSoft.clawPDF.Assistants;
-using NLog;
 
 namespace clawSoft.clawPDF.Startup
 {
     internal class PrintFileStart : IAppStart
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = Logger.GetCurrentClassLogger();
 
         public PrintFileStart(string printFile, string printerName)
         {
@@ -29,7 +29,7 @@ namespace clawSoft.clawPDF.Startup
 
             if (!File.Exists(PrintFile))
             {
-                _logger.Error("The file \"{0}\" does not exist!", PrintFile);
+                _logger.Error("The file \"{0}\" does not exist!"+PrintFile);
                 return false;
             }
 
@@ -37,13 +37,13 @@ namespace clawSoft.clawPDF.Startup
 
             if (!printFileAssistant.AddFile(PrintFile))
             {
-                _logger.Warn("The file \"{0}\" is not printable!", PrintFile);
+                _logger.Warn("The file \"{0}\" is not printable!"+ PrintFile);
                 return false;
             }
 
             if (!printFileAssistant.PrintAll())
             {
-                _logger.Error("The file \"{0}\" could not be printed!", PrintFile);
+                _logger.Error("The file \"{0}\" could not be printed!"+ PrintFile);
                 return false;
             }
 

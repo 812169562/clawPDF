@@ -22,7 +22,7 @@ namespace clawSoft.clawPDF.Core {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CoreResources {
+    public class CoreResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace clawSoft.clawPDF.Core {
         ///   返回此类使用的缓存的 ResourceManager 实例。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("clawSoft.clawPDF.Core.CoreResources", typeof(CoreResources).Assembly);
@@ -51,7 +51,7 @@ namespace clawSoft.clawPDF.Core {
         ///   使用此强类型资源类的所有资源查找执行重写。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace clawSoft.clawPDF.Core {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] eciRGB_v2 {
+        public static byte[] eciRGB_v2 {
             get {
                 object obj = ResourceManager.GetObject("eciRGB_v2", resourceCulture);
                 return ((byte[])(obj));
@@ -73,7 +73,7 @@ namespace clawSoft.clawPDF.Core {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] ISOcoated_v2_300_eci {
+        public static byte[] ISOcoated_v2_300_eci {
             get {
                 object obj = ResourceManager.GetObject("ISOcoated_v2_300_eci", resourceCulture);
                 return ((byte[])(obj));
@@ -83,7 +83,7 @@ namespace clawSoft.clawPDF.Core {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] ISOcoated_v2_grey1c_bas {
+        public static byte[] ISOcoated_v2_grey1c_bas {
             get {
                 object obj = ResourceManager.GetObject("ISOcoated_v2_grey1c_bas", resourceCulture);
                 return ((byte[])(obj));
@@ -109,7 +109,7 @@ namespace clawSoft.clawPDF.Core {
         ///
         ///%% This code attemp [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
-        internal static string PdfaDefinition {
+        public static string PdfaDefinition {
             get {
                 return ResourceManager.GetString("PdfaDefinition", resourceCulture);
             }
@@ -128,7 +128,7 @@ namespace clawSoft.clawPDF.Core {
         ///systemdict /ColorConversionStrategy known {
         ///  systemdict /ColorConversionStrategy get cvn du [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
-        internal static string PdfxDefinition {
+        public static string PdfxDefinition {
             get {
                 return ResourceManager.GetString("PdfxDefinition", resourceCulture);
             }
@@ -148,7 +148,7 @@ namespace clawSoft.clawPDF.Core {
         ///    /space/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright
         ///    /parenle [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
-        internal static string PostScriptStamp {
+        public static string PostScriptStamp {
             get {
                 return ResourceManager.GetString("PostScriptStamp", resourceCulture);
             }
@@ -157,7 +157,7 @@ namespace clawSoft.clawPDF.Core {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] WebCoatedFOGRA28 {
+        public static byte[] WebCoatedFOGRA28 {
             get {
                 object obj = ResourceManager.GetObject("WebCoatedFOGRA28", resourceCulture);
                 return ((byte[])(obj));

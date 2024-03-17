@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmd.cs" />
     <Compile Include="INIFile.cs" />
     <Compile Include="ProcessExtensions.cs" />
     <Compile Include="Program.cs" />

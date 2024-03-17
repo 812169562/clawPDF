@@ -979,7 +979,7 @@ namespace clawSoft.clawPDF.SetupHelper.Driver
             RegistryKey portConfiguration;
             try
             {
-                if (Environment.OSVersion.Version.Major == 5)
+                if (Environment.OSVersion.Version.Major==5)
                 {
                     XP(out registryChangesMade, out portConfiguration);
                 }

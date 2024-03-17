@@ -23,7 +23,7 @@ namespace clawPDF.Bridge
 
         private static void Main(string[] args)
         {
-            if (Environment.OSVersion.Version.Major==5)
+            if (Environment.OSVersion.Version.Major == 5 || true)
             {
                 XP(args);
             }
@@ -37,60 +37,127 @@ namespace clawPDF.Bridge
         {
             try
             {
-                Log.Error("启动");
+                Log.Debug("启动");
+                String standardInputFilename = Path.GetTempFileName();
+                using (BinaryReader standardInputReader = new BinaryReader(Console.OpenStandardInput()))
+                {
+                    using (FileStream standardInputFile = new FileStream(standardInputFilename, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        standardInputReader.BaseStream.CopyTo(standardInputFile);
+                    }
+                }
+                Log.Info(standardInputFilename);
+                StripNoDistill(standardInputFilename);
+                var infFileTemp = standardInputFilename.Replace("tmp", "inf");
+                CreateInf(infFileTemp, standardInputFilename);
+                start(infFileTemp);
                 //这是一种曲线救国的方式等待研究
-                if (args != null || args.Length != 0)
-                {
-                    try
-                    {
-                        string inffile = args[0].Split('=')[1];
-                        Log.Info("参数1" + args[0]);
-                        var infFileTemp = inffile.Replace("ps", "inf");
-                        CreateInf(infFileTemp, inffile);
-                        if (File.Exists(infFileTemp))
-                        {
-                            start(infFileTemp);
-                        }
-                        else
-                        {
-                            Log.Info("未找到文件--" + inffile);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex);
-                        Log.Error("错误的桥接 参数--" + args[0]);
-                    }
-                }
-                else
-                {
-                    Log.Error("未获取到参数");
-                }
-                Log.Error("结束");
+                //if (args != null || args.Length != 0)
+                //{
+                //    try
+                //    {
+                //        string inffile = args[0].Split('=')[1];
+                //        Log.Info("参数1" + args[0]);
+                //        var infFileTemp = inffile.Replace("ps", "inf");
+                //        CreateInf(infFileTemp, inffile);
+                //        if (File.Exists(infFileTemp))
+                //        {
+                //            start(infFileTemp);
+                //        }
+                //        else
+                //        {
+                //            Log.Info("未找到文件--" + inffile);
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Log.Error(ex);
+                //        Log.Error("错误的桥接 参数--" + args[0]);
+                //    }
+                //}
+                //else
+                //{
+                //    Log.Error("未获取到参数");
+                //}
+                //Log.Error("结束");
             }
             catch (Exception ex2)
             {
                 Log.Error(ex2);
+                MessageBox.Show("打印错误；查看文件夹下logs"+ex2.Message);
             }
         }
 
+        public enum NoDistillStripping : int
+        {
+            Searching,
+            Removing,
+            Complete
+        }
+        static void StripNoDistill(String postscriptFile)
+        {
+
+            String strippedFile = Path.GetTempFileName();
+
+            using (StreamReader inputReader = new StreamReader(File.OpenRead(postscriptFile), System.Text.Encoding.UTF8))
+            using (StreamWriter strippedWriter = new StreamWriter(File.OpenWrite(strippedFile), new UTF8Encoding(false)))
+            {
+                NoDistillStripping strippingStatus = NoDistillStripping.Searching;
+                String inputLine;
+                while (!inputReader.EndOfStream)
+                {
+                    inputLine = inputReader.ReadLine();
+                    if (inputLine != null)
+                    {
+                        switch ((int)strippingStatus)
+                        {
+                            case (int)NoDistillStripping.Searching:
+                                if (inputLine == "%ADOBeginClientInjection: DocumentSetup Start \"No Re-Distill\"")
+                                    strippingStatus = NoDistillStripping.Removing;
+                                else
+                                    strippedWriter.WriteLine(inputLine);
+                                break;
+                            case (int)NoDistillStripping.Removing:
+                                if (inputLine == "%ADOEndClientInjection: DocumentSetup Start \"No Re-Distill\"")
+                                    strippingStatus = NoDistillStripping.Complete;
+                                break;
+                            case (int)NoDistillStripping.Complete:
+                                strippedWriter.WriteLine(inputLine);
+                                break;
+                        }
+                    }
+                }
+                strippedWriter.Close();
+                inputReader.Close();
+
+                File.Delete(postscriptFile);
+                File.Move(strippedFile, postscriptFile);
+            }
+        }
         private static void start(string infFile)
         {
             Log.Info("进入桥接--" + infFile);
             INIFile iniFile = new INIFile(infFile);
             string username = iniFile.Read("0", "Username");
+            if (string.IsNullOrEmpty(username))
+            {
+                username = "Administrator";
+            }
             Log.Info("进入桥接1--" + username);
             Log.Info("进入桥接2--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe");
             Log.Info("进入桥接3--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile);
             Log.Info("进入桥接4--" + Path.GetDirectoryName(Application.ExecutablePath));
-            ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
+            Cmd.StartApp(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", "/INFODATAFILE=" + infFile);
+            //ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
         }
 
         private static void CreateInf(string infFile, string sourceFile)
         {
+            var tempName = sourceFile + "-SZYXPrint";
             var path = Path.GetDirectoryName(Application.ExecutablePath) + @"\template.inf";
             InfHelper.WriteString("0", "SpoolFileName", Path.GetFileName(sourceFile), path);
-            InfHelper.WriteString("0", "DocumentTitle", sourceFile + "-SZYXPrint", path);
+            InfHelper.WriteString("0", "Username", Environment.UserName, path);
+            InfHelper.WriteString("0", "DocumentTitle", tempName, path);
             try
             {
                 string[] text = File.ReadLines(sourceFile).ToArray();
@@ -101,7 +168,7 @@ namespace clawPDF.Bridge
             {
                 InfHelper.WriteString("0", "TotalPages", "1", path);
             }
-            File.Copy(path, infFile.Replace(".ps", ".inf"), true);
+            File.Copy(path, infFile, true);
         }
 
         private static void Usage()

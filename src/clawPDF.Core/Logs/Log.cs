@@ -116,6 +116,14 @@ namespace clawPDF.Core
             }
         }
 
+        public static void Print(string[] message) {
+            var sb = new StringBuilder();
+            foreach (var item in message)
+            {
+                sb.AppendLine(item);
+            }
+            Print(sb.ToString());
+        }
         public static void Print(string message)
         {
             var path = AppDomain.CurrentDomain.BaseDirectory + "logs/" + "print" + $"//{Date.yyyyMMdd}";
@@ -466,6 +474,11 @@ namespace clawPDF.Core
         public void Debug(string msg)
         {
             Log.Debug(msg);
+        }
+
+        public void Debug(string msg2,string msg)
+        {
+            Log.Debug(msg2+msg) ;
         }
 
         public void Error(string mgs)

@@ -25,7 +25,7 @@ namespace clawSoft.clawPDF
     public partial class App
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
+        
         public App()
         {
             InitializeComponent();
@@ -101,7 +101,7 @@ namespace clawSoft.clawPDF
 
         private void RunApplication(string[] commandLineArguments)
         {
-            Log.Debug("开始启动8");
+            Log.Debug("开始启动8"+ commandLineArguments);
             CheckSpoolerRunning();
             Log.Debug("开始启动9");
             // Must be done before the other checks to initialize the translator
@@ -120,10 +120,10 @@ namespace clawSoft.clawPDF
                 return;
             }
 
-            Logger.Debug("Starting clawPDF");
+            Log.Debug("Starting clawPDF");
 
             if (commandLineArguments.Length > 0)
-                Logger.Info("Command Line parameters: \r\n" + string.Join(" ", commandLineArguments));
+                Log.Debug("Command Line parameters: \r\n" + string.Join(" ", commandLineArguments));
 
             if (!InitializeJobInfoQueue())
                 return;
@@ -131,7 +131,7 @@ namespace clawSoft.clawPDF
             // Start the application
             appStart.Run();
 
-            Logger.Debug("Waiting for all threads to finish");
+            Log.Debug("Waiting for all threads to finish");
             ThreadManager.Instance.WaitForThreadsAndShutdown(this);
         }
 

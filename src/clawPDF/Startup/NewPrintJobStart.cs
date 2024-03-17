@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IO;
+using clawPDF.Core;
 using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Utilities.IO;
-using NLog;
 
 namespace clawSoft.clawPDF.Startup
 {
     internal class NewPrintJobStart : MaybePipedStart
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = Logger.GetCurrentClassLogger();
 
         public NewPrintJobStart(string newJobInfoFile)
         {

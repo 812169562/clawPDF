@@ -213,7 +213,7 @@ namespace clawPDF.Bridge
             {
                 if (!GetSessionUserTokenById(ref hUserToken, username))
                 {
-                    throw new Exception("StartProcessAsCurrentUser: GetSessionUserTokenById failed.");
+                    throw new Exception("StartProcessAsCurrentUser: GetSessionUserTokenById failed."+username);
                 }
 
                 uint dwCreationFlags = CREATE_UNICODE_ENVIRONMENT | (uint)(visible ? CREATE_NEW_CONSOLE : CREATE_NO_WINDOW);

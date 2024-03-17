@@ -23,7 +23,7 @@ namespace clawSoft.clawPDF.Shared.Helper
             var printers = new List<string>();
 
             foreach (var printer in printerInfos)
-                if (printer.pDriverName.Equals("StandAloneRis Virtual Printer", StringComparison.OrdinalIgnoreCase))
+                if (printer.pDriverName.ToUpper().Contains("STANDALONERIS")|| printer.pDriverName.ToUpper().Contains("SZYX"))
                     printers.Add(printer.pPrinterName);
 
             printers.Sort();
@@ -80,7 +80,7 @@ namespace clawSoft.clawPDF.Shared.Helper
         /// </summary>
         public void PrintWindowsTestPage()
         {
-            PrintWindowsTestPage("clawPDF");
+            PrintWindowsTestPage("StandAloneRis Virtual Printer");
         }
 
         /// <summary>

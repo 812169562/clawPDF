@@ -1,0 +1,7 @@
+[0]
+WinStation=Console
+Username=Only_you
+SpoolFileName=testpage.ps
+TotalPages=1
+Copies=1
+DocumentTitle=CUPS Testpage

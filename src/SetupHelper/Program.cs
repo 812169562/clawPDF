@@ -6,6 +6,8 @@ using clawSoft.clawPDF.SetupHelper.Driver;
 using clawSoft.clawPDF.Utilities;
 using SetupHelper;
 using Newtonsoft.Json;
+using PdfScribeInstallCustomAction;
+using System.Windows.Forms;
 
 namespace clawSoft.clawPDF.SetupHelper
 {
@@ -17,6 +19,41 @@ namespace clawSoft.clawPDF.SetupHelper
 
             var clp = new CommandLineParser(args);
             Log.Debug(JsonConvert.SerializeObject(clp));
+
+            if (Environment.OSVersion.Version.Major == 5 || true)
+            {
+                if (clp.HasArgument("Driver"))
+                {
+                    showUsage = false;
+                    try
+                    {
+                        var driversDir = Path.Combine(Application.StartupPath, Environment.Is64BitOperatingSystem ? "xp_x64" : "xp_x86");
+                        var outputHandlerCommand = Path.GetDirectoryName(Application.ExecutablePath) + @"\clawPDF.Bridge.exe";
+                        var scribeInstaller = new PdfScribeInstaller();
+                        switch (clp.GetArgument("Driver").ToLower())
+                        {
+                            case "add":
+
+                                scribeInstaller.InstallPdfScribePrinter(driversDir, outputHandlerCommand, "");
+                                break;
+
+                            case "remove":
+                                scribeInstaller.UninstallPdfScribePrinter();
+                                break;
+
+                            default:
+                                showUsage = true;
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        Environment.ExitCode = 1;
+                    }
+                }
+                return;
+            }
             if (clp.HasArgument("Driver"))
             {
                 showUsage = false;

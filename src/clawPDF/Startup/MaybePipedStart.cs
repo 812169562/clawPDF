@@ -1,14 +1,14 @@
 ﻿using System;
+using clawPDF.Core;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Threading;
 using clawSoft.clawPDF.Utilities.Communication;
-using NLog;
 
 namespace clawSoft.clawPDF.Startup
 {
     internal abstract class MaybePipedStart : IAppStart
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = Logger.GetCurrentClassLogger();
 
         public bool StartManagePrintJobs { get; protected internal set; }
 
@@ -20,7 +20,7 @@ namespace clawSoft.clawPDF.Startup
             // Make n Attempts: Look if a pipe server exists, if so, send a message. If that fails, retry (and maybe do the job yourself)
             while (!success && retry++ <= 5)
             {
-                _logger.Debug("Starting attempt {0}: ", retry);
+                _logger.Debug("Starting attempt {0}: "+ retry);
                 if (PipeServer.SessionServerInstanceRunning(ThreadManager.PipeName))
                 {
                     success = TrySendPipeMessage();
