@@ -20,7 +20,8 @@ namespace clawSoft.clawPDF.SetupHelper
             var clp = new CommandLineParser(args);
             Log.Debug(JsonConvert.SerializeObject(clp));
 
-            if (Environment.OSVersion.Version.Major == 5 || true)
+            //if (Environment.OSVersion.Version.Major == 5 || true)
+            if (Environment.OSVersion.Version.Major == 5)
             {
                 if (clp.HasArgument("Driver"))
                 {

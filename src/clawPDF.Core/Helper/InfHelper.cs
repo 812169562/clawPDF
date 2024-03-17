@@ -19,7 +19,7 @@ namespace clawPDF.Core.Helper
         /// <param name="size">返回值允许的大小</param>
         /// <param name="filepath">ini文件的完整路径</param>
         /// <returns></returns>
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll",CharSet =CharSet.Unicode)]
         private static extern int GetPrivateProfileString(
             string section,
             string key,
@@ -36,7 +36,7 @@ namespace clawPDF.Core.Helper
         /// <param name="val">写入值</param>
         /// <param name="filepath">ini文件的完整路径</param>
         /// <returns></returns>
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern int WritePrivateProfileString(
             string section,
             string key,

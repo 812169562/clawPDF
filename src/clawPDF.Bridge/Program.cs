@@ -24,6 +24,7 @@ namespace clawPDF.Bridge
         private static void Main(string[] args)
         {
             if (Environment.OSVersion.Version.Major == 5 || true)
+            //if (Environment.OSVersion.Version.Major == 5)
             {
                 XP(args);
             }
@@ -84,7 +85,7 @@ namespace clawPDF.Bridge
             catch (Exception ex2)
             {
                 Log.Error(ex2);
-                MessageBox.Show("打印错误；查看文件夹下logs"+ex2.Message);
+                MessageBox.Show("打印错误；查看文件夹下logs" + ex2.Message);
             }
         }
 
@@ -153,22 +154,51 @@ namespace clawPDF.Bridge
 
         private static void CreateInf(string infFile, string sourceFile)
         {
-            var tempName = sourceFile + "-SZYXPrint";
+            var tempName = "-SZYXPrint";
+            var path2 = Path.GetDirectoryName(Application.ExecutablePath) + @"\template1.inf";
             var path = Path.GetDirectoryName(Application.ExecutablePath) + @"\template.inf";
-            InfHelper.WriteString("0", "SpoolFileName", Path.GetFileName(sourceFile), path);
-            InfHelper.WriteString("0", "Username", Environment.UserName, path);
-            InfHelper.WriteString("0", "DocumentTitle", tempName, path);
+            var sb = new StringBuilder();
+            File.Copy(path2, path, true);
+            sb.AppendLine("[0]");
+            sb.AppendLine($"SpoolFileName={Path.GetFileName(sourceFile)}");
+            sb.AppendLine($"Username={Environment.UserName}");
+            //InfHelper.WriteString("0", "SpoolFileName", Path.GetFileName(sourceFile), path);
+            //InfHelper.WriteString("0", "Username", Environment.UserName, path);
             try
             {
                 string[] text = File.ReadLines(sourceFile).ToArray();
+                //Log.Print(text);
+                foreach (string line in text)
+                {
+                    if (line.Contains("%%Title"))
+                    {
+                        tempName = line.Replace("%%Title: <", "").Replace(">", "").Trim();
+                        tempName = tempName.HexToString();
+                        Log.Print(tempName);
+                        break;
+                    }
+                    if (line.Contains("%% Title"))
+                    {
+                        tempName = line.Replace("%% Title: <", "").Replace(">", "").Trim();
+                        tempName = tempName.HexToString();
+                        Log.Print(tempName);
+                        break;
+                    }
+                }
+                sb.AppendLine($"DocumentTitle={tempName}");
+                //InfHelper.WriteString("0", "DocumentTitle", tempName, path);
                 var totalPages = text[text.Length - 4].Replace("%%Pages: ", "").Trim();
-                InfHelper.WriteString("0", "TotalPages", totalPages, path);
+                //InfHelper.WriteString("0", "TotalPages", totalPages, path);
+                sb.AppendLine($"TotalPages={totalPages}");
+                File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+                File.Copy(path, infFile, true);
+                //throw new Exception("1");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 InfHelper.WriteString("0", "TotalPages", "1", path);
+                throw ex;
             }
-            File.Copy(path, infFile, true);
         }
 
         private static void Usage()

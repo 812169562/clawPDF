@@ -8,7 +8,7 @@ namespace clawPDF.Bridge
     /// <summary>
     /// 执行命令
     /// </summary>
-    public class Cmd
+    public static class Cmd
     {
         ///
         /// 执行cmd.exe命令
@@ -90,7 +90,7 @@ namespace clawPDF.Bridge
         ///启动参数
         ///进程窗口模式
         /// true表示成功，false表示失败
-        public static bool StartApp(string appName, string arguments, ProcessWindowStyle style,bool blnRst=false)
+        public static bool StartApp(string appName, string arguments, ProcessWindowStyle style, bool blnRst = false)
         {
             Process p = new Process();
             p.StartInfo.FileName = appName;//exe,bat and so on
@@ -106,11 +106,57 @@ namespace clawPDF.Bridge
                 }
                 blnRst = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
             return blnRst;
+        }
+
+        public static string HexToString(this string hexString)
+        {
+            byte[] byteArray = HexStringToByteArray(hexString);
+            var val = Encoding.GetEncoding("GB2312").GetString(byteArray);
+            if (!val.Contains("?????"))
+            {
+                return val;
+            }
+            return Encoding.UTF8.GetString(byteArray);
+        }
+
+        public static string ConvertAndPrint(string gb2312String)
+        {
+            // 将GB2312编码的字符串转换为字节序列
+            byte[] gb2312Bytes = Encoding.GetEncoding("GB2312").GetBytes(gb2312String);
+
+            // 将GB2312字节序列转换为UTF8编码的字节序列
+            byte[] utf8Bytes = Encoding.Convert(Encoding.GetEncoding("GB2312"), Encoding.UTF8, gb2312Bytes);
+
+            // 将UTF8编码的字节序列转换回字符串
+            string utf8String = Encoding.UTF8.GetString(utf8Bytes);
+
+            return utf8String;
+        }
+
+        public static string ByteArrayToHexString(byte[] ba)
+        {
+            var hex = new StringBuilder(ba.Length * 2);
+            foreach (var b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
+        public static byte[] HexStringToByteArray(string hex)
+        {
+            if (hex.Length % 2 != 0)
+                throw new ArgumentException(nameof(hex));
+
+            var numberOfCharacters = hex.Length;
+            var returnArray = new byte[numberOfCharacters / 2];
+
+            for (var i = 0; i < numberOfCharacters; i += 2)
+                returnArray[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+
+            return returnArray;
         }
     }
 }
