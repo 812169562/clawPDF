@@ -130,26 +130,97 @@ namespace clawSoft.clawPDF.Core.Request
                     BindSource = patient.BindSource
                 };
             }
-            //var list = SplitFileUpload(file);
-            var client = new RestClient(uploadUrl);
-            var request = new RestRequest("", Method.POST);
-            request.AddHeader("Content-Type", "application/json");
-            //request.AddParameter("JSESSIONID_RIS", "sqOCPPJD171jbE9NPtp1TLstty96MGfHsvE_JZ-P", ParameterType.Cookie);
-            var mac = GetMacByWMI();
-            var body = new
+            var list = SplitFileUpload(file);
+            var message = "";
+            foreach (var item in list)
             {
-                Mac = mac,
-                PdfBase64 = Convert.ToBase64String(File.ReadAllBytes(file)),
-                //PdfBase64List = list,
-                FileName = fileName,
-                BandPatientDto = patientDto,
-                LoginCache = loginUser
-            };
-            request.AddJsonBody(body);
-            IRestResponse response = client.Execute(request);
-            if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
-                throw new Exception(response.StatusDescription + response.ErrorMessage);
-            return response.Content;
+                var client = new RestClient(uploadUrl);
+                var request = new RestRequest("", Method.POST);
+                request.AddHeader("Content-Type", "application/json");
+                //request.AddParameter("JSESSIONID_RIS", "sqOCPPJD171jbE9NPtp1TLstty96MGfHsvE_JZ-P", ParameterType.Cookie);
+                var mac = GetMacByWMI();
+                var body = new
+                {
+                    Mac = mac,
+                    //PdfBase64 = Convert.ToBase64String(File.ReadAllBytes(file)),
+                    //PdfBase64List = list,
+                    FileName = fileName,
+                    BandPatientDto = patientDto,
+                    LoginCache = loginUser,
+                    FileParam = item
+                };
+                request.AddJsonBody(body);
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                    throw new Exception(response.StatusDescription + response.ErrorMessage);
+                if (item.Index == item.Total)
+                {
+                    message = response.Content;
+                }
+                else
+                {
+                    ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                    if (model.Status != "0")
+                        throw new Exception(model.Message);
+                }
+                if (File.Exists(item.FilePath))
+                    File.Delete(item.FilePath);
+            }
+            return message;
+        }
+        /// <summary>
+        /// 大文件切片
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public List<FileParam> SplitFileUpload(string filePath)
+        {
+            List<FileParam> fileList = new List<FileParam>();
+            var key = Guid.NewGuid().ToString();
+            var temFolder = System.Windows.Forms.Application.StartupPath + "\\partFile\\" + key;
+            //var temFolder = $"D:\\szyx\\partFile\\{key}";
+            // 确保目标文件夹存在
+            if (!Directory.Exists(temFolder))
+                Directory.CreateDirectory(temFolder);
+
+            // 计算分片大小（字节）
+            int chunkSizeBytes = 2 * 1024 * 1024;
+            // 打开源文件
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                int fileLength = (int)fileStream.Length;
+                int chunkCount = (int)Math.Ceiling((double)fileLength / chunkSizeBytes);
+                for (int i = 0; i < chunkCount; i++)
+                {
+                    int chunkStart = i * chunkSizeBytes;
+                    int chunkLength = Math.Min(chunkSizeBytes, fileLength - chunkStart);
+
+                    // 创建分片文件
+                    string chunkFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_temp_{i}{Path.GetExtension(filePath)}";
+                    string chunkFilePath = Path.Combine(temFolder, chunkFileName);
+                    using (FileStream chunkFileStream = new FileStream(chunkFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        fileStream.Position = chunkStart;
+                        byte[] buffer = new byte[chunkLength];
+                        int bytesRead = fileStream.Read(buffer, 0, chunkLength);
+                        chunkFileStream.Write(buffer, 0, bytesRead);
+                        fileList.Add(new FileParam
+                        {
+                            PdfBase64 = Convert.ToBase64String(buffer),
+                            Index = i + 1,
+                            Total = chunkCount,
+                            TotalSize = fileLength,
+                            FileName = chunkFileName,
+                            FilePath = chunkFilePath,
+                            Guid = key
+
+                        });
+                        chunkFileStream.Close();
+                    }
+                }
+                fileStream.Close();
+            }
+            return fileList;
         }
         /// <summary>
         /// 获取解密后的登录用户信息
@@ -191,48 +262,6 @@ namespace clawSoft.clawPDF.Core.Request
 
             return macs;
         }
-        public List<string> SplitFileUpload(string filePath)
-        {
-            List<string> fileList = new List<string>();
-            var key = Date.Number4();
-            var temFolder = $"D:\\szyx\\partFile\\{key}";
-            // 确保目标文件夹存在
-            if (!Directory.Exists(temFolder))
-                Directory.CreateDirectory(temFolder);
-
-            // 计算分片大小（字节）
-            int chunkSizeBytes = 1 * 1024 * 1024;
-            // 打开源文件
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                int fileLength = (int)fileStream.Length;
-                int chunkCount = (int)Math.Ceiling((double)fileLength / chunkSizeBytes);
-                for (int i = 0; i < chunkCount; i++)
-                {
-                    int chunkStart = i * chunkSizeBytes;
-                    int chunkLength = Math.Min(chunkSizeBytes, fileLength - chunkStart);
-
-                    // 创建分片文件
-                    string chunkFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_temp_{i}{Path.GetExtension(filePath)}";
-                    string chunkFilePath = Path.Combine(temFolder, chunkFileName);
-                    using (FileStream chunkFileStream = new FileStream(chunkFilePath, FileMode.Create, FileAccess.Write))
-                    {
-                        fileStream.Position = chunkStart;
-                        byte[] buffer = new byte[chunkLength];
-                        int bytesRead = fileStream.Read(buffer, 0, chunkLength);
-                        chunkFileStream.Write(buffer, 0, bytesRead);
-                        chunkFileStream.Close();
-                        fileList.Add(Convert.ToBase64String(buffer));
-                        if (File.Exists(chunkFilePath))
-                            File.Delete(chunkFilePath);
-                    }
-                }
-                if (Directory.Exists(temFolder))
-                    Directory.Delete(temFolder);
-                fileStream.Close();
-            }
-            return fileList;
-        }
     }
 }
 
@@ -241,4 +270,35 @@ public class ResponseModel
     public object Data { get; set; }
     public string Status { get; set; }
     public string Message { get; set; }
+}
+public class FileParam
+{
+    /// <summary>
+    /// 唯一标识
+    /// </summary>
+    public string Guid { get; set; }
+    /// <summary>
+    /// 当前为第几片
+    /// </summary>
+    public int Index { get; set; }
+    /// <summary>
+    /// 分片后总片数
+    /// </summary>
+    public int Total { get; set; }
+    /// <summary>
+    /// 文件总大小
+    /// </summary>
+    public int TotalSize { get; set; }
+    /// <summary>
+    /// 文件名称
+    /// </summary>
+    public string FileName { get; set; }
+    /// <summary>
+    /// 文件Base64
+    /// </summary>
+    public string PdfBase64 { get; set; }
+    /// <summary>
+    /// 分片文件路径
+    /// </summary>
+    public string FilePath { get; set; }
 }

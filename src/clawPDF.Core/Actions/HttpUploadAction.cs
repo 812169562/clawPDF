@@ -1,21 +1,15 @@
 ﻿using clawPDF.Core;
 using clawSoft.clawPDF.Core.Jobs;
+using clawSoft.clawPDF.Core.Printer;
 using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Core.Views;
 using Newtonsoft.Json;
-using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace clawSoft.clawPDF.Core.Actions
@@ -139,9 +133,9 @@ namespace clawSoft.clawPDF.Core.Actions
                                 fileName = fileName.Substring(lastIndex + 1);
                         }
                         Log.Print("打印开始");
-                        //var key = Date.Number4();
-                        //PrintQueue.Add(key, file);
-                        foxitReaderPrintPdf(file);
+                        var key = Date.Number4();
+                        PrintQueue.Add(key, file);
+                        //foxitReaderPrintPdf(file);
                         Log.Print(file);
                         string mac = GetMacByWMI();
                         var response = request.Upload(job.Profile.HttpUploader.HttpUploadUrl, file, fileName, patient);
