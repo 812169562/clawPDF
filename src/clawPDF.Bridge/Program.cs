@@ -148,7 +148,7 @@ namespace clawPDF.Bridge
             Log.Info("进入桥接2--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe");
             Log.Info("进入桥接3--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile);
             Log.Info("进入桥接4--" + Path.GetDirectoryName(Application.ExecutablePath));
-            Cmd.StartApp(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", "/INFODATAFILE=" + infFile);
+            Cmd.StartApp(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", "\"/INFODATAFILE=" + infFile+"\"");
             //ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
         }
 

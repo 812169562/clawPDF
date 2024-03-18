@@ -28,6 +28,7 @@ namespace clawSoft.clawPDF.Startup
 
         internal override bool StartApplication()
         {
+            Log.Info("NewJobInfoFile:" + NewJobInfoFile);
             if (string.IsNullOrEmpty(NewJobInfoFile) || !File.Exists(NewJobInfoFile))
             {
                 _logger.Error("No file in InfoDataFile argument or file does not exist.");

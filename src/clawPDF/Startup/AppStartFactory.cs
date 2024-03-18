@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using clawPDF.Core;
 using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Utilities;
 using clawSoft.clawPDF.Utilities.Registry;
-using NLog;
 using pdfforge.DataStorage.Storage;
 using SystemInterface.IO;
 using SystemWrapper.IO;
@@ -18,7 +18,7 @@ namespace clawSoft.clawPDF.Startup
     internal class AppStartFactory
     {
         private readonly ApplicationSettings _appSettings;
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = Logger.GetCurrentClassLogger();
         public Action<clawPDFSettings> UpdateSettings { get; set; }
 
         public AppStartFactory() : this(SettingsHelper.Settings.ApplicationSettings)
@@ -44,6 +44,8 @@ namespace clawSoft.clawPDF.Startup
                 if (validFiles.Count > 0)
                     return new DragAndDropStart(commandLineArgs);
             }
+            Log.Print("commandLineArgs");
+            Log.Print(commandLineArgs);
 
             var commandLineParser = new CommandLineParser(commandLineArgs);
 
