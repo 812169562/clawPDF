@@ -139,19 +139,34 @@ namespace clawPDF.Bridge
         {
             Log.Info("进入桥接--" + infFile);
             INIFile iniFile = new INIFile(infFile);
-            string username = iniFile.Read("0", "Username");
+            string username = _username;
             if (string.IsNullOrEmpty(username))
             {
-                username = "Administrator";
+                username = Environment.UserName;
             }
             Log.Info("进入桥接1--" + username);
             Log.Info("进入桥接2--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe");
             Log.Info("进入桥接3--" + Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile);
             Log.Info("进入桥接4--" + Path.GetDirectoryName(Application.ExecutablePath));
-            Cmd.StartApp(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", "\"/INFODATAFILE=" + infFile+"\"");
-            //ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
+            try
+            {
+                if (Environment.OSVersion.Version.Major == 5)
+                {
+                    Cmd.StartApp(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", "\"/INFODATAFILE=" + infFile + "\"");
+                }
+                else
+                {
+                    ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
+                }
+            }
+            catch (Exception)
+            {
+                Cmd.StartApp(Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", "\"/INFODATAFILE=" + infFile + "\"");
+            }
+            //
         }
 
+        private static string _username = "";
         private static void CreateInf(string infFile, string sourceFile)
         {
             var tempName = "-SZYXPrint";
@@ -161,7 +176,6 @@ namespace clawPDF.Bridge
             File.Copy(path2, path, true);
             sb.AppendLine("[0]");
             sb.AppendLine($"SpoolFileName={Path.GetFileName(sourceFile)}");
-            sb.AppendLine($"Username={Environment.UserName}");
             //InfHelper.WriteString("0", "SpoolFileName", Path.GetFileName(sourceFile), path);
             //InfHelper.WriteString("0", "Username", Environment.UserName, path);
             try
@@ -170,6 +184,13 @@ namespace clawPDF.Bridge
                 //Log.Print(text);
                 foreach (string line in text)
                 {
+                    if (line.Contains("%%For"))
+                    {
+                        _username = line.Replace("%%For: ", "").Trim();
+                        sb.AppendLine($"Username={_username}");
+                        break;
+                    }
+
                     if (line.Contains("%%Title"))
                     {
                         tempName = line.Replace("%%Title: <", "").Replace(">", "").Trim();
