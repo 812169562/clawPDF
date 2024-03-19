@@ -21,7 +21,11 @@ namespace clawSoft.clawPDF.Core.Ghostscript
             IntPtr gsInstancePtr;
             lock (resourceLock)
             {
-                GhostscriptAPI._putenv_s_14("TESSDATA_PREFIX", Directory.GetCurrentDirectory() + @"\tessdata");
+                if (Environment.OSVersion.Version.Major > 5)
+                {
+                    GhostscriptAPI._putenv_s_14("TESSDATA_PREFIX", Directory.GetCurrentDirectory() + @"\tessdata");
+                }
+
                 if (IntPtr.Size == 8)
                 {
                     GhostscriptAPI.CreateAPIInstance64(out gsInstancePtr, IntPtr.Zero);
