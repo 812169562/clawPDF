@@ -184,11 +184,10 @@ namespace clawPDF.Bridge
                 //Log.Print(text);
                 foreach (string line in text)
                 {
-                    if (line.Contains("%%For"))
+                    if (line.Contains("%%For") && !sb.ToString().Contains("Username"))
                     {
-                        _username = line.Replace("%%For: ", "").Trim();
+                        _username = line.Replace("%%For:", "").Trim();
                         sb.AppendLine($"Username={_username}");
-                        break;
                     }
 
                     if (line.Contains("%%Title"))
