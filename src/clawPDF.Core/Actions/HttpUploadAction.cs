@@ -56,7 +56,7 @@ namespace clawSoft.clawPDF.Core.Actions
             }
             catch (Exception ex)
             {
-                Logger.Error("Exception while upload file to ftp:\r\n" + ex.Message);
+                Logger.Error("Exception while upload file to http:\r\n" + ex.Message);
                 return new ActionResult(ActionId, 999);
             }
         }

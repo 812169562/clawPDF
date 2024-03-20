@@ -188,8 +188,11 @@ namespace clawPDF.Bridge
                     {
                         _username = line.Replace("%%For:", "").Trim();
                         sb.AppendLine($"Username={_username}");
+                        break;
                     }
-
+                }
+                foreach (string line in text)
+                {
                     if (line.Contains("%%Title"))
                     {
                         tempName = line.Replace("%%Title: <", "").Replace(">", "").Trim();
