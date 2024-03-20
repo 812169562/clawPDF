@@ -115,13 +115,20 @@ namespace clawPDF.Bridge
 
         public static string HexToString(this string hexString)
         {
-            byte[] byteArray = HexStringToByteArray(hexString);
-            var val = Encoding.GetEncoding("GB2312").GetString(byteArray);
-            if (!val.Contains("?????"))
+            try
             {
-                return val;
+                byte[] byteArray = HexStringToByteArray(hexString);
+                var val = Encoding.GetEncoding("GB2312").GetString(byteArray);
+                if (!val.Contains("?????"))
+                {
+                    return val;
+                }
+                return Encoding.UTF8.GetString(byteArray);
             }
-            return Encoding.UTF8.GetString(byteArray);
+            catch (Exception)
+            {
+                return hexString;
+            }
         }
 
         public static string ConvertAndPrint(string gb2312String)
