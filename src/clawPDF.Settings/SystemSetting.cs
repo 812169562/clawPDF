@@ -15,5 +15,17 @@ namespace clawSoft.clawPDF.Core.Settings
         /// 登录用户信息
         /// </summary>
         public string LoginUser { get; set; }
+        /// <summary>
+        /// 打印方式：1、印刷体打印 2、pdf文件打印
+        /// </summary>
+        public int PrintWay { get; set; }
+        /// <summary>
+        /// Pdf配置页是否可见
+        /// </summary>
+        public bool PdfTabVisible { get; set; }
+        /// <summary>
+        /// OCR配置页是否可见
+        /// </summary>
+        public bool OCRTabVisible { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using clawPDF.Core;
+using clawSoft.clawPDF.Core.Settings.Enums;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
-using System.Printing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,7 +14,8 @@ namespace clawSoft.clawPDF.Core.Printer
     {
         public static ConcurrentDictionary<string, string> PdfFiles;
         public static ConcurrentQueue<string> PdfQueue;
-        public static string _printer = "StandAloneRis";
+        public static string _printer = "";
+        public static SelectPrinter _selectPrinter;
         private static object _lock = new object();
         static PrintQueue()
         {
@@ -35,7 +36,7 @@ namespace clawSoft.clawPDF.Core.Printer
                 {
                     try
                     {
-                        if (!Printing(_printer))
+                        if (!PrinterUtil.Printing(_printer))
                         {
                             Print();
                         }
@@ -72,7 +73,13 @@ namespace clawSoft.clawPDF.Core.Printer
             {
                 var processStartInfo = new ProcessStartInfo();
                 processStartInfo.FileName = Application.StartupPath + "\\TemrsPrint.exe";
-                processStartInfo.Arguments = string.Format(" /p  \"{0}\"", url);
+                var arg = @"/p " + "\"" + url + "\"";
+                if (_selectPrinter == SelectPrinter.SelectedPrinter)
+                {
+                    arg = @"/t " + "\"" + url + "\"" + " \"" + _printer + "\"";
+                }
+                processStartInfo.Arguments = arg;
+                //processStartInfo.Arguments = string.Format(" /p  \"{0}\"", url);
                 processStartInfo.CreateNoWindow = true;
                 processStartInfo.UseShellExecute = true;
                 processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -81,6 +88,8 @@ namespace clawSoft.clawPDF.Core.Printer
                     StartInfo = processStartInfo
                 };
                 printProcess.Start();
+                if (printProcess.WaitForExit(-1))
+                    printResult = true;
             }
             catch (Exception ex)
             {
@@ -91,21 +100,5 @@ namespace clawSoft.clawPDF.Core.Printer
             return printResult;
         }
 
-        public static bool Printing(string printerName)
-        {
-            // 创建打印服务对象
-            LocalPrintServer printServer = new LocalPrintServer();
-            // 获取所有打印队列
-            System.Printing.PrintQueue queue = printServer.GetPrintQueues().First(t => t.Name == printerName);
-            try
-            {
-                queue.Refresh();
-                return queue.IsPrinting;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
     }
 }

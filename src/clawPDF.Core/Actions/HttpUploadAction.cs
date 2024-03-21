@@ -132,9 +132,9 @@ namespace clawSoft.clawPDF.Core.Actions
                             if (lastIndex != -1)
                                 fileName = fileName.Substring(lastIndex + 1);
                         }
-                        Log.Print("打印开始");
-                        var key = Date.Number4();
-                        PrintQueue.Add(key, file);
+                        //Log.Print("打印开始");
+                        //var key = Date.Number4();
+                        //PrintQueue.Add(key, file);
                         //foxitReaderPrintPdf(file);
                         Log.Print(file);
                         string mac = GetMacByWMI();
@@ -163,6 +163,7 @@ namespace clawSoft.clawPDF.Core.Actions
                                 }
                             }
                         }
+                        #region 注释
                         /*using (var client = new WebClient())
                         {
                             client.Encoding = Encoding.UTF8;
@@ -216,6 +217,7 @@ namespace clawSoft.clawPDF.Core.Actions
                                 }
                             }
                         }*/
+                        #endregion
                         i++;
                     }
                     catch (Exception ex)

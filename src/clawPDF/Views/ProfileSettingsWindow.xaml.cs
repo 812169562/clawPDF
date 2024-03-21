@@ -36,6 +36,8 @@ namespace clawSoft.clawPDF.Views
 
             if (ViewModel.CurrentProfile != null)
                 DocumentTabUserControl.UpdateFontLabel(ViewModel.CurrentProfile.Stamping);
+            OCRTab.Visibility = SystemConfig.Setting.OCRTabVisible ? Visibility.Visible : Visibility.Hidden;
+            PdfTab.Visibility = SystemConfig.Setting.PdfTabVisible ? Visibility.Visible : Visibility.Hidden;
         }
 
         private ProfileSettingsViewModel ViewModel

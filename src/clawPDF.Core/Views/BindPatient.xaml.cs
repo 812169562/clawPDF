@@ -29,7 +29,7 @@ namespace clawSoft.clawPDF.Core.Views
         {
             if (_user == null)
             {
-                MessageBox.Show("请选择医师账号！");
+                MessageBox.Show("请选择医师账号！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
                 return;
             }
             txtAccount.Text = _user.AccountName;

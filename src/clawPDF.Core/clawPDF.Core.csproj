@@ -147,6 +147,7 @@
     <Compile Include="Printer\PrinterPort.cs" />
     <Compile Include="Printer\PrinterPortReader.cs" />
     <Compile Include="Helper\ProfileChecker.cs" />
+    <Compile Include="Printer\PrinterUtil.cs" />
     <Compile Include="Printer\PrintQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\HttpUploadRequest.cs" />
@@ -154,6 +155,9 @@
     <Compile Include="Request\Models\PatientModel.cs" />
     <Compile Include="Views\SelectAccount.xaml.cs">
       <DependentUpon>SelectAccount.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectPrinter.xaml.cs">
+      <DependentUpon>SelectPrinter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\SelectControl.xaml.cs">
       <DependentUpon>SelectControl.xaml</DependentUpon>
@@ -226,6 +230,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\SelectAccount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectPrinter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
