@@ -106,6 +106,7 @@ namespace clawSoft.clawPDF.Core.Request
         /// <returns></returns>
         public string Upload(string uploadUrl, string file, string fileName, PatientModel patient)
         {
+            Log.Trace("上传单机系统--uploadUrl:" + uploadUrl + ",file:" + file + ",fileName:" + fileName);
             LoginUser loginUser = null;
             object patientDto = null;
             if (patient != null)
@@ -150,14 +151,16 @@ namespace clawSoft.clawPDF.Core.Request
                     FileParam = item
                 };
                 request.AddJsonBody(body);
+                Log.Trace("上传单机系统--request:" + JsonConvert.SerializeObject(body));
                 IRestResponse response = client.Execute(request);
+                Log.Trace("上传单机系统--response:" + JsonConvert.SerializeObject(response.Content));
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                     throw new Exception(response.StatusDescription + response.ErrorMessage);
                 if (item.Index == item.Total)
                 {
                     message = response.Content;
                 }
-                else
+                else if(!string.IsNullOrEmpty(response.Content))
                 {
                     ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
                     if (model.Status != "0")

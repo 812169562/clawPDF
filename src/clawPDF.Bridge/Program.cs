@@ -23,6 +23,7 @@ namespace clawPDF.Bridge
 
         private static void Main(string[] args)
         {
+            //var envs = Environment.GetEnvironmentVariables();
             if (Environment.OSVersion.Version.Major == 5 || true)
             //if (Environment.OSVersion.Version.Major == 5)
             {
@@ -38,6 +39,8 @@ namespace clawPDF.Bridge
         {
             try
             {
+                Log.Batch("当前计算机名2：" + Environment.UserName);
+                Log.Batch("当前计算机域2：" + Environment.UserDomainName);
                 Log.Debug("启动");
                 String standardInputFilename = Path.GetTempFileName();
                 using (BinaryReader standardInputReader = new BinaryReader(Console.OpenStandardInput()))
@@ -140,6 +143,7 @@ namespace clawPDF.Bridge
             Log.Info("进入桥接--" + infFile);
             INIFile iniFile = new INIFile(infFile);
             string username = _username;
+            //if (string.IsNullOrEmpty(username) || Cmd.OsVersion() == "11")
             if (string.IsNullOrEmpty(username))
             {
                 username = Environment.UserName;
@@ -156,6 +160,7 @@ namespace clawPDF.Bridge
                 }
                 else
                 {
+                    Log.Batch("username---" + username);
                     ProcessExtensions.StartProcessAsUser(username, Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe", Path.GetDirectoryName(Application.ExecutablePath) + @"\" + "clawPDF.exe" + " /INFODATAFILE=" + infFile, Path.GetDirectoryName(Application.ExecutablePath), true);
                 }
             }
@@ -181,12 +186,13 @@ namespace clawPDF.Bridge
             try
             {
                 string[] text = File.ReadLines(sourceFile).ToArray();
-                //Log.Print(text);
+                Log.Print(text);
                 foreach (string line in text)
                 {
                     if (line.Contains("%%For") && !sb.ToString().Contains("Username"))
                     {
-                        _username = line.Replace("%%For:", "").Trim();
+                        _username = line.Replace("%%For:", "").Replace("<", "").Replace(">", "").Trim();
+                        _username = _username.HexToString();
                         sb.AppendLine($"Username={_username}");
                         break;
                     }
@@ -195,16 +201,18 @@ namespace clawPDF.Bridge
                 {
                     if (line.Contains("%%Title"))
                     {
-                        tempName = line.Replace("%%Title: <", "").Replace(">", "").Trim();
+                        tempName = line.Replace("%%Title: <", "").Replace(">", "").Replace("%%Title:", "").Trim();
+                        Log.Print("1-1：" + tempName);
                         tempName = tempName.HexToString();
-                        Log.Print(tempName);
+                        Log.Print("1-2：" + tempName);
                         break;
                     }
                     if (line.Contains("%% Title"))
                     {
-                        tempName = line.Replace("%% Title: <", "").Replace(">", "").Trim();
+                        tempName = line.Replace("%% Title: <", "").Replace(">", "").Replace("%% Title_", "").Trim();
+                        Log.Print("2-1：" + tempName);
                         tempName = tempName.HexToString();
-                        Log.Print(tempName);
+                        Log.Print("2-2：" + tempName);
                         break;
                     }
                 }
@@ -215,6 +223,19 @@ namespace clawPDF.Bridge
                 sb.AppendLine($"TotalPages={totalPages}");
                 File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
                 File.Copy(path, infFile, true);
+                //var envs = Environment.GetEnvironmentVariables();
+                //if (envs["TEMP"] != null && Cmd.OsVersion() == "11")
+                //{
+                //    var tmpPath = envs["TEMP"].ToString();
+                //    if (!File.Exists(Path.Combine(tmpPath, Path.GetFileName(infFile))))
+                //    {
+                //        File.Copy(infFile, Path.Combine(tmpPath, Path.GetFileName(infFile)), true);
+                //    }
+                //    if (!File.Exists(Path.Combine(tmpPath, Path.GetFileName(sourceFile))))
+                //    {
+                //        File.Copy(sourceFile, Path.Combine(tmpPath, Path.GetFileName(sourceFile)), true);
+                //    }
+                //}
                 //throw new Exception("1");
             }
             catch (Exception ex)

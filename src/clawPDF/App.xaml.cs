@@ -101,6 +101,8 @@ namespace clawSoft.clawPDF
 
         private void RunApplication(string[] commandLineArguments)
         {
+            Log.Batch("当前计算机名：" + Environment.UserName);
+            Log.Batch("当前计算机域：" + Environment.UserDomainName);
             Log.Debug("开始启动8"+ commandLineArguments);
             CheckSpoolerRunning();
             Log.Debug("开始启动9");

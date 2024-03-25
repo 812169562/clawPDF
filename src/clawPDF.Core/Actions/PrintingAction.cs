@@ -51,7 +51,7 @@ namespace clawSoft.clawPDF.Core.Actions
                     dialog.Width = 400;
                     dialog.ShowDialog();
                     if (string.IsNullOrEmpty(dialog.PrintName))
-                        throw new Exception("取消打印！");
+                        return new ActionResult();
                     PrintQueue._printer = dialog.PrintName;
                 }
                 foreach (var item in job.OutputFiles)
