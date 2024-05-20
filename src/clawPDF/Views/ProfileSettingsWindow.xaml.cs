@@ -70,14 +70,21 @@ namespace clawSoft.clawPDF.Views
 
         private void AddActions()
         {
-            AddAction(new BackgroundActionControl());
-            AddAction(new CoverActionControl());
-            AddAction(new AttachmentActionControl());
+            if (SystemConfig.Setting.BackgroundActionVisible)
+                AddAction(new BackgroundActionControl());
+            if (SystemConfig.Setting.CoverActionVisible)
+                AddAction(new CoverActionControl());
+            if (SystemConfig.Setting.AttachmentActionVisible)
+                AddAction(new AttachmentActionControl());
             AddAction(new PrintActionControl());
-            AddAction(new EmailClientActionControl());
-            AddAction(new EmailSmtpActionControl());
-            AddAction(new ScriptActionControl());
-            AddAction(new FtpActionControl(_tokenReplacer));
+            if (SystemConfig.Setting.EmailClientActionVisible)
+                AddAction(new EmailClientActionControl());
+            if (SystemConfig.Setting.EmailSmtpActionVisible)
+                AddAction(new EmailSmtpActionControl());
+            if (SystemConfig.Setting.ScriptActionVisible)
+                AddAction(new ScriptActionControl());
+            if (SystemConfig.Setting.FtpActionVisible)
+                AddAction(new FtpActionControl(_tokenReplacer));
             AddAction(new HttpUploadActionControl());
         }
 

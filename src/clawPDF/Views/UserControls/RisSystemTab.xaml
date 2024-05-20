@@ -6,11 +6,38 @@
              xmlns:local="clr-namespace:clawSoft.clawPDF.Views.UserControls"
              mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
-             d:DesignHeight="400" d:DesignWidth="500">
+             d:DesignHeight="400" d:DesignWidth="550">
     <Grid>
-        <StackPanel Margin="20">
-            <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">单机设备管理系统地址：</TextBlock>
-            <TextBox Name="txtRisUrl" Height="24"  />
+        <StackPanel>
+            <HeaderedContentControl Name="SystemControl" Template="{StaticResource HeaderPanelTemplate}" Header="系统配置">
+                <StackPanel>
+                    <TextBlock Margin="0,6" TextWrapping="Wrap">单机设备管理系统地址：</TextBlock>
+                    <TextBox Name="txtRisUrl" Height="25" />
+                    <TextBlock Margin="0,6" TextWrapping="Wrap">打印类型：</TextBlock>
+                    <ComboBox x:Name="cbbPrintWay" ItemsSource="{Binding}" SelectionChanged="cbbPrintWay_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Value}" Tag="{Binding Key}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </HeaderedContentControl>
+            <HeaderedContentControl Margin="0,5,0,0" Name="ButtonControl" Template="{StaticResource HeaderPanelTemplate}" Header="按钮显示控制">
+                <UniformGrid Columns="3" Rows="3" Margin="0,5">
+                    <CheckBox Content="Pdf配置页" x:Name="PdfTabVisible"></CheckBox>
+                    <CheckBox Content="OCR配置页" x:Name="OCRTabVisible"></CheckBox>
+                    <CheckBox Content="动作>加入背景 (仅PDF)" x:Name="BackgroundActionVisible"></CheckBox>
+                    <CheckBox Content="动作>加入封面" x:Name="CoverActionVisible"></CheckBox>
+                    <CheckBox Content="动作>加入附件" x:Name="AttachmentActionVisible"></CheckBox>
+                    <CheckBox Content="动作>开启电子邮件客户端" x:Name="EmailClientActionVisible"></CheckBox>
+                    <CheckBox Content="动作>通过SMTP发送电子邮件" x:Name="EmailSmtpActionVisible"></CheckBox>
+                    <CheckBox Content="动作>执行脚本" x:Name="ScriptActionVisible"></CheckBox>
+                    <CheckBox Content="动作>使用FTP上传" x:Name="FtpActionVisible"></CheckBox>
+                </UniformGrid>
+            </HeaderedContentControl>
         </StackPanel>
     </Grid>
 </UserControl>
