@@ -122,9 +122,9 @@ namespace clawSoft.clawPDF.Views
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            HttpUploadRequest request = new HttpUploadRequest();
-            string sourceFile = @"D:\资料\医学文档资料\合并PDF\合并PDF_13.pdf";
-            request.Upload("http://localhost:8866/ris/hospital/fileUpload/part-upload", sourceFile, "11",null);
+            //HttpUploadRequest request = new HttpUploadRequest();
+            //string sourceFile = @"D:\资料\医学文档资料\合并PDF\合并PDF_13.pdf";
+            //request.Upload("http://localhost:8866/ris/hospital/fileUpload/part-upload", sourceFile, "11",null);
             // 患者信息弹窗
             //BindPatient dialog = new BindPatient();
             //dialog.Height = 460;

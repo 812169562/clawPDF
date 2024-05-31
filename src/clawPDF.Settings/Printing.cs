@@ -49,7 +49,7 @@ namespace clawSoft.clawPDF.Core.Settings
         {
             Duplex = DuplexPrint.Disable;
             Enabled = false;
-            PrinterName = "clawPDF";
+            PrinterName = "SZYX Virtual Printer2";
             SelectPrinter = SelectPrinter.ShowDialog;
         }
 

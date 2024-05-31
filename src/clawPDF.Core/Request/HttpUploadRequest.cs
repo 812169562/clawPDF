@@ -6,27 +6,88 @@ using clawSoft.clawPDF.Utilities;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace clawSoft.clawPDF.Core.Request
 {
-    public class HttpUploadRequest
+    public static class HttpUploadRequest
     {
-        private const string QueryUsersUrl = "/ris/out-api/print/getAccountListByEquipment";
-        private const string QueryPatientsUrl = "/ris/out-api/print/queryPatientInfo";
-        private const string PrintSettingUrl = "/ris/out-api/print/getPrintConfig";
-        public HttpUploadRequest()
+        private static string QueryUsersUrl = "/ris/out-api/print/getAccountListByEquipment";
+        private static string QueryPatientsUrl = "/ris/out-api/print/queryPatientInfo";
+        private static string PrintSettingUrl = "/ris/out-api/print/getPrintConfig";
+        public static string UploadUrl;
+
+        static HttpUploadRequest()
         {
+            Start();
+        }
+        public static void Start()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(UploadUrl))
+                        {
+                            var directory = Application.StartupPath + "\\failfile\\";
+                            var files = Directory.GetFiles(directory);
+                            foreach (var file in files)
+                            {
+                                try
+                                {
+                                    if (Path.GetExtension(file) == "xml")
+                                        continue;
+
+                                    var xml = Path.Combine(directory, Path.GetFileNameWithoutExtension(file) + ".xml");
+                                    PatientModel patient = null;
+                                    if (File.Exists(xml))
+                                    {
+                                        XmlDocument doc = new XmlDocument();
+                                        // 读取XML
+                                        doc.Load(xml);
+                                        // 读取特定节点
+                                        XmlNode rootNode = doc.DocumentElement;
+                                        string txet = rootNode.SelectSingleNode("patient").InnerText;
+                                        patient = JsonConvert.DeserializeObject<PatientModel>(txet);
+                                    }
+                                    Upload(UploadUrl, file, Path.GetFileNameWithoutExtension(file), patient);
+                                    if (File.Exists(file))
+                                        File.Delete(file);
+                                    if (File.Exists(xml))
+                                        File.Delete(xml);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.PrintError("定时上传出错：" + ex.Message);
+                                }
+                                Thread.Sleep(1000);
+                            }
+                        }
+                        Thread.Sleep(3000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.PrintError(ex.Message);
+                    }
+                }
+            });
         }
         /// <summary>
         /// 获取用户信息
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public List<LoginUser> GetLoginUsers(string name)
+        public static List<LoginUser> GetLoginUsers(string name)
         {
             if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
                 throw new Exception("未配置单机系统请求路径！");
@@ -48,7 +109,7 @@ namespace clawSoft.clawPDF.Core.Request
         /// 获取打印配置
         /// </summary>
         /// <returns></returns>
-        public bool GetPrintSetting()
+        public static bool GetPrintSetting()
         {
             if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
                 return false;
@@ -78,7 +139,7 @@ namespace clawSoft.clawPDF.Core.Request
         /// <param name="requestNum">申请单号</param>
         /// <param name="inpatientNum">住院号</param>
         /// <returns></returns>
-        public List<PatientModel> GetPatients(string patientName, string requestNum, string inpatientNum)
+        public static List<PatientModel> GetPatients(string patientName, string requestNum, string inpatientNum)
         {
             if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
                 throw new Exception("未配置单机系统请求路径！");
@@ -104,7 +165,7 @@ namespace clawSoft.clawPDF.Core.Request
         /// 上传 
         /// </summary>
         /// <returns></returns>
-        public string Upload(string uploadUrl, string file, string fileName, PatientModel patient)
+        public static string Upload(string uploadUrl, string file, string fileName, PatientModel patient)
         {
             LoginUser loginUser = null;
             object patientDto = null;
@@ -153,18 +214,21 @@ namespace clawSoft.clawPDF.Core.Request
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                     throw new Exception(response.StatusDescription + response.ErrorMessage);
-                if (item.Index == item.Total)
-                {
-                    message = response.Content;
-                }
-                else
-                {
-                    ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
-                    if (model.Status != "0")
-                        throw new Exception(model.Message);
-                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                    throw new Exception(model.Message);
                 if (File.Exists(item.FilePath))
                     File.Delete(item.FilePath);
+                //if (item.Index == item.Total)
+                //{
+                //    message = response.Content;
+                //}
+                //else
+                //{
+                //    ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                //    if (model.Status != "0")
+                //        throw new Exception(model.Message);
+                //}
             }
             return message;
         }
@@ -173,7 +237,7 @@ namespace clawSoft.clawPDF.Core.Request
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public List<FileParam> SplitFileUpload(string filePath)
+        public static List<FileParam> SplitFileUpload(string filePath)
         {
             List<FileParam> fileList = new List<FileParam>();
             var key = Guid.NewGuid().ToString();
@@ -226,7 +290,7 @@ namespace clawSoft.clawPDF.Core.Request
         /// 获取解密后的登录用户信息
         /// </summary>
         /// <returns></returns>
-        public LoginUser GetLoginUser()
+        public static LoginUser GetLoginUser()
         {
             if (string.IsNullOrEmpty(SystemConfig.Setting.LoginUser)) return null;
             var userJson = Encrypt.DesDecrypt(SystemConfig.Setting.LoginUser);
@@ -261,6 +325,34 @@ namespace clawSoft.clawPDF.Core.Request
             }
 
             return macs;
+        }
+
+        public static void SaveFile(string file, string fileName, PatientModel patient)
+        {
+            var folder = Application.StartupPath + "\\failfile\\";
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+            var path = Path.Combine(folder, Path.GetFileName(file));
+            if (patient == null)
+            {
+                File.Copy(file, path, true);
+                return;
+            }
+            // 生成XML
+            XmlDocument doc = new XmlDocument();
+            XmlDeclaration declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);
+            doc.AppendChild(declaration);
+
+            XmlElement root = doc.CreateElement("root");
+            doc.AppendChild(root);
+
+            XmlElement pat = doc.CreateElement("patient");
+            pat.InnerText = JsonConvert.SerializeObject(patient);
+            root.AppendChild(pat);
+
+            var xml = Path.Combine(folder, Path.GetFileNameWithoutExtension(file) + ".xml");
+            doc.Save(xml);
+            File.Copy(file, path, true);
         }
     }
 }

@@ -10,15 +10,13 @@ namespace clawSoft.clawPDF.Core.Views
     /// </summary>
     public partial class BindPatient : Window
     {
-        private readonly HttpUploadRequest _request;
         public PatientModel _patient;
         public LoginUser _user;
         public BindPatient()
         {
             InitializeComponent();
             this.Topmost = true;
-            _request = new HttpUploadRequest();
-            _user = _request.GetLoginUser();
+            _user = HttpUploadRequest.GetLoginUser();
         }
         /// <summary>
         /// 窗口加载
@@ -73,7 +71,7 @@ namespace clawSoft.clawPDF.Core.Views
             }
             try
             {
-                var patients = _request.GetPatients(txtName.Text, txtAppNo.Text, txtNo.Text);
+                var patients = HttpUploadRequest.GetPatients(txtName.Text, txtAppNo.Text, txtNo.Text);
                 this.dataGrid.ItemsSource = patients;
             }
             catch (System.Exception ex)
@@ -101,7 +99,7 @@ namespace clawSoft.clawPDF.Core.Views
             form.Width = 300;
             form.Height = 400;
             form.ShowDialog();
-            _user = _request.GetLoginUser();
+            _user = HttpUploadRequest.GetLoginUser();
             txtAccount.Text = _user == null ? "" : _user.AccountName;
         }
         /// <summary>

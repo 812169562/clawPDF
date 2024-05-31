@@ -15,12 +15,10 @@ namespace clawSoft.clawPDF.Core.Views
     /// </summary>
     public partial class SelectAccount : Window
     {
-        private readonly HttpUploadRequest _request;
         public SelectAccount()
         {
             InitializeComponent();
             this.Topmost = true;
-            _request = new HttpUploadRequest();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -37,7 +35,7 @@ namespace clawSoft.clawPDF.Core.Views
         {
             try
             {
-                List<LoginUser> list = _request.GetLoginUsers(txtBox.Text);
+                List<LoginUser> list = HttpUploadRequest.GetLoginUsers(txtBox.Text);
                 dataGrid.ItemsSource = list;
             }
             catch (Exception ex)

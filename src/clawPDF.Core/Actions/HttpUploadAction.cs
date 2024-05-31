@@ -110,9 +110,9 @@ namespace clawSoft.clawPDF.Core.Actions
                     return new ActionResult();
                 }
                 // 根据配置弹出窗口绑定患者信息
-                HttpUploadRequest request = new HttpUploadRequest();
+                HttpUploadRequest.UploadUrl = url;
                 PatientModel patient = null;
-                if (request.GetPrintSetting())
+                if (HttpUploadRequest.GetPrintSetting())
                 {
                     BindPatient dialog = new BindPatient();
                     dialog.Height = 460;
@@ -123,9 +123,9 @@ namespace clawSoft.clawPDF.Core.Actions
                 int i = 0;
                 foreach (var file in job.OutputFiles)
                 {
+                    var fileName = job.JobInfo.SourceFiles[i].DocumentTitle;
                     try
                     {
-                        var fileName = job.JobInfo.SourceFiles[i].DocumentTitle;
                         if (!string.IsNullOrEmpty(fileName))
                         {
                             int lastIndex = fileName.LastIndexOf('\\');
@@ -136,33 +136,45 @@ namespace clawSoft.clawPDF.Core.Actions
                         //var key = Date.Number4();
                         //PrintQueue.Add(key, file);
                         //foxitReaderPrintPdf(file);
-                        Log.Print(file);
+                        //Log.Print(file);
                         string mac = GetMacByWMI();
-                        var response = request.Upload(job.Profile.HttpUploader.HttpUploadUrl, file, fileName, patient);
-                        Log.Print(response);
-                        ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response);
-                        string status = model.Status;
-                        if (!status.Equals("0"))
+                        var response = HttpUploadRequest.Upload(job.Profile.HttpUploader.HttpUploadUrl, file, fileName, patient);
+                        Log.Info("上传成功");
+                        //Log.Print(response);
+                        MessageBox.Show(mac + " 上传成功", "提示");
+                        if (File.Exists(file))
                         {
-                            MessageBox.Show(mac + " 上传失败:" + model.Message, "警告");
-                            Log.PrintError(response);
-                        }
-                        else
-                        {
-                            if (job.Profile.HttpUploader.HttpUploadUrl == null || job.Profile.HttpUploader.HttpUploadUrl.Trim().Length == 0)
-                                MessageBox.Show(mac + " 上传成功", "提示");
-                            if (File.Exists(file))
+                            try
                             {
-                                try
-                                {
-                                    File.Delete(file);
-                                }
-                                catch (Exception)
-                                {
-
-                                }
+                                File.Delete(file);
+                            }
+                            catch (Exception)
+                            {
                             }
                         }
+                        //ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response);
+                        //string status = model.Status;
+                        //if (!status.Equals("0"))
+                        //{
+                        //    MessageBox.Show(mac + " 上传失败:" + model.Message, "警告");
+                        //    Log.PrintError(response);
+                        //}
+                        //else
+                        //{
+                        //    if (job.Profile.HttpUploader.HttpUploadUrl == null || job.Profile.HttpUploader.HttpUploadUrl.Trim().Length == 0)
+                        //        MessageBox.Show(mac + " 上传成功", "提示");
+                        //    if (File.Exists(file))
+                        //    {
+                        //        try
+                        //        {
+                        //            File.Delete(file);
+                        //        }
+                        //        catch (Exception)
+                        //        {
+
+                        //        }
+                        //    }
+                        //}
                         #region 注释
                         /*using (var client = new WebClient())
                         {
@@ -222,8 +234,11 @@ namespace clawSoft.clawPDF.Core.Actions
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error("虚拟打印组件执行出错:" + ex.Message);
-                        System.Windows.Forms.MessageBox.Show("虚拟打印组件执行出错:" + ex.Message);
+                        HttpUploadRequest.SaveFile(file, fileName, patient);
+                        Log.PrintError("上传出错:" + ex.Message);
+                        MessageBox.Show("上传出错:" + ex.Message);
+                        //Logger.Error("虚拟打印组件执行出错:" + ex.Message);
+                        //System.Windows.Forms.MessageBox.Show("虚拟打印组件执行出错:" + ex.Message);
                     }
                 }
             }
