@@ -19,6 +19,9 @@ using Application = System.Windows.Forms.Application;
 using System.Net;
 using RestSharp;
 using System.Printing;
+using System.IO;
+using clawSoft.clawPDF.Utilities;
+using clawSoft.clawPDF.Core.Settings;
 
 namespace clawSoft.clawPDF
 {
@@ -31,9 +34,41 @@ namespace clawSoft.clawPDF
             InitializeComponent();
             Application.EnableVisualStyles();
         }
+        string lincense = Path.Combine(Application.StartupPath, "ris.lincense");
+        public string Lincense()
+        {
+            if (!File.Exists(lincense))
+            {
+                return "未授权的软件,请联系管理员提供授权文件！";
+            }
+            var key2 = Encrypt.DesEncryptMD5();
+            var key = File.ReadAllText(lincense);
+            var desKey = Encrypt.DesDecrypt(key);
+            var keys = desKey.Split(',');
+            if (keys.Length == 2)
+            {
+                var date = Convert.ToDateTime(keys[1]);
+                if (date < DateTime.Today)
+                {
+                    return "授权码已过期，请重新授权！";
+                }
+                key2 = Encrypt.DesEncryptMD5(keys[1]);
+            }
 
+            if (key != key2)
+            {
+                return "授权码错误，请重新授权！";
+            }
+            return "";
+        }
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+            var key = Lincense();
+            if (!string.IsNullOrEmpty(key))
+            {
+                MessageBox.Show(key);
+                //return;
+            }
             //var client = new RestClient("https://betainner.51trust.com/ris/hospital/reportDoc/queryPatientInfo");
             //var request = new RestRequest("", Method.POST);
             //client.Proxy = WebRequest.DefaultWebProxy;  // <== Add this line in your code?

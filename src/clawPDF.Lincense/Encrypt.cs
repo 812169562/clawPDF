@@ -5,10 +5,16 @@ using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace clawSoft.clawPDF.Utilities
+namespace clawPDF.Lincense
 {
+    /// <summary>
+    /// 加密操作
+    /// 说明：
+    /// 1. AES加密整理自支付宝SDK
+    /// </summary>
     public static class Encrypt
     {
+
         #region Md5加密
 
         /// <summary>
@@ -69,10 +75,15 @@ namespace clawSoft.clawPDF.Utilities
         {
             return Md5(value, encoding, null, null);
         }
+
+        #endregion
+
+        #region DES加密
+
         /// <summary>
         /// DES加密
         /// </summary>
-        /// <param name="value">待加密的值</param>
+        /// <param name="validityDate">有效期</param>
         public static string DesEncryptMD5(string validityDate)
         {
             if (string.IsNullOrEmpty(validityDate))
@@ -83,10 +94,14 @@ namespace clawSoft.clawPDF.Utilities
         /// DES加密
         /// </summary>
         /// <param name="value">待加密的值</param>
-        public static string DesEncryptMD5()
+        /// <param name="validityDate">有效期</param>
+        public static string DesEncryptMD5(string value, string validityDate)
         {
-            return DesEncrypt(Compter().Md5By32(), DesKey);
+            if (string.IsNullOrEmpty(validityDate))
+                validityDate = DateTime.Now.AddDays(10).AddYears(1).ToString("yyyy-MM-dd");
+            return DesEncrypt($"{value},{validityDate}", DesKey);
         }
+
 
         public static string Compter()
         {
@@ -138,10 +153,6 @@ namespace clawSoft.clawPDF.Utilities
 
             return macs;
         }
-        #endregion
-
-        #region DES加密
-
         /// <summary>
         /// DES密钥,24位字符串
         /// </summary>

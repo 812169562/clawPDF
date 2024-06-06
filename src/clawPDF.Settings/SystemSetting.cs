@@ -27,5 +27,33 @@ namespace clawSoft.clawPDF.Core.Settings
         /// OCR配置页是否可见
         /// </summary>
         public bool OCRTabVisible { get; set; }
+        /// <summary>
+        /// 加入背景 (仅PDF)
+        /// </summary>
+        public bool BackgroundActionVisible { get; set; }
+        /// <summary>
+        /// 加入封面
+        /// </summary>
+        public bool CoverActionVisible { get; set; }
+        /// <summary>
+        /// 加入附件
+        /// </summary>
+        public bool AttachmentActionVisible { get; set; }
+        /// <summary>
+        /// 开启电子邮件客户端
+        /// </summary>
+        public bool EmailClientActionVisible { get; set; }
+        /// <summary>
+        /// 通过SMTP发送电子邮件
+        /// </summary>
+        public bool EmailSmtpActionVisible { get; set; }
+        /// <summary>
+        /// 执行脚本
+        /// </summary>
+        public bool ScriptActionVisible { get; set; }
+        /// <summary>
+        /// 使用FTP上传
+        /// </summary>
+        public bool FtpActionVisible { get; set; }
     }
 }

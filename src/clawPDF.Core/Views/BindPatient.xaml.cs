@@ -10,15 +10,13 @@ namespace clawSoft.clawPDF.Core.Views
     /// </summary>
     public partial class BindPatient : Window
     {
-        private readonly HttpUploadRequest _request;
         public PatientModel _patient;
         public LoginUser _user;
         public BindPatient()
         {
             InitializeComponent();
             this.Topmost = true;
-            _request = new HttpUploadRequest();
-            _user = _request.GetLoginUser();
+            _user = HttpUploadRequest.GetLoginUser();
         }
         /// <summary>
         /// 窗口加载
@@ -27,6 +25,7 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //ImageEditor.FilePath = "D:\\szyx\\test-pdf\\00001\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
             if (_user == null)
             {
                 MessageBox.Show("请选择医师账号！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
@@ -73,7 +72,7 @@ namespace clawSoft.clawPDF.Core.Views
             }
             try
             {
-                var patients = _request.GetPatients(txtName.Text, txtAppNo.Text, txtNo.Text);
+                var patients = HttpUploadRequest.GetPatients(txtName.Text, txtAppNo.Text, txtNo.Text);
                 this.dataGrid.ItemsSource = patients;
             }
             catch (System.Exception ex)
@@ -101,7 +100,7 @@ namespace clawSoft.clawPDF.Core.Views
             form.Width = 300;
             form.Height = 400;
             form.ShowDialog();
-            _user = _request.GetLoginUser();
+            _user = HttpUploadRequest.GetLoginUser();
             txtAccount.Text = _user == null ? "" : _user.AccountName;
         }
         /// <summary>

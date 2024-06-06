@@ -54,7 +54,16 @@ namespace clawSoft.clawPDF.Views
         {
             SystemSetting setting = SystemConfig.Setting;
             setting.RisUrl = RisSystemTabUserControl.txtRisUrl.Text;
-            //SystemSetting setting = new SystemSetting { RisUrl = RisSystemTabUserControl.txtRisUrl.Text };
+            setting.PrintWay = RisSystemTabUserControl._printWay;
+            setting.PdfTabVisible = RisSystemTabUserControl.PdfTabVisible.IsChecked ?? false;
+            setting.OCRTabVisible = RisSystemTabUserControl.OCRTabVisible.IsChecked ?? false;
+            setting.ScriptActionVisible = RisSystemTabUserControl.ScriptActionVisible.IsChecked ?? false;
+            setting.AttachmentActionVisible = RisSystemTabUserControl.AttachmentActionVisible.IsChecked ?? false;
+            setting.BackgroundActionVisible = RisSystemTabUserControl.BackgroundActionVisible.IsChecked ?? false;
+            setting.CoverActionVisible = RisSystemTabUserControl.CoverActionVisible.IsChecked ?? false;
+            setting.EmailClientActionVisible = RisSystemTabUserControl.FtpActionVisible.IsChecked ?? false;
+            setting.EmailSmtpActionVisible = RisSystemTabUserControl.FtpActionVisible.IsChecked ?? false;
+            setting.FtpActionVisible = RisSystemTabUserControl.FtpActionVisible.IsChecked ?? false;
             SystemConfig.Save(setting);
             DialogResult = true;
         }
