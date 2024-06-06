@@ -15,10 +15,11 @@ namespace clawPDF.Lincense
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (File.Exists("com.lincense"))
-                File.Delete("com.lincense");
-            File.WriteAllText("com.lincense", Encrypt.Compter().Md5By32());
-            OpenFolder(Application.StartupPath);
+            //if (File.Exists("com.lincense"))
+            //    File.Delete("com.lincense");
+            //File.WriteAllText("com.lincense", Encrypt.Compter().Md5By32());
+            //OpenFolder(Application.StartupPath);
+            richTextBox1.Text = Encrypt.Compter().Md5By32();
         }
         public void OpenFolder(string folder)
         {

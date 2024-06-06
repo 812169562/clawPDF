@@ -16,9 +16,10 @@ namespace clawPDF.Lincense
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            dateTimePicker1.MinDate = DateTime.Today;
         }
 
-        string lincense = "key.lincense";
+        string lincense = "ris.lincense";
         public string val = $"{DateTime.Now.Year}abc@123//..";
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
@@ -33,27 +34,27 @@ namespace clawPDF.Lincense
                 MessageBox.Show("请输入正确的密码！");
                 return;
             }
-            if (string.IsNullOrEmpty(file))
+            if (string.IsNullOrEmpty(richTextBox1.Text))
             {
-                MessageBox.Show("请选择授权文件！");
+                MessageBox.Show("请输入授权内容！");
                 return;
             }
             if (File.Exists(lincense))
                 File.Delete(lincense);
-            var key = File.ReadAllText(file);
-            File.WriteAllText(lincense, Encrypt.DesEncryptMD5(key, dateTimePicker1.Text.Trim()));
+            // var key = File.ReadAllText(file);
+            File.WriteAllText(lincense, Encrypt.DesEncryptMD5(richTextBox1.Text, dateTimePicker1.Text.Trim()));
             MessageBox.Show("授权码生成成功！");
             this.Close();
         }
-        string file;
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            var ok = openFileDialog1.ShowDialog();
-            if (ok == DialogResult.OK)
-            {
-                file = openFileDialog1.FileName;
-                label3.Text = Path.GetFileName(file);
-            }
-        }
+        // string file;
+        //private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        //{
+        //    var ok = openFileDialog1.ShowDialog();
+        //    if (ok == DialogResult.OK)
+        //    {
+        //        file = openFileDialog1.FileName;
+        //        label3.Text = Path.GetFileName(file);
+        //    }
+        //}
     }
 }

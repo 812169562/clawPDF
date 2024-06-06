@@ -200,6 +200,7 @@ namespace clawSoft.clawPDF.Core.Request
                 request.AddHeader("Content-Type", "application/json");
                 //request.AddParameter("JSESSIONID_RIS", "sqOCPPJD171jbE9NPtp1TLstty96MGfHsvE_JZ-P", ParameterType.Cookie);
                 var mac = GetMacByWMI();
+                // authorizationStatus 0:未授权 1:已授权 2：已失效
                 var body = new
                 {
                     Mac = mac,
@@ -208,7 +209,8 @@ namespace clawSoft.clawPDF.Core.Request
                     FileName = fileName,
                     BandPatientDto = patientDto,
                     LoginCache = loginUser,
-                    FileParam = item
+                    FileParam = item,
+                    AuthorizationStatus = SystemConfig.AuthorizationStatus
                 };
                 request.AddJsonBody(body);
                 IRestResponse response = client.Execute(request);

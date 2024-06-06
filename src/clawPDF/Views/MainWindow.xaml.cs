@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Interop;
 using clawSoft.clawPDF.Core.Request;
+using clawSoft.clawPDF.Core.Views;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
 using clawSoft.clawPDF.Shared.Helper.Logging;
@@ -127,6 +128,8 @@ namespace clawSoft.clawPDF.Views
             //request.Upload("http://localhost:8866/ris/hospital/fileUpload/part-upload", sourceFile, "11",null);
             // 患者信息弹窗
             //BindPatient dialog = new BindPatient();
+            //dialog.WindowState = WindowState.Maximized;
+            //dialog.ResizeMode = ResizeMode.NoResize;
             //dialog.Height = 460;
             //dialog.Width = 800;
             //dialog.ShowDialog();

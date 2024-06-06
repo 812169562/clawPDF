@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.6.33513.286
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34407.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clawPDF", "src\clawPDF\clawPDF.csproj", "{28A624EA-10C1-4178-BB3A-6A2BB6AA159D}"
 EndProject
@@ -49,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{9B28089E-175F-4B23-AF8C-CFFB082D4355}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clawPDF.Lincense", "src\clawPDF.Lincense\clawPDF.Lincense.csproj", "{27F60C65-ABCA-43AB-B376-7B171042885C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -361,6 +363,22 @@ Global
 		{9B28089E-175F-4B23-AF8C-CFFB082D4355}.Release|Win32.Build.0 = Release|Any CPU
 		{9B28089E-175F-4B23-AF8C-CFFB082D4355}.Release|x64.ActiveCfg = Release|Any CPU
 		{9B28089E-175F-4B23-AF8C-CFFB082D4355}.Release|x64.Build.0 = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|Win32.Build.0 = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Debug|x64.Build.0 = Debug|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|ARM64.Build.0 = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|Win32.Build.0 = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|x64.ActiveCfg = Release|Any CPU
+		{27F60C65-ABCA-43AB-B376-7B171042885C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -384,6 +402,7 @@ Global
 		{90E35422-BDAA-4AA7-94CC-43616907B5F4} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
 		{AF1CA416-657F-4811-A0B1-9989FC790D60} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
 		{9B28089E-175F-4B23-AF8C-CFFB082D4355} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
+		{27F60C65-ABCA-43AB-B376-7B171042885C} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1EDC79-B996-4708-828F-773DA0A7AD09}
