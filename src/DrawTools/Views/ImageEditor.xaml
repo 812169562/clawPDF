@@ -1,0 +1,146 @@
+﻿<UserControl x:Class="DrawTools.Views.ImageEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:attach="clr-namespace:DrawTools.Attach"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:local="clr-namespace:DrawTools"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="Page.Styles.Button.Base" TargetType="{x:Type ButtonBase}">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="#333" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="Padding" Value="5 3" />
+                <Setter Property="Margin" Value="3 0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Cursor" Value="Hand" />
+            </Style>
+            <Style x:Key="Page.Styles.DrawTools" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Page.Styles.Button.Base}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <StackPanel>
+                                    <Image x:Name="img" Width="20" Height="20" Source="{TemplateBinding attach:IconElement.Image}" />
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 4 0 0" />
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.9" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="#1A87FE" />
+                                    <Setter TargetName="img" Property="Source" Value="{Binding Path=(attach:IconElement.ImageSelected),RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Page.Styles.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource Page.Styles.Button.Base}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <StackPanel>
+                                    <Image x:Name="img" Width="20" Height="20" Source="{TemplateBinding attach:IconElement.Image}" />
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 4 0 0" />
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.9" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Foreground" Value="#1A87FE" />
+                                    <Setter TargetName="img" Property="Source" Value="{Binding Path=(attach:IconElement.ImageSelected),RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Page.Styles.Button.Color" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Page.Styles.Button.Base}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                                <StackPanel>
+                                    <Border Width="20" Height="20" BorderThickness="1" BorderBrush="Black" Background="White" Padding="1" CornerRadius="2">
+                                        <Rectangle Fill="{TemplateBinding Foreground}" RadiusX="2" RadiusY="2" />
+                                    </Border>
+                                    <TextBlock Foreground="#333" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 4 0 0">颜色</TextBlock>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.9" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar x:Name="toolbar" ToolBarTray.IsLocked="True" Background="Transparent" Height="60" Margin="0">
+                <Button x:Name="btn_save" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/save.png" attach:IconElement.ImageSelected="../Images/save.png" Click="btn_save_Click">保存图像</Button>
+                <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/pointer1.png" attach:IconElement.ImageSelected="../Images/pointer2.png" Tag="Pointer" IsChecked="True">拾取</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/pen1.png" attach:IconElement.ImageSelected="../Images/pen2.png" Tag="Pen">画笔</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/text1.png" attach:IconElement.ImageSelected="../Images/text2.png" Tag="Text">文本</RadioButton>
+                <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/line1.png" attach:IconElement.ImageSelected="../Images/line2.png" Tag="Line">直线</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/arrow1.png" attach:IconElement.ImageSelected="../Images/arrow2.png" Tag="Arrow">箭头</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/rectangle1.png" attach:IconElement.ImageSelected="../Images/rectangle2.png" Tag="Rectangle">矩形</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/ellipse1.png" attach:IconElement.ImageSelected="../Images/ellipse2.png" Tag="Ellipse">椭圆</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/polyline1.png" attach:IconElement.ImageSelected="../Images/polyline2.png" Tag="Polyline">折线</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/curve1.png" attach:IconElement.ImageSelected="../Images/curve2.png" Tag="Curve">曲线</RadioButton>
+                <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
+                <Button x:Name="first" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/left1.png" attach:IconElement.ImageSelected="../Images/left1.png" Click="first_Click">首页</Button>
+                <Button x:Name="before" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/left.png" attach:IconElement.ImageSelected="../Images/left.png" Click="before_Click">上一页</Button>
+                <StackPanel Margin="6" Orientation="Horizontal">
+                    <TextBox x:Name="currentPage" FontSize="12" Text="1" Width="30" Height="15" TextChanged="currentPage_TextChanged"/>
+                    <TextBlock x:Name="totalPages" FontSize="12" Foreground="#333" Text="/ 1" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+                <Button x:Name="after" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/right.png" attach:IconElement.ImageSelected="../Images/right.png" Click="after_Click">下一页</Button>
+                <Button x:Name="last" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/right1.png" attach:IconElement.ImageSelected="../Images/right1.png" Click="last_Click">末页</Button>
+                <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
+                <Button x:Name="btn_undo" IsEnabled="False" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/undo.png" attach:IconElement.ImageSelected="../Images/undo1.png" Click="Undo_Click" Opacity="0.7">撤销</Button>
+                <Button x:Name="btn_redo" IsEnabled="False" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/redo.png" attach:IconElement.ImageSelected="../Images/redo1.png" Click="Redo_Click_1" Opacity="0.7">重做</Button>
+                <Button x:Name="btn_clear" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/clear1.png" attach:IconElement.ImageSelected="../Images/clear2.png" Click="btn_clear_Click">清除图像</Button>
+                <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
+                <ToggleButton x:Name="btn_color" Style="{StaticResource Page.Styles.Button.Color}" Foreground="{Binding Brush,ElementName=drawCanvas}" />
+                <Popup PlacementTarget="{Binding ElementName=btn_color}" Placement="Bottom" IsOpen="{Binding IsChecked,ElementName=btn_color}">
+                    <hc:ColorPicker x:Name="color_picker" />
+                </Popup>
+                <StackPanel Margin="16 6">
+                    <hc:NumericUpDown FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding StrokeThickness,ElementName=drawCanvas}" />
+                    <TextBlock FontSize="10" Foreground="#333" Margin="0 4 0 0" HorizontalAlignment="Center">画刷粗细</TextBlock>
+                </StackPanel>
+                <StackPanel Margin="16 6">
+                    <hc:NumericUpDown FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding FontSize,ElementName=drawCanvas}" />
+                    <TextBlock FontSize="10" Foreground="#333" Margin="0 4 0 0" HorizontalAlignment="Center">文本大小</TextBlock>
+                </StackPanel>
+            </ToolBar>
+        </ToolBarTray>
+        <local:DrawingCanvasViewer x:Name="drawViewer" BackgroundImage="../Images/img1.jpg">
+            <local:DrawingCanvas x:Name="drawCanvas" Background="Transparent" Zoom="{Binding Zoom,ElementName=drawViewer}" />
+        </local:DrawingCanvasViewer>
+    </DockPanel>
+</UserControl>

@@ -127,12 +127,12 @@ namespace clawSoft.clawPDF.Views
             //string sourceFile = @"D:\资料\医学文档资料\合并PDF\合并PDF_13.pdf";
             //request.Upload("http://localhost:8866/ris/hospital/fileUpload/part-upload", sourceFile, "11",null);
             // 患者信息弹窗
-            //BindPatient dialog = new BindPatient();
+            SelectAccount1 dialog = new SelectAccount1();
             //dialog.WindowState = WindowState.Maximized;
             //dialog.ResizeMode = ResizeMode.NoResize;
-            //dialog.Height = 460;
-            //dialog.Width = 800;
-            //dialog.ShowDialog();
+            dialog.Height = 800;
+            dialog.Width = 1600;
+            dialog.ShowDialog();
         }
     }
 }
