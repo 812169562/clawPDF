@@ -27,6 +27,7 @@ namespace DrawTools
 
         public static Cursor CreateBmpCursor(Uri uri, UInt32 xHotSpot, UInt32 yHotSpot)
         {
+            uri = new Uri("pack://application:,,,/DrawTools;component/Images/Cursor/hand.png");
             var sri = Application.GetResourceStream(uri);
 
             using (var bmp = new Bitmap(sri.Stream))
@@ -56,7 +57,7 @@ namespace DrawTools
             }
         }
 
-        private static Lazy<Cursor> hand = new Lazy<Cursor>(() => { return CreateBmpCursor(new Uri("Images/Cursor/hand.png", UriKind.Relative), 12, 12); });
+        private static Lazy<Cursor> hand = new Lazy<Cursor>(() => { return CreateBmpCursor(new Uri("/Images/Cursor/hand.png", UriKind.Relative), 12, 12); });
         /// <summary>
         /// 拖动
         /// </summary>

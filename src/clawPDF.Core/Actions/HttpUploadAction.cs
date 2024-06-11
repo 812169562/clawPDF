@@ -115,8 +115,9 @@ namespace clawSoft.clawPDF.Core.Actions
                 if (HttpUploadRequest.GetPrintSetting())
                 {
                     BindPatient dialog = new BindPatient();
-                    dialog.Height = 460;
-                    dialog.Width = 800;
+                    //dialog.Height = 460;
+                    //dialog.Width = 800;
+                    dialog.file = job.OutputFiles[0];
                     dialog.ShowDialog();
                     patient = dialog._patient;
                 }
@@ -146,10 +147,11 @@ namespace clawSoft.clawPDF.Core.Actions
                         {
                             try
                             {
-                                File.Delete(file);
+                                ClearImage(file);
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
+                                Log.PrintError("删除文件错误：" + ex.Message);
                             }
                         }
                         //ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response);
@@ -243,6 +245,20 @@ namespace clawSoft.clawPDF.Core.Actions
                 }
             }
             return new ActionResult();
+        }
+
+        public void ClearImage(string file)
+        {
+            var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
+            var files = Directory.GetFiles(directory);
+            foreach (var item in files)
+            {
+                if (File.Exists(item))
+                    File.Delete(item);
+            }
+            if (Directory.Exists(directory))
+                Directory.Delete(directory);
+            File.Delete(file);
         }
 
         private bool foxitReaderPrintPdf(string url)

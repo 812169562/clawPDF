@@ -13,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/DrawTools;component/Themes/generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="Page.Styles.Button.Base" TargetType="{x:Type ButtonBase}">
                 <Setter Property="Background" Value="Transparent" />
@@ -139,7 +140,7 @@
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
-        <local:DrawingCanvasViewer x:Name="drawViewer" BackgroundImage="../Images/img1.jpg">
+        <local:DrawingCanvasViewer x:Name="drawViewer" BackgroundImage="../Images/img1.jpg" Zoom="1">
             <local:DrawingCanvas x:Name="drawCanvas" Background="Transparent" Zoom="{Binding Zoom,ElementName=drawViewer}" />
         </local:DrawingCanvasViewer>
     </DockPanel>

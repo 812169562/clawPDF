@@ -1,5 +1,9 @@
 ﻿using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
+using DrawTools.Utils;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,6 +14,7 @@ namespace clawSoft.clawPDF.Core.Views
     /// </summary>
     public partial class BindPatient : Window
     {
+        public string file;
         public PatientModel _patient;
         public LoginUser _user;
         public BindPatient()
@@ -25,7 +30,7 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ImageEditor.FilePath = "D:\\szyx\\test-pdf\\00001\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
+            ImageEditor.FilePath = file;// "D:\\szyx\\test-pdf\\00001\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
             if (_user == null)
             {
                 MessageBox.Show("请选择医师账号！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
@@ -41,6 +46,7 @@ namespace clawSoft.clawPDF.Core.Views
         private void clear1_Click(object sender, RoutedEventArgs e)
         {
             _patient = null;
+            ImageToPdf();
             this.Close();
         }
         /// <summary>
@@ -56,6 +62,7 @@ namespace clawSoft.clawPDF.Core.Views
                 return;
             }
             _patient = (PatientModel)this.dataGrid.SelectedItem;
+            ImageToPdf();
             this.Close();
         }
         /// <summary>
@@ -129,6 +136,24 @@ namespace clawSoft.clawPDF.Core.Views
             }
             _patient = (PatientModel)this.dataGrid.SelectedItem;
             this.Close();
+        }
+
+        public void ImageToPdf()
+        {
+            var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
+            var files = Directory.GetFiles(directory);
+            List<string> list = new List<string>();
+            foreach (var item in files)
+            {
+                list.Add(item);
+            }
+            var update = list.Where(t => t.Contains("_update")).ToList();
+            foreach (var item in update)
+            {
+                var name = item.Replace("_update", "");
+                list.Remove(name);
+            }
+            ImageHelper.ToPDF(list, file);
         }
     }
 }

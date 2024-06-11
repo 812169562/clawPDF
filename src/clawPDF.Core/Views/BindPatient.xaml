@@ -6,7 +6,7 @@
              xmlns:tools="clr-namespace:DrawTools.Views;assembly=DrawTools"
              xmlns:local="clr-namespace:clawSoft.clawPDF.Core.Views"
              mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-             d:DesignHeight="450" d:DesignWidth="800" ResizeMode="NoResize"
+             d:DesignHeight="450" d:DesignWidth="1600" ResizeMode="NoResize"
         Loaded="Window_Loaded" Title="单机设备文档管理系统采集引擎">
     <Window.Resources>
         <Style TargetType="DataGridRow" x:Key="patDataGridRow">
@@ -32,8 +32,8 @@
     </Window.Resources>
     <Grid Margin="10,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="14*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>

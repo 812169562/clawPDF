@@ -39,9 +39,15 @@ namespace DrawTools.Views
             ImageHelper.ToImages(file);
             var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
             var files = Directory.GetFiles(directory);
-
-            images.AddRange(files);
-            this.totalPages.Text = "/ " + files.Count();
+            foreach (var item in files)
+            {
+                if (!item.Contains("_update"))
+                {
+                    images.Add(item);
+                }
+            }
+            //images.AddRange(files);
+            this.totalPages.Text = "/ " + images.Count();
             currentIndex = 0;
             LoadImage();
         }
@@ -203,7 +209,6 @@ namespace DrawTools.Views
         private void btn_save_Click(object sender, RoutedEventArgs e)
         {
             var backgroundImage = this.drawViewer.BackgroundImage;
-
             var frame = this.drawCanvas.ToBitmapFrame(backgroundImage);
 
             if (frame == null)
