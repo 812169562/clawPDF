@@ -244,6 +244,8 @@ namespace DrawTools
             this.CanEdit = true;
 
             textBox = null;
+
+            this.drawingCanvas.DrawingToolType = DrawToolType.Pointer;
         }
 
         #endregion

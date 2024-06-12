@@ -44,8 +44,8 @@ namespace clawSoft.clawPDF.Startup
                 if (validFiles.Count > 0)
                     return new DragAndDropStart(commandLineArgs);
             }
-            Log.Print("commandLineArgs");
-            Log.Print(commandLineArgs);
+            //Log.Print("commandLineArgs");
+            //Log.Print(commandLineArgs);
 
             var commandLineParser = new CommandLineParser(commandLineArgs);
 

@@ -69,7 +69,7 @@ namespace DrawTools
 
         static DrawingCanvasViewer()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DrawingCanvasViewer), new FrameworkPropertyMetadata(typeof(DrawingCanvasViewer)));
+            //DefaultStyleKeyProperty.OverrideMetadata(typeof(DrawingCanvasViewer), new FrameworkPropertyMetadata(typeof(DrawingCanvasViewer)));
         }
 
         public DrawingCanvasViewer()

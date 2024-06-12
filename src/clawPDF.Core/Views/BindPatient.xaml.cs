@@ -20,7 +20,10 @@ namespace clawSoft.clawPDF.Core.Views
         public BindPatient()
         {
             InitializeComponent();
-            this.Topmost = true;
+            //this.Topmost = true;
+            this.WindowState = WindowState.Maximized;
+            this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
+            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             _user = HttpUploadRequest.GetLoginUser();
         }
         /// <summary>
@@ -46,7 +49,7 @@ namespace clawSoft.clawPDF.Core.Views
         private void clear1_Click(object sender, RoutedEventArgs e)
         {
             _patient = null;
-            ImageToPdf();
+            ImageEditor.SaveFile();
             this.Close();
         }
         /// <summary>
@@ -62,7 +65,7 @@ namespace clawSoft.clawPDF.Core.Views
                 return;
             }
             _patient = (PatientModel)this.dataGrid.SelectedItem;
-            ImageToPdf();
+            ImageEditor.SaveFile();
             this.Close();
         }
         /// <summary>
@@ -135,25 +138,8 @@ namespace clawSoft.clawPDF.Core.Views
                 return;
             }
             _patient = (PatientModel)this.dataGrid.SelectedItem;
+            ImageEditor.SaveFile();
             this.Close();
-        }
-
-        public void ImageToPdf()
-        {
-            var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
-            var files = Directory.GetFiles(directory);
-            List<string> list = new List<string>();
-            foreach (var item in files)
-            {
-                list.Add(item);
-            }
-            var update = list.Where(t => t.Contains("_update")).ToList();
-            foreach (var item in update)
-            {
-                var name = item.Replace("_update", "");
-                list.Remove(name);
-            }
-            ImageHelper.ToPDF(list, file);
         }
     }
 }

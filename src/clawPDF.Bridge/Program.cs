@@ -197,17 +197,19 @@ namespace clawPDF.Bridge
                     {
                         tempName = line.Replace("%%Title: <", "").Replace(">", "").Trim();
                         tempName = tempName.HexToString();
-                        Log.Print(tempName);
+                        //Log.Print(tempName);
                         break;
                     }
                     if (line.Contains("%% Title"))
                     {
                         tempName = line.Replace("%% Title: <", "").Replace(">", "").Trim();
                         tempName = tempName.HexToString();
-                        Log.Print(tempName);
+                        //Log.Print(tempName);
                         break;
                     }
                 }
+                if (!string.IsNullOrEmpty(tempName) && tempName.Length > 200)
+                    tempName = tempName.Substring(0, 200);
                 sb.AppendLine($"DocumentTitle={tempName}");
                 //InfHelper.WriteString("0", "DocumentTitle", tempName, path);
                 var totalPages = text[text.Length - 4].Replace("%%Pages: ", "").Trim();

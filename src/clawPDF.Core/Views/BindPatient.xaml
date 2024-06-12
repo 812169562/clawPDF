@@ -32,15 +32,16 @@
     </Window.Resources>
     <Grid Margin="10,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="11*"/>
-            <ColumnDefinition Width="14*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0,0,10,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -95,14 +96,14 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
+        <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="ok" Content="绑定" Margin="10,0,0,0.4" MinWidth="70" Click="ok_Click" Height="18" VerticalAlignment="Bottom" />
+                <Button x:Name="ok" Content="绑定" Margin="10,0,0,0.4" MinWidth="70" Click="ok_Click" Height="30" VerticalAlignment="Bottom" />
                 <Button x:Name="clear1" Content="跳过" Margin="10,0,0,0" MinWidth="70" Click="clear1_Click" Background="White" />
             </StackPanel>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="100" Margin="992,73.4,-318.4,0" Grid.Row="3" VerticalAlignment="Top" Width="100"/>
-
-        <tools:ImageEditor Grid.Column="1" Grid.RowSpan="5" x:Name="ImageEditor"></tools:ImageEditor>
+        <Border BorderThickness="1" BorderBrush="Gainsboro" Grid.Column="1" Grid.RowSpan="5" Width="1"></Border>
+        <tools:ImageEditor Grid.Column="2" Grid.RowSpan="5" x:Name="ImageEditor"></tools:ImageEditor>
     </Grid>
 </Window>

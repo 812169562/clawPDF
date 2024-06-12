@@ -130,7 +130,7 @@ namespace clawSoft.clawPDF.Views
             BindPatient dialog = new BindPatient();
             //dialog.WindowState = WindowState.Maximized;
             //dialog.ResizeMode = ResizeMode.NoResize;
-            dialog.file = "D:\\szyx\\test-pdf\\00001\\dc3395f7278c4a56b52ff4291594184a.pdf";
+            dialog.file = "D:\\szyx\\test-pdf\\00001\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
             //dialog.Height = 800;
             //dialog.Width = 1600;
             dialog.ShowDialog();

@@ -41,6 +41,8 @@ namespace DrawTools.Utils
             using (var fs = new FileStream(filepath, FileMode.Create))
             {
                 encoder.Save(fs);
+                fs?.Dispose();
+                fs?.Close();
             }
         }
 

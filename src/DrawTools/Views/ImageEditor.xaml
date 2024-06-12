@@ -102,16 +102,16 @@
             <ToolBar x:Name="toolbar" ToolBarTray.IsLocked="True" Background="Transparent" Height="60" Margin="0">
                 <Button x:Name="btn_save" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/save.png" attach:IconElement.ImageSelected="../Images/save.png" Click="btn_save_Click">保存图像</Button>
                 <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
-                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/pointer1.png" attach:IconElement.ImageSelected="../Images/pointer2.png" Tag="Pointer" IsChecked="True">拾取</RadioButton>
+                <RadioButton x:Name="Pointer" Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/pointer1.png" attach:IconElement.ImageSelected="../Images/pointer2.png" Tag="Pointer" IsChecked="True">拾取</RadioButton>
                 <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/pen1.png" attach:IconElement.ImageSelected="../Images/pen2.png" Tag="Pen">画笔</RadioButton>
                 <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/text1.png" attach:IconElement.ImageSelected="../Images/text2.png" Tag="Text">文本</RadioButton>
                 <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
                 <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/line1.png" attach:IconElement.ImageSelected="../Images/line2.png" Tag="Line">直线</RadioButton>
                 <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/arrow1.png" attach:IconElement.ImageSelected="../Images/arrow2.png" Tag="Arrow">箭头</RadioButton>
                 <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/rectangle1.png" attach:IconElement.ImageSelected="../Images/rectangle2.png" Tag="Rectangle">矩形</RadioButton>
-                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/ellipse1.png" attach:IconElement.ImageSelected="../Images/ellipse2.png" Tag="Ellipse">椭圆</RadioButton>
+                <!--<RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/ellipse1.png" attach:IconElement.ImageSelected="../Images/ellipse2.png" Tag="Ellipse">椭圆</RadioButton>
                 <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/polyline1.png" attach:IconElement.ImageSelected="../Images/polyline2.png" Tag="Polyline">折线</RadioButton>
-                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/curve1.png" attach:IconElement.ImageSelected="../Images/curve2.png" Tag="Curve">曲线</RadioButton>
+                <RadioButton Style="{StaticResource Page.Styles.DrawTools}" attach:IconElement.Image="../Images/curve1.png" attach:IconElement.ImageSelected="../Images/curve2.png" Tag="Curve">曲线</RadioButton>-->
                 <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
                 <Button x:Name="first" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/left1.png" attach:IconElement.ImageSelected="../Images/left1.png" Click="first_Click">首页</Button>
                 <Button x:Name="before" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/left.png" attach:IconElement.ImageSelected="../Images/left.png" Click="before_Click">上一页</Button>
