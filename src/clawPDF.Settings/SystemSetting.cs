@@ -55,5 +55,9 @@ namespace clawSoft.clawPDF.Core.Settings
         /// 使用FTP上传
         /// </summary>
         public bool FtpActionVisible { get; set; }
+        /// <summary>
+        /// 图像文字模板
+        /// </summary>
+        public string TextTemplate { get; set; }
     }
 }

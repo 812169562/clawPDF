@@ -1,4 +1,5 @@
-﻿using PdfiumViewer;
+﻿using Newtonsoft.Json;
+using PdfiumViewer;
 using PdfSharp;
 using PdfSharp.Drawing;
 using System;

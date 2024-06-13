@@ -117,7 +117,12 @@
       <DependentUpon>ImageEditor.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\clawPDF.Settings\clawPDF.Settings.csproj">
+      <Project>{94936199-C9C7-4A5F-A58E-6123158E84F3}</Project>
+      <Name>clawPDF.Settings</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\angle1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

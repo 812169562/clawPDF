@@ -32,7 +32,7 @@ namespace clawSoft.clawPDF.Views.UserControls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.txtRisUrl.Text = SystemConfig.Setting.RisUrl;
-            List<KeyValue> keys = new List<KeyValue>(); 
+            List<KeyValue> keys = new List<KeyValue>();
             keys.Add(new KeyValue { Key = 1, Value = "印刷体打印" });
             keys.Add(new KeyValue { Key = 2, Value = "PDF打印" });
             cbbPrintWay.ItemsSource = keys;
@@ -41,7 +41,7 @@ namespace clawSoft.clawPDF.Views.UserControls
             else
                 cbbPrintWay.SelectedItem = keys.FirstOrDefault(t => t.Key == SystemConfig.Setting.PrintWay);
             PdfTabVisible.IsChecked = SystemConfig.Setting.PdfTabVisible;
-            OCRTabVisible.IsChecked = SystemConfig.Setting.OCRTabVisible;
+            //OCRTabVisible.IsChecked = SystemConfig.Setting.OCRTabVisible;
             ScriptActionVisible.IsChecked = SystemConfig.Setting.ScriptActionVisible;
             AttachmentActionVisible.IsChecked = SystemConfig.Setting.AttachmentActionVisible;
             BackgroundActionVisible.IsChecked = SystemConfig.Setting.BackgroundActionVisible;
@@ -49,6 +49,7 @@ namespace clawSoft.clawPDF.Views.UserControls
             EmailClientActionVisible.IsChecked = SystemConfig.Setting.EmailClientActionVisible;
             EmailSmtpActionVisible.IsChecked = SystemConfig.Setting.EmailSmtpActionVisible;
             FtpActionVisible.IsChecked = SystemConfig.Setting.FtpActionVisible;
+            txtTextTemplate.Text = SystemConfig.Setting.TextTemplate;
         }
 
         private void cbbPrintWay_SelectionChanged(object sender, SelectionChangedEventArgs e)

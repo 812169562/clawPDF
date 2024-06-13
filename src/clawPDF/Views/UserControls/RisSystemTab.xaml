@@ -28,7 +28,7 @@
             <HeaderedContentControl Margin="0,5,0,0" Name="ButtonControl" Template="{StaticResource HeaderPanelTemplate}" Header="按钮显示控制">
                 <UniformGrid Columns="3" Rows="3" Margin="0,5">
                     <CheckBox Content="Pdf配置页" x:Name="PdfTabVisible"></CheckBox>
-                    <CheckBox Content="OCR配置页" x:Name="OCRTabVisible"></CheckBox>
+                    <!--<CheckBox Content="OCR配置页" x:Name="OCRTabVisible"></CheckBox>-->
                     <CheckBox Content="动作>加入背景 (仅PDF)" x:Name="BackgroundActionVisible"></CheckBox>
                     <CheckBox Content="动作>加入封面" x:Name="CoverActionVisible"></CheckBox>
                     <CheckBox Content="动作>加入附件" x:Name="AttachmentActionVisible"></CheckBox>
@@ -37,6 +37,16 @@
                     <CheckBox Content="动作>执行脚本" x:Name="ScriptActionVisible"></CheckBox>
                     <CheckBox Content="动作>使用FTP上传" x:Name="FtpActionVisible"></CheckBox>
                 </UniformGrid>
+            </HeaderedContentControl>
+
+            <HeaderedContentControl Margin="0,5,0,0" Name="TemplateControl" Template="{StaticResource HeaderPanelTemplate}">
+                <HeaderedContentControl.Header>
+                    <Grid>
+                        <TextBlock Text="图像文本模板" FontSize="18" FontWeight="Bold"/>
+                        <TextBlock Text="多个模版使用英文,逗号隔开" FontSize="12" HorizontalAlignment="Right"/>
+                    </Grid>
+                </HeaderedContentControl.Header>
+                <TextBox x:Name="txtTextTemplate" Height="100" Margin="2,5,2,0" TextWrapping="Wrap"/>
             </HeaderedContentControl>
         </StackPanel>
     </Grid>

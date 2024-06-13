@@ -36,7 +36,7 @@ namespace clawSoft.clawPDF.Views
 
             if (ViewModel.CurrentProfile != null)
                 DocumentTabUserControl.UpdateFontLabel(ViewModel.CurrentProfile.Stamping);
-            OCRTab.Visibility = SystemConfig.Setting.OCRTabVisible ? Visibility.Visible : Visibility.Hidden;
+            //OCRTab.Visibility = SystemConfig.Setting.OCRTabVisible ? Visibility.Visible : Visibility.Hidden;
             PdfTab.Visibility = SystemConfig.Setting.PdfTabVisible ? Visibility.Visible : Visibility.Hidden;
         }
 
@@ -109,7 +109,7 @@ namespace clawSoft.clawPDF.Views
             ActionsTabUserControl.ViewModel.CurrentProfile = currentProfile;
             ImageFormatsTabUserControl.ViewModel.CurrentProfile = currentProfile;
             PdfTabUserControl.ViewModel.CurrentProfile = currentProfile;
-            OCRTabUserControl.ViewModel.CurrentProfile = currentProfile;
+            //OCRTabUserControl.ViewModel.CurrentProfile = currentProfile;
         }
 
         private string QueryProfileName(string profileName)

@@ -89,8 +89,13 @@ namespace DrawTools
             var hitResult = VisualTreeHelper.HitTest(this, point);
             return hitResult.VisualHit as DrawingVisual;
         }
+
+        #region add
         private List<Visual> undoVisuals = new List<Visual>();
         private bool isAll = false;
+        /// <summary>
+        /// 撤销
+        /// </summary>
         public void Undo()
         {
             var a = this.Zoom;
@@ -103,6 +108,9 @@ namespace DrawTools
             base.RemoveLogicalChild(visual);
             undoVisuals.Add(visual);
         }
+        /// <summary>
+        /// 重做
+        /// </summary>
         public void Redo()
         {
             if (this.undoVisuals.Count() == 0) return;
@@ -121,6 +129,18 @@ namespace DrawTools
                 undoVisuals.Remove(visual);
             }
         }
+        public List<Visual> GetVisuals()
+        {
+            return visuals;
+        }
+
+        public void AddTextDrawTool(string text)
+        {
+            TextDrawTool tool = new TextDrawTool(this);
+            tool.Add(text);
+        }
+        #endregion
+
         #endregion
 
         #region 依赖属性

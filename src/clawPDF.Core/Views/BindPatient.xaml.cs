@@ -49,7 +49,7 @@ namespace clawSoft.clawPDF.Core.Views
         private void clear1_Click(object sender, RoutedEventArgs e)
         {
             _patient = null;
-            ImageEditor.SaveFile();
+            ImageEditor.SavePdfFile();
             this.Close();
         }
         /// <summary>
@@ -65,7 +65,7 @@ namespace clawSoft.clawPDF.Core.Views
                 return;
             }
             _patient = (PatientModel)this.dataGrid.SelectedItem;
-            ImageEditor.SaveFile();
+            ImageEditor.SavePdfFile();
             this.Close();
         }
         /// <summary>
@@ -138,7 +138,7 @@ namespace clawSoft.clawPDF.Core.Views
                 return;
             }
             _patient = (PatientModel)this.dataGrid.SelectedItem;
-            ImageEditor.SaveFile();
+            ImageEditor.SavePdfFile();
             this.Close();
         }
     }

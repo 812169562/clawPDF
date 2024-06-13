@@ -131,12 +131,30 @@
                     <hc:ColorPicker x:Name="color_picker" />
                 </Popup>
                 <StackPanel Margin="16 6">
-                    <hc:NumericUpDown FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding StrokeThickness,ElementName=drawCanvas}" />
+                    <hc:NumericUpDown x:Name="stroke_thickness" FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding StrokeThickness,ElementName=drawCanvas}" />
                     <TextBlock FontSize="10" Foreground="#333" Margin="0 4 0 0" HorizontalAlignment="Center">画刷粗细</TextBlock>
                 </StackPanel>
                 <StackPanel Margin="16 6">
-                    <hc:NumericUpDown FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding FontSize,ElementName=drawCanvas}" />
+                    <hc:NumericUpDown x:Name="font_size" FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding FontSize,ElementName=drawCanvas}" />
                     <TextBlock FontSize="10" Foreground="#333" Margin="0 4 0 0" HorizontalAlignment="Center">文本大小</TextBlock>
+                </StackPanel>
+                <StackPanel Margin="16 6">
+                    <ComboBox x:Name="cbxTextTemplate" ItemsSource="{Binding}" SelectionChanged="cbxTextTemplate_SelectionChanged" Width="120">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Width="100" Text="{Binding}" TextTrimming="CharacterEllipsis" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="5000">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Placement="Mouse" DataContext="{Binding PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}">
+                                                <TextBlock Text="{Binding Path=Text, Mode=OneWay}" TextWrapping="Wrap" MaxWidth="300"/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                    <!--<TextBlock Text="{Binding}" Tag="{Binding}" Width="100" TextTrimming="CharacterEllipsis"/>-->
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>

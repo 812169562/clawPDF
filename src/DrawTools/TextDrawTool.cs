@@ -109,6 +109,27 @@ namespace DrawTools
             AddTextBox();
         }
 
+        public void Add(string content)
+        {
+            this.text = content;
+            this.drawingCanvas.AddWorkingDrawTool(this);
+            this.drawingCanvas.AddVisual(this);
+
+            Point point = new Point();
+            point.X = this.drawingCanvas.ActualWidth / 2;
+            point.Y = this.drawingCanvas.ActualHeight / 2;
+            this.startPoint = point;
+            this.pen = new Pen(this.drawingCanvas.Brush, 1);
+
+            this.fontSize = this.drawingCanvas.FontSize;
+            this.typeface = new Typeface(new FontFamily("Microsoft YaHei UI,Tahoma"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+
+            this.padding = new Thickness(pen.Thickness * 3);
+            this.minWidth = this.minHeight = fontSize * 2 + pen.Thickness * 8;
+
+            AddTextBox();
+        }
+
         #endregion
 
         #region 序列化
