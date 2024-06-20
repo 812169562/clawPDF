@@ -141,7 +141,6 @@ namespace clawSoft.clawPDF.Core.Actions
                         var response = HttpUploadRequest.Upload(job.Profile.HttpUploader.HttpUploadUrl, file, fileName, patient);
                         Log.Info("上传成功");
                         //Log.Print(response);
-                        MessageBox.Show(mac + " 上传成功", "提示");
                         if (File.Exists(file))
                         {
                             try

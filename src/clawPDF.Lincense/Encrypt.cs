@@ -115,7 +115,6 @@ namespace clawPDF.Lincense
                     reslut += $"Product: {item["Product"]}";
                     reslut += $"SerialNumber: {item["SerialNumber"]}";
                 }
-                reslut += $"MacAddress: {GetMacByWMI()}";
                 if (string.IsNullOrEmpty(reslut))
                 {
                     return "djiodjwe90i192j3i12j3io123jjpw";
@@ -127,36 +126,10 @@ namespace clawPDF.Lincense
                 return reslut;
             }
         }
-        private static string GetMacByWMI()
-        {
-            string macs = String.Empty;
-            try
-            {
-                string mac = "";
-                ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
-                ManagementObjectCollection moc = mc.GetInstances();
-                foreach (ManagementObject mo in moc)
-                {
-                    if ((bool)mo["IPEnabled"])
-                    {
-                        mac = mo["MacAddress"].ToString().Replace(":", "");
-                        macs += mac;
-                        break;
-                    }
-                }
-                moc = null;
-                mc = null;
-            }
-            catch
-            {
-            }
-
-            return macs;
-        }
         /// <summary>
         /// DES密钥,24位字符串
         /// </summary>
-        public static string DesKey = "#s^un2ye21fcv%|f0XpR,+vh";
+        public static string DesKey = "#s^un2ye21fcv%|f0XpR,+vc";
 
         /// <summary>
         /// DES加密
