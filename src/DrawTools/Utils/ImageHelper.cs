@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using clawSoft.clawPDF.Core.Settings;
+using Newtonsoft.Json;
 using PdfiumViewer;
 using PdfSharp;
 using PdfSharp.Drawing;
@@ -59,11 +60,12 @@ namespace DrawTools.Utils
                 var directory = Path.GetDirectoryName(path);
                 var name = Path.GetFileNameWithoutExtension(path);
                 var imgPath = Path.Combine(directory, name);
-                if (!Directory.Exists(imgPath))
+                if (Directory.Exists(imgPath))
                 {
-                    Directory.CreateDirectory(imgPath);
+                    Directory.Delete(imgPath, true);
                 }
-                var dpi = 96;
+                Directory.CreateDirectory(imgPath);
+                var dpi = SystemConfig.Setting.Dpi ?? 150;
                 using (var document = PdfDocument.Load(path))
                 {
                     for (int i = 0; i < document.PageCount; i++)

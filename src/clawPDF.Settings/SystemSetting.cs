@@ -59,5 +59,9 @@ namespace clawSoft.clawPDF.Core.Settings
         /// 图像文字模板
         /// </summary>
         public string TextTemplate { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? Dpi { get; set; }
     }
 }
