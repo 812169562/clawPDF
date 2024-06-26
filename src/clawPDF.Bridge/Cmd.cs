@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Management;
 
 namespace clawPDF.Bridge
 {
@@ -10,6 +12,46 @@ namespace clawPDF.Bridge
     /// </summary>
     public static class Cmd
     {
+        public static string OsVersion()
+        {
+            try
+            {
+                foreach (var o in new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem").Get())
+                {
+                    var obj = (ManagementObject)o;
+
+                    // Microsoft Windows 11 企业版
+                    var caption = obj.GetPropertyValue("Caption");
+
+                    // 
+                    var version = obj.GetPropertyValue("Version");
+                    if (version.ToString().IndexOf('6') == 0)
+                    {
+                        return "7";
+                    }
+                    if (version.ToString().IndexOf('5') == 0)
+                    {
+                        return "XP";
+                    }
+                    if (version.ToString().CompareTo("10.0.22000") > 0)
+                    {
+                        return "11";
+                    }
+                    if (version.ToString().CompareTo("10.0.22000") < 0)
+                    {
+                        return "10";
+                    }
+                    return version.ToString();
+                }
+
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return "7";
+            }
+        }
+
         ///
         /// 执行cmd.exe命令
         ///
@@ -117,6 +159,10 @@ namespace clawPDF.Bridge
         {
             try
             {
+                var reg = @"^[a-zA-Z]+$";
+                var reg2 = @"^[0-9]+$";
+                if (Regex.IsMatch(hexString, reg) || Regex.IsMatch(hexString, reg2))
+                    return hexString;
                 byte[] byteArray = HexStringToByteArray(hexString);
                 var val = Encoding.GetEncoding("GB2312").GetString(byteArray);
                 if (!val.Contains("?????"))
