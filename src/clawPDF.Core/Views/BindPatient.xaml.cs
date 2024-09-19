@@ -1,5 +1,9 @@
-﻿using clawSoft.clawPDF.Core.Request;
+﻿using clawPDF.Core;
+using clawPDF.Signature;
+using clawPDF.Signature.Service;
+using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
+using clawSoft.clawPDF.Core.Settings;
 using DrawTools.Utils;
 using System.Collections.Generic;
 using System.IO;
@@ -59,15 +63,49 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGrid.SelectedItem == null)
+            //if (dataGrid.SelectedItem == null)
+            //{
+            //    MessageBox.Show("请选择绑定患者！");
+            //    return;
+            //}
+            //_patient = (PatientModel)this.dataGrid.SelectedItem;
+            //ImageEditor.SavePdfFile();
+            bool b = Sign();
+            if (!b)
             {
-                MessageBox.Show("请选择绑定患者！");
+                MessageBox.Show("签名失败，请联系北京CA");
                 return;
             }
-            _patient = (PatientModel)this.dataGrid.SelectedItem;
-            ImageEditor.SavePdfFile();
             this.Close();
         }
+        /// <summary>
+        /// 签名登录
+        /// </summary>
+        private bool Sign()
+        {
+            // 判断是否配置独立签名，未配置直接上传  TODO 条件需从接口获取 
+            if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl)) 
+                return true;
+            MessageBoxResult messageBoxResult = MessageBox.Show("绑定成功并上传至后台，请确认是否签名？", "", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            // 1、取消：不签名，直接上传
+            if (messageBoxResult == MessageBoxResult.Cancel)
+                return true;
+            // 2、确定：判断当前登录账号是否与绑定的一致？
+            if (_user?.UserCertID != Login.strUserCertID)
+            {
+                // 2-1、不一致，弹出登录框
+                Login login = new Login();
+                login.ShowDialog();
+            }
+            // 账号一致，调用签名
+            var res = SignatureService.Instance.SignData(Login.strCertId, file);
+            if (res.Status == "-1") {
+                Log.Error($"签名失败：{res.Message}");
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// 查询患者
         /// </summary>

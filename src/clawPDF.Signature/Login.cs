@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Windows.Interop;
 
 namespace clawPDF.Signature
 {
@@ -16,8 +17,6 @@ namespace clawPDF.Signature
         }
 
         private string oid = "2.16.840.1.113732.2";//RSA 对象唯一标示符 SM2 1.2.156.112562.2.1.1.1
-        //创建获取签章图片对象
-        private GETKEYPICLib.GetPic pic = new GETKEYPICLib.GetPic();
 
         private void Login_Load(object sender, EventArgs e)
         {
@@ -29,6 +28,11 @@ namespace clawPDF.Signature
         private void GetUserList()
         {
             string CertID = axXTXApp1.SOF_GetUserList();
+            if (string.IsNullOrEmpty(CertID))
+            {
+                msg.Text = "提示：请插入实体key，并完成登录";
+                return;
+            }
             // CertID返回     王晓东||102080000879376/011712001357&&&
             string[] sArray = CertID.Split(new string[] { "&&&" }, StringSplitOptions.RemoveEmptyEntries);
             if (sArray.Length <= 0)
@@ -79,7 +83,8 @@ namespace clawPDF.Signature
         {
             if (string.IsNullOrEmpty(txtPassword.Text))
             {
-                MessageBox.Show("请输入密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
+                msg.Text = "提示：请输入密码";
+                //MessageBox.Show("请输入密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
                 return;
             }
             //获取随机数  随机数签名值 服务器证书
@@ -96,7 +101,8 @@ namespace clawPDF.Signature
             bool blRet = xtx.SOF_VerifySignedData(ServerCertificate, Random_num, Sigdata);
             if (!blRet)
             {
-                MessageBox.Show("客户端验证服务器签名失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
+                msg.Text = "提示：客户端验证服务器签名失败";
+                //MessageBox.Show("客户端验证服务器签名失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
                 return;
             }
             // 验证密码是否通过
@@ -108,22 +114,26 @@ namespace clawPDF.Signature
                 int errorTimes = xtx.SOF_GetRetryCount(strCertId);//获取容错次数
                 if (errorTimes < 0)
                 {
-                    MessageBox.Show("获取重试次数失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    msg.Text = "提示：获取重试次数失败";
+                    //MessageBox.Show("获取重试次数失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 if (errorTimes == 0)
                 {
-                    MessageBox.Show("您的证书已经锁死，请到相关部门进行解锁.", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    msg.Text = "提示：您的证书已经锁死，请到相关部门进行解锁.";
+                    //MessageBox.Show("您的证书已经锁死，请到相关部门进行解锁.", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                MessageBox.Show($"登录失败，您还有{errorTimes}次机会", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                msg.Text = $"提示：登录失败，您还有{errorTimes}次机会";
+                //MessageBox.Show($"登录失败，您还有{errorTimes}次机会", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             string strSingnValue = xtx.SOF_SignData(strCertId, Random_num);
             int ret = svs.VerifySignedData(strUserCert, Random_num, strSingnValue); //用户证书 随机值 签名值
             if (ret != 0)
             {
-                MessageBox.Show("服务器验证签名失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                msg.Text = "提示：服务器验证签名失败";
+                //MessageBox.Show("服务器验证签名失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             int retV_cert = svs.ValidateCertificate(strUserCert);//验证客户端证书有效性操作
@@ -131,21 +141,46 @@ namespace clawPDF.Signature
             switch (retV_cert)
             {
                 case 0: break;
-                case -1: MessageBox.Show("不是所信任的根", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
-                case -2: MessageBox.Show("超过有效期，请更换证书", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
-                case -3: MessageBox.Show("证书已作废", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
-                case -4: MessageBox.Show("证书已加入黑名单", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
-                case -5: MessageBox.Show("证书未生效", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
+                case -1:
+                    msg.Text = "提示：不是所信任的根";
+                    //MessageBox.Show("不是所信任的根", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                    return;
+                case -2:
+                    msg.Text = "提示：超过有效期，请更换证书";
+                    //MessageBox.Show("超过有效期，请更换证书", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                    return;
+                case -3:
+                    msg.Text = "提示：证书已作废";
+                    //MessageBox.Show("证书已作废", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                    return;
+                case -4:
+                    msg.Text = "提示：证书已加入黑名单";
+                    //MessageBox.Show("证书已加入黑名单", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                    return;
+                case -5:
+                    msg.Text = "提示：证书未生效";
+                    //MessageBox.Show("证书未生效", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                    return;
                 default: return;
             }
+            //创建获取签章图片对象
+            GETKEYPICLib.GetPic pic = new GETKEYPICLib.GetPic();
             //获取签章图片信息
             strPicBase64 = pic.GetPic(strCertId);
             if (string.IsNullOrEmpty(strPicBase64))
             {
-                MessageBox.Show("获取签章图片失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                msg.Text = "提示：获取签章图片失败";
+                //MessageBox.Show("获取签章图片失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            // TODO 绑定
             MessageBox.Show("登录成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 

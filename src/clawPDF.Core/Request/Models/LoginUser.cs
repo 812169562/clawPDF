@@ -54,5 +54,9 @@ namespace clawSoft.clawPDF.Core.Request.Models
         /// 密码（密文）
         /// </summary>
         public string Password { get; set; }
+        /// <summary>
+        ///证书用户唯一标识
+        /// <summary>
+        public string UserCertID { get; set; }
     }
 }
