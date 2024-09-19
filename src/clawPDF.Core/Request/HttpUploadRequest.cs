@@ -24,6 +24,7 @@ namespace clawSoft.clawPDF.Core.Request
         private static string QueryPatientsUrl = "/ris/out-api/print/queryPatientInfo";
         private static string PrintSettingUrl = "/ris/out-api/print/getPrintConfig";
         public static string UploadUrl;
+        private static string guid = "QzwQbZxDanJiRistkhHARz9fdBehDF8r";
 
         static HttpUploadRequest()
         {
@@ -96,6 +97,7 @@ namespace clawSoft.clawPDF.Core.Request
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("mac", GetMacByWMI());
             request.AddParameter("userName", name);
+            request.AddParameter("guid", guid);
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 throw new Exception(response.StatusDescription + response.ErrorMessage);
@@ -117,6 +119,7 @@ namespace clawSoft.clawPDF.Core.Request
             var request = new RestRequest(PrintSettingUrl, Method.GET);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("mac", GetMacByWMI());
+            request.AddParameter("guid", guid);
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
             {
@@ -150,7 +153,7 @@ namespace clawSoft.clawPDF.Core.Request
             LoginUser loginUser = GetLoginUser();
             if (loginUser == null)
                 throw new Exception("请选择登录账号！");
-            var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, HiscaDepartmentId = loginUser.HiscaDepartmentId };
+            var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, HiscaDepartmentId = loginUser.HiscaDepartmentId, guid };
             request.AddJsonBody(body);
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)

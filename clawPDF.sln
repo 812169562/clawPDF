@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.34407.143
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clawPDF", "src\clawPDF\clawPDF.csproj", "{28A624EA-10C1-4178-BB3A-6A2BB6AA159D}"
 EndProject
@@ -53,6 +53,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clawPDF.Lincense", "src\clawPDF.Lincense\clawPDF.Lincense.csproj", "{27F60C65-ABCA-43AB-B376-7B171042885C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawTools", "src\DrawTools\DrawTools.csproj", "{CAB8FA72-6845-46D9-B139-1EBF9CFABFFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clawPDF.Signature", "src\clawPDF.Signature\clawPDF.Signature.csproj", "{5946EDFB-44D2-4220-9FB3-148F52DC55AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -397,6 +399,22 @@ Global
 		{CAB8FA72-6845-46D9-B139-1EBF9CFABFFC}.Release|Win32.Build.0 = Release|Any CPU
 		{CAB8FA72-6845-46D9-B139-1EBF9CFABFFC}.Release|x64.ActiveCfg = Release|Any CPU
 		{CAB8FA72-6845-46D9-B139-1EBF9CFABFFC}.Release|x64.Build.0 = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|Win32.Build.0 = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Debug|x64.Build.0 = Debug|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|ARM64.Build.0 = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|Win32.ActiveCfg = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|Win32.Build.0 = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|x64.ActiveCfg = Release|Any CPU
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -422,6 +440,7 @@ Global
 		{9B28089E-175F-4B23-AF8C-CFFB082D4355} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
 		{27F60C65-ABCA-43AB-B376-7B171042885C} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
 		{CAB8FA72-6845-46D9-B139-1EBF9CFABFFC} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
+		{5946EDFB-44D2-4220-9FB3-148F52DC55AA} = {10E1C86E-25C5-4C22-9FE7-4C505F39B266}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1EDC79-B996-4708-828F-773DA0A7AD09}
