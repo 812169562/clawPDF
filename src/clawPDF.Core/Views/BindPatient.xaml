@@ -38,12 +38,11 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="65"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="45"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0,0,10,0">
+        <Grid Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,10,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock VerticalAlignment="Center" Margin="0,0,10,0">当前登录：</TextBlock>
                 <TextBlock x:Name="txtAccount" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold"></TextBlock>
@@ -54,22 +53,34 @@
                 <uc:SelectControl x:Name="cbxUser" Columns="{Binding}" ItemsSource="{Binding}" SelectionChanged="cbxUser_SelectionChanged" TextChanged="cbxUser_TextChanged"></uc:SelectControl>
             </StackPanel>-->
         </Grid>
-        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
+        <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
             <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="16">请选择打印文件所属于患者，完成报告绑定：</TextBlock>
         </Grid>
-        <Grid Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center">门诊/住院号：</TextBlock>
-                <TextBox x:Name="txtNo" MinWidth="120" />
-                <TextBlock VerticalAlignment="Center" Margin="10,0,0,0">患者姓名：</TextBlock>
-                <TextBox x:Name="txtName" MinWidth="120" />
-                <TextBlock VerticalAlignment="Center" Margin="10,0,0,0">申请单号：</TextBlock>
-                <TextBox x:Name="txtAppNo" MinWidth="120" />
-                <Button x:Name="query" Content="查询" Margin="10,0,0,0" MinWidth="70" Click="query_Click" />
-                <Button x:Name="clear" Content="清空" Margin="10,0,0,0" MinWidth="70" Click="clear_Click" Background="White" />
-            </StackPanel>
+        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0">
+            <UniformGrid Columns="3">
+                <StackPanel Orientation="Horizontal" Margin="0 5 10 5">
+                    <TextBlock VerticalAlignment="Center">门诊/住院号：</TextBlock>
+                    <TextBox x:Name="txtNo" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 5 10 5">
+                    <TextBlock VerticalAlignment="Center">患者姓名：</TextBlock>
+                    <TextBox x:Name="txtName" MinWidth="120"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 5 10 5">
+                    <TextBlock VerticalAlignment="Center">申请单号：</TextBlock>
+                    <TextBox x:Name="txtAppNo" MinWidth="120"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 5 10 5">
+                    <TextBlock VerticalAlignment="Center" Width="78">执 行 科 室：</TextBlock>
+                    <ComboBox x:Name="cbbExecDept" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 5 10 5">
+                    <Button x:Name="query" Content="查询" MinWidth="70" Click="query_Click" />
+                    <Button x:Name="clear" Content="清空" Margin="10 0 0 0" MinWidth="70" Click="clear_Click" Background="White" />
+                </StackPanel>
+            </UniformGrid>
         </Grid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="2">
             <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" HeadersVisibility ="Column" LoadingRow="dataGrid_LoadingRow" IsReadOnly="True" CanUserAddRows="False" MouseDoubleClick="dataGrid_MouseDoubleClick" AlternationCount="2" RowStyle="{StaticResource patDataGridRow}" SelectionMode="Single" SelectionUnit="FullRow">
                 <DataGrid.Resources>
                     <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
@@ -96,7 +107,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Grid Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="ok" Content="绑定" Margin="10,0,0,0.4" MinWidth="70" Click="ok_Click" Height="30" VerticalAlignment="Bottom" />
                 <Button x:Name="clear1" Content="跳过" Margin="10,0,0,0" MinWidth="70" Click="clear1_Click" Background="White" />
@@ -104,6 +115,6 @@
         </Grid>
         <Grid HorizontalAlignment="Left" Height="100" Margin="992,73.4,-318.4,0" Grid.Row="3" VerticalAlignment="Top" Width="100"/>
         <Border BorderThickness="1" BorderBrush="Gainsboro" Grid.Column="1" Grid.RowSpan="5" Width="1"></Border>
-        <tools:ImageEditor Grid.Column="2" Grid.RowSpan="5" x:Name="ImageEditor"></tools:ImageEditor>
+        <tools:ImageEditor Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" x:Name="ImageEditor"></tools:ImageEditor>
     </Grid>
 </Window>

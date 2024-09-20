@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Interop;
 
@@ -10,7 +11,11 @@ namespace clawPDF.Signature
         public static string strCertId;//certId
         public static string strUserCert;//用户证书
         public static string strUserCertID;//用户证书Id
-        public static string strPicBase64;
+        public static string strPicBase64 = "R0lGODlhWwA3ANUAAAAAAP///wUGBhgZGRcaGB8jIAABAAECAQIDAgYIBgMEAwQFBAUGBRIVEhoeGg0PDQ4QDgcIBw8RDwgJCBodGgkKCQoLChUXFQwNDBweHA4PDhAREBITEhoeGR4iHSEkIBocGRsdGgkKCAEBAAICAQMDAgUFBAkJCBgYGAYGBgUFBQQEBAMDAwICAgEBAf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAABbADcAAAb/wJdwSCwaj8ikcslsOp/QaKuFdAGu0aL1yu0CVtnsyusttq4KQFi4BbimrTZ33SS7wGeW2oilL/VXLn5ICG5JaHx7g0tuiotPfUSRj0mAlJCOL2OCl4yZnUeTL5ErpaBFKqKnko5XK2dkKmGqRbSro4pfGVYuCK9ynJBxnrdsLEKRXSYHBlRDZwYAznUJn7XWl322uEZ6Vk4t0cSnsi5vyNjcoemJCLJV5rPYWwpj6IfWACbsQoAYHVumEUkTDMqXKweGgBGSqoK9barGICgYileLEwZSndMC4JiTNhEmLHiwxYVHNi0GqNnGohkRKyT4qYuzR9W2ImPINCAAAQAD/yPm7LEYgQCJpRfReDkJxM2cwBcs4jUp8QkAh29Gcg6x9SYNF4pMYDkAkEJUCaxOFqTQ4kIF2q0b1YUSETfMGwqTNMo8sqBWoVYAUBwYc+wtx4V+AES4QEaanxXvsBhCx6IAVj19jzC42STOBzUsWqy4s4hBvG+iOrYCu3UvPgAhcnU6wyBqqkSs8K05mow1nQUANhzN3Vp3lNGk7wk5c+rKu2tEaFdx3c8NYnSQQ1PHdKhWQiQASDTJOe3VFQkeuvj2w3xpOs4vnGpqrAFE8mJK1hYHz84KCwuwBHISABPhF4VhxBlxRgsHdPEUMnUZiARimymAxBnPRYeQCUuM0KGLhEu4Bdch6zkRVYkgjsIJRNvxl6ISGsmF2yDwgeiGaO+1uM6LjLggQDp50KhjMXOQKCSPTLBw0o6JDYlkgmvU+KRxdEg55REIRmHllah01CSXUY7ghxWZgWmQk8t9YaaWaL5wxnVrMrFlNybF+cRESx43mZ11oJlKm1POScSffLpHB6GFhgVAhlAAB2igTpb16JOC7pfoOJcWo0emBiIWBAA7";
+        /// <summary>
+        /// 是否登录成功
+        /// </summary>
+        public bool IsLogin = false;
         public Login()
         {
             InitializeComponent();
@@ -83,7 +88,7 @@ namespace clawPDF.Signature
         {
             if (string.IsNullOrEmpty(txtPassword.Text))
             {
-                msg.Text = "提示：请输入密码";
+                msg.Text = "提示：密码不能为空";
                 //MessageBox.Show("请输入密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
                 return;
             }
@@ -124,7 +129,7 @@ namespace clawPDF.Signature
                     //MessageBox.Show("您的证书已经锁死，请到相关部门进行解锁.", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                msg.Text = $"提示：登录失败，您还有{errorTimes}次机会";
+                msg.Text = $"提示：账号密码不正确，您还有{errorTimes}次机会";
                 //MessageBox.Show($"登录失败，您还有{errorTimes}次机会", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -173,13 +178,14 @@ namespace clawPDF.Signature
                 //MessageBox.Show("获取签章图片失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // TODO 绑定
+            IsLogin = true;
             MessageBox.Show("登录成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            IsLogin = false;
             this.Close();
         }
     }

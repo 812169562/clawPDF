@@ -153,6 +153,8 @@
     <Compile Include="Request\HttpUploadRequest.cs" />
     <Compile Include="Request\Models\LoginUser.cs" />
     <Compile Include="Request\Models\PatientModel.cs" />
+    <Compile Include="Request\Models\SignConfigModel.cs" />
+    <Compile Include="Request\Models\SystemConfigModel.cs" />
     <Compile Include="Views\SelectAccount1.xaml.cs">
       <DependentUpon>SelectAccount1.xaml</DependentUpon>
     </Compile>

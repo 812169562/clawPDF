@@ -23,11 +23,13 @@ namespace clawSoft.clawPDF.Core.Request
         private static string QueryUsersUrl = "/ris/out-api/print/getAccountListByEquipment";
         private static string QueryPatientsUrl = "/ris/out-api/print/queryPatientInfo";
         private static string PrintSettingUrl = "/ris/out-api/print/getPrintConfig";
+        private static string SignSettingUrl = "/ris/out-api/print/getSignConfig";
         public static string UploadUrl;
         private static string guid = "QzwQbZxDanJiRistkhHARz9fdBehDF8r";
 
         static HttpUploadRequest()
         {
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)192 | (SecurityProtocolType)768 | (SecurityProtocolType)3072;
             Start();
         }
         public static void Start()
@@ -334,7 +336,12 @@ namespace clawSoft.clawPDF.Core.Request
 
             return macs;
         }
-
+        /// <summary>
+        /// 保存上传失败文件
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="fileName"></param>
+        /// <param name="patient"></param>
         public static void SaveFile(string file, string fileName, PatientModel patient)
         {
             var folder = Application.StartupPath + "\\failfile\\";
@@ -361,6 +368,154 @@ namespace clawSoft.clawPDF.Core.Request
             var xml = Path.Combine(folder, Path.GetFileNameWithoutExtension(file) + ".xml");
             doc.Save(xml);
             File.Copy(file, path, true);
+        }
+
+        /// <summary>
+        /// 获取签名配置
+        /// </summary>
+        /// <returns></returns>
+        public static SignConfigModel GetSignSetting()
+        {
+            SignConfigModel config = new SignConfigModel();
+            try
+            {
+                if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+                    return config;
+                var client = new RestClient(SystemConfig.Setting.RisUrl);
+                var request = new RestRequest(SignSettingUrl, Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("mac", GetMacByWMI());
+                request.AddParameter("guid", guid);
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                {
+                    Log.Error("获取签名配置失败：" + response.StatusDescription + response.ErrorMessage);
+                    return config;
+                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                {
+                    Log.Error("获取签名配置失败：" + model.Message);
+                    return config;
+                }
+                config = JsonConvert.DeserializeObject<SignConfigModel>(model.Data.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error("获取签名配置异常：" + ex.Message);
+            }
+            return config;
+        }
+        /// <summary>
+        /// 获取系统配置
+        /// </summary>
+        /// <returns></returns>
+        public static SystemConfigModel GetSystemConfig()
+        {
+            var config = new SystemConfigModel();
+            //try
+            //{
+            //    if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+            //        return config;
+            //    var client = new RestClient(SystemConfig.Setting.RisUrl);
+            //    var request = new RestRequest(SignSettingUrl, Method.GET);
+            //    request.AddHeader("Content-Type", "application/json");
+            //    request.AddParameter("guid", guid);
+            //    IRestResponse response = client.Execute(request);
+            //    if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+            //    {
+            //        Log.Error("获取系统配置失败：" + response.StatusDescription + response.ErrorMessage);
+            //        return config;
+            //    }
+            //    ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+            //    if (model.Status != "0")
+            //    {
+            //        Log.Error("获取系统配置失败：" + model.Message);
+            //        return config;
+            //    }
+            //    config = JsonConvert.DeserializeObject<SystemConfigModel>(model.Data.ToString());
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error("获取系统配置异常：" + ex.Message);
+            //}
+            return config;
+        }
+        /// <summary>
+        /// 获取医网信签章图片
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSignImage(string openId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+                    return string.Empty;
+                var client = new RestClient(SystemConfig.Setting.RisUrl);
+                client.Timeout = 6000;
+                var request = new RestRequest(SignSettingUrl, Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("guid", guid);
+                request.AddParameter("openId", openId);
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                {
+                    Log.Error("获取医网信签章图片失败：" + response.StatusDescription + response.ErrorMessage);
+                    return string.Empty;
+                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                {
+                    Log.Error("获取医网信签章图片失败：" + model.Message);
+                    return string.Empty;
+                }
+                return model.Data.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("获取医网信签章图片异常：" + ex.Message);
+                return string.Empty;
+            }
+        }
+        /// <summary>
+        /// 绑定用户签名
+        /// </summary>
+        /// <param name="uniqueId"></param>
+        /// <param name="strUserCertID"></param>
+        /// <param name="strPicBase64"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public static void BingdingUser(int uniqueId, string strUserCertID, string strPicBase64)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+                    return;
+                var client = new RestClient(SystemConfig.Setting.RisUrl);
+                client.Timeout = 6000;
+                var request = new RestRequest(SignSettingUrl, Method.POST);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("guid", guid);
+                request.AddParameter("uniqueId", uniqueId);
+                request.AddParameter("userCertID", strUserCertID);
+                request.AddParameter("picBase64", strPicBase64);
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                {
+                    Log.Error("获取医网信签章图片失败：" + response.StatusDescription + response.ErrorMessage);
+                    return;
+                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                {
+                    Log.Error("获取医网信签章图片失败：" + model.Message);
+                    return ;
+                }
+                 model.Data.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("获取医网信签章图片异常：" + ex.Message);
+            }
         }
     }
 }

@@ -59,6 +59,15 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.Charting.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
@@ -80,12 +89,14 @@
     <Compile Include="IO\UniqueFilename.cs" />
     <Compile Include="GUID\MachineId.cs" />
     <Compile Include="OsHelper.cs" />
+    <Compile Include="PdfUtil.cs" />
     <Compile Include="PrinterWrapper.cs" />
     <Compile Include="Process\ProcessFactory.cs" />
     <Compile Include="Process\ProcessWrapper.cs" />
     <Compile Include="Registry\RegistryUtility.cs" />
     <Compile Include="Retry.cs" />
     <Compile Include="ShellExecuteHelper.cs" />
+    <Compile Include="StringUtil.cs" />
     <Compile Include="Threading\ISynchronizedThread.cs" />
     <Compile Include="Threading\SynchronizedThread.cs" />
     <Compile Include="Tokens\DateToken.cs" />
@@ -118,6 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="signClawPDF.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
