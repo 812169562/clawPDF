@@ -116,7 +116,8 @@ namespace DrawTools
             this.drawingCanvas.AddVisual(this);
 
             Point point = new Point();
-            point.X = this.drawingCanvas.ActualWidth / 2;
+            point.X = 10;
+            //point.X = this.drawingCanvas.ActualWidth / 2;
             point.Y = this.drawingCanvas.ActualHeight / 2;
             this.startPoint = point;
             this.pen = new Pen(this.drawingCanvas.Brush, 1);
@@ -192,7 +193,9 @@ namespace DrawTools
                 AcceptsTab = true,
                 MinWidth = minWidth,
                 MinHeight = minHeight,
-                Text = text
+                Text = text,
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = this.drawingCanvas.ActualWidth - startPoint.X
             };
 
             textBox.SelectionStart = textBox.Text.Length;
@@ -253,6 +256,7 @@ namespace DrawTools
                     typeface,
                     this.fontSize,
                     pen.Brush);
+                formattedText.MaxTextWidth = textBox.MaxWidth - 10;
 
                 geometry = formattedText.BuildGeometry(textPoint).GetFlattenedPathGeometry();
                 Draw();

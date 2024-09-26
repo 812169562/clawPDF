@@ -1,4 +1,5 @@
-﻿using clawSoft.clawPDF.Core.Request;
+﻿using clawPDF.Signature;
+using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
@@ -53,6 +54,18 @@ namespace clawSoft.clawPDF.Core.Views
         {
             if (dataGrid.SelectedItem == null) return;
             LoginUser user = (LoginUser)dataGrid.SelectedItem;
+            // 判断
+            if (user.SignType == 2 && (user.UserCertID.IsEmpty() || Login.strUserCertID != user.UserCertID))
+            {
+                Login login = new Login();
+                login.ShowDialog();
+                if (login.IsLogin)
+                {
+                    user.UserCertID = Login.strUserCertID;
+                    user.Base64 = Login.strPicBase64;
+                }
+            }
+
             SystemSetting setting = SystemConfig.Setting;
             setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
             SystemConfig.Save(setting);

@@ -7,6 +7,7 @@ namespace clawSoft.clawPDF.Core.Settings
 {
     public class SystemSetting
     {
+
         /// <summary>
         /// 单机系统地址
         /// </summary>
@@ -63,5 +64,13 @@ namespace clawSoft.clawPDF.Core.Settings
         /// 
         /// </summary>
         public int? Dpi { get; set; }
+        /// <summary>
+        /// 纸张大小
+        /// </summary>
+        public string PageSize { get; set; }
+        /// <summary>
+        /// 文本字体大小
+        /// </summary>
+        public double FontSize { get; set; }
     }
 }

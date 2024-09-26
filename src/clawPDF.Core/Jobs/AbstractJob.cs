@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using clawSoft.clawPDF.Core.Actions;
 using clawSoft.clawPDF.Core.Ghostscript.OutputDevices;
+using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Core.Settings.Enums;
+using clawSoft.clawPDF.Core.Views;
 using clawSoft.clawPDF.PDFProcessing;
 using clawSoft.clawPDF.Utilities;
 using clawSoft.clawPDF.Utilities.IO;
@@ -636,6 +639,16 @@ namespace clawSoft.clawPDF.Core.Jobs
 
         private void CallActions()
         {
+            var b = HttpUploadRequest.GetPrintSetting();
+            if (JobActions.Any(t => t.GetType().Name.Contains("PrintingAction") || t.GetType().Name.Contains("HttpUploadAction")) && b)
+            {
+                BindPatient dialog = new BindPatient();
+                dialog.file = this.OutputFiles[0];
+                dialog.ShowDialog();
+                if (!dialog.isUpload) 
+                    return;
+
+            }
             foreach (var action in JobActions)
             {
                 Logger.Trace("Calling Action {0}", action.GetType().Name);

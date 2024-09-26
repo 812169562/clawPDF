@@ -1,4 +1,5 @@
-﻿using System;
+﻿using clawSoft.clawPDF.Core.Settings;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -11,7 +12,7 @@ namespace clawPDF.Signature
         public static string strCertId;//certId
         public static string strUserCert;//用户证书
         public static string strUserCertID;//用户证书Id
-        public static string strPicBase64 = "R0lGODlhWwA3ANUAAAAAAP///wUGBhgZGRcaGB8jIAABAAECAQIDAgYIBgMEAwQFBAUGBRIVEhoeGg0PDQ4QDgcIBw8RDwgJCBodGgkKCQoLChUXFQwNDBweHA4PDhAREBITEhoeGR4iHSEkIBocGRsdGgkKCAEBAAICAQMDAgUFBAkJCBgYGAYGBgUFBQQEBAMDAwICAgEBAf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAABbADcAAAb/wJdwSCwaj8ikcslsOp/QaKuFdAGu0aL1yu0CVtnsyusttq4KQFi4BbimrTZ33SS7wGeW2oilL/VXLn5ICG5JaHx7g0tuiotPfUSRj0mAlJCOL2OCl4yZnUeTL5ErpaBFKqKnko5XK2dkKmGqRbSro4pfGVYuCK9ynJBxnrdsLEKRXSYHBlRDZwYAznUJn7XWl322uEZ6Vk4t0cSnsi5vyNjcoemJCLJV5rPYWwpj6IfWACbsQoAYHVumEUkTDMqXKweGgBGSqoK9barGICgYileLEwZSndMC4JiTNhEmLHiwxYVHNi0GqNnGohkRKyT4qYuzR9W2ImPINCAAAQAD/yPm7LEYgQCJpRfReDkJxM2cwBcs4jUp8QkAh29Gcg6x9SYNF4pMYDkAkEJUCaxOFqTQ4kIF2q0b1YUSETfMGwqTNMo8sqBWoVYAUBwYc+wtx4V+AES4QEaanxXvsBhCx6IAVj19jzC42STOBzUsWqy4s4hBvG+iOrYCu3UvPgAhcnU6wyBqqkSs8K05mow1nQUANhzN3Vp3lNGk7wk5c+rKu2tEaFdx3c8NYnSQQ1PHdKhWQiQASDTJOe3VFQkeuvj2w3xpOs4vnGpqrAFE8mJK1hYHz84KCwuwBHISABPhF4VhxBlxRgsHdPEUMnUZiARimymAxBnPRYeQCUuM0KGLhEu4Bdch6zkRVYkgjsIJRNvxl6ISGsmF2yDwgeiGaO+1uM6LjLggQDp50KhjMXOQKCSPTLBw0o6JDYlkgmvU+KRxdEg55REIRmHllah01CSXUY7ghxWZgWmQk8t9YaaWaL5wxnVrMrFlNybF+cRESx43mZ11oJlKm1POScSffLpHB6GFhgVAhlAAB2igTpb16JOC7pfoOJcWo0emBiIWBAA7";
+        public static string strPicBase64;// = "R0lGODlhWwA3ANUAAAAAAP///wUGBhgZGRcaGB8jIAABAAECAQIDAgYIBgMEAwQFBAUGBRIVEhoeGg0PDQ4QDgcIBw8RDwgJCBodGgkKCQoLChUXFQwNDBweHA4PDhAREBITEhoeGR4iHSEkIBocGRsdGgkKCAEBAAICAQMDAgUFBAkJCBgYGAYGBgUFBQQEBAMDAwICAgEBAf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAABbADcAAAb/wJdwSCwaj8ikcslsOp/QaKuFdAGu0aL1yu0CVtnsyusttq4KQFi4BbimrTZ33SS7wGeW2oilL/VXLn5ICG5JaHx7g0tuiotPfUSRj0mAlJCOL2OCl4yZnUeTL5ErpaBFKqKnko5XK2dkKmGqRbSro4pfGVYuCK9ynJBxnrdsLEKRXSYHBlRDZwYAznUJn7XWl322uEZ6Vk4t0cSnsi5vyNjcoemJCLJV5rPYWwpj6IfWACbsQoAYHVumEUkTDMqXKweGgBGSqoK9barGICgYileLEwZSndMC4JiTNhEmLHiwxYVHNi0GqNnGohkRKyT4qYuzR9W2ImPINCAAAQAD/yPm7LEYgQCJpRfReDkJxM2cwBcs4jUp8QkAh29Gcg6x9SYNF4pMYDkAkEJUCaxOFqTQ4kIF2q0b1YUSETfMGwqTNMo8sqBWoVYAUBwYc+wtx4V+AES4QEaanxXvsBhCx6IAVj19jzC42STOBzUsWqy4s4hBvG+iOrYCu3UvPgAhcnU6wyBqqkSs8K05mow1nQUANhzN3Vp3lNGk7wk5c+rKu2tEaFdx3c8NYnSQQ1PHdKhWQiQASDTJOe3VFQkeuvj2w3xpOs4vnGpqrAFE8mJK1hYHz84KCwuwBHISABPhF4VhxBlxRgsHdPEUMnUZiARimymAxBnPRYeQCUuM0KGLhEu4Bdch6zkRVYkgjsIJRNvxl6ISGsmF2yDwgeiGaO+1uM6LjLggQDp50KhjMXOQKCSPTLBw0o6JDYlkgmvU+KRxdEg55REIRmHllah01CSXUY7ghxWZgWmQk8t9YaaWaL5wxnVrMrFlNybF+cRESx43mZ11oJlKm1POScSffLpHB6GFhgVAhlAAB2igTpb16JOC7pfoOJcWo0emBiIWBAA7";
         /// <summary>
         /// 是否登录成功
         /// </summary>
@@ -32,27 +33,35 @@ namespace clawPDF.Signature
         /// </summary>
         private void GetUserList()
         {
-            string CertID = axXTXApp1.SOF_GetUserList();
-            if (string.IsNullOrEmpty(CertID))
+            try
             {
-                msg.Text = "提示：请插入实体key，并完成登录";
-                return;
+                string CertID = axXTXApp1.SOF_GetUserList();
+                if (string.IsNullOrEmpty(CertID))
+                {
+                    msg.Text = "提示：请插入实体key，并完成登录";
+                    return;
+                }
+                // CertID返回     王晓东||102080000879376/011712001357&&&
+                string[] sArray = CertID.Split(new string[] { "&&&" }, StringSplitOptions.RemoveEmptyEntries);
+                if (sArray.Length <= 0)
+                    return;
+                List<User> users = new List<User>();
+                for (int i = 0; i < sArray.Length; i++)
+                {
+                    var arry = sArray[i].Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+                    if (arry.Length <= 0) continue;
+                    users.Add(new User() { CertId = arry[1], Username = arry[0] });
+                }
+                cbxUsername.Items.Clear();
+                cbxUsername.DataSource = users;
+                cbxUsername.DisplayMember = "Username";
+                cbxUsername.ValueMember = "CertId";
             }
-            // CertID返回     王晓东||102080000879376/011712001357&&&
-            string[] sArray = CertID.Split(new string[] { "&&&" }, StringSplitOptions.RemoveEmptyEntries);
-            if (sArray.Length <= 0)
-                return;
-            List<User> users = new List<User>();
-            for (int i = 0; i < sArray.Length; i++)
+            catch (Exception ex)
             {
-                var arry = sArray[i].Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
-                if (arry.Length <= 0) continue;
-                users.Add(new User() { CertId = arry[1], Username = arry[0] });
+                msg.Text = "提示：请检查证书环境";
+                Log.SignError($"初始化插件：{ex.Message}");
             }
-            cbxUsername.Items.Clear();
-            cbxUsername.DataSource = users;
-            cbxUsername.DisplayMember = "Username";
-            cbxUsername.ValueMember = "CertId";
         }
         /// <summary>
         /// UKey设备插拔事件
@@ -75,9 +84,16 @@ namespace clawPDF.Signature
             strCertId = ((User)cbxUsername.SelectedItem).CertId;
             strUserCert = axXTXApp1.SOF_ExportUserCert(strCertId);//导出用户证书
             var certType = axXTXApp1.SOF_GetCertInfo(strUserCert, 3); // 证书类型 返回"RSA"或"SM2"
-            if (certType == "SM2")
-                oid = "1.2.156.112562.2.1.1.1";
+            oid = certType == "SM2" ? "1.2.156.112562.2.1.1.1" : "2.16.840.1.113732.2";
             strUserCertID = axXTXApp1.SOF_GetCertInfoByOid(strUserCert, oid); //注意oid的加密方式要对应才行
+            if (!string.IsNullOrEmpty(SystemConfig.LoginUser?.UserCertID) && SystemConfig.LoginUser.UserCertID != strUserCertID)
+            {
+                msg.Text = "提示：插入的实体key与单机账号不匹配！";
+            }
+            else
+            {
+                msg.Text = "";
+            }
         }
         /// <summary>
         /// 登录
@@ -156,7 +172,7 @@ namespace clawPDF.Signature
                     return;
                 case -3:
                     msg.Text = "提示：证书已作废";
-                    //MessageBox.Show("证书已作废", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                    //MessageBox.Show("作废证书", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
                     return;
                 case -4:
                     msg.Text = "提示：证书已加入黑名单";

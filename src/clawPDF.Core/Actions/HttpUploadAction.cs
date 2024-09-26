@@ -111,16 +111,16 @@ namespace clawSoft.clawPDF.Core.Actions
                 }
                 // 根据配置弹出窗口绑定患者信息
                 HttpUploadRequest.UploadUrl = url;
-                PatientModel patient = null;
-                if (HttpUploadRequest.GetPrintSetting())
-                {
-                    BindPatient dialog = new BindPatient();
-                    //dialog.Height = 460;
-                    //dialog.Width = 800;
-                    dialog.file = job.OutputFiles[0];
-                    dialog.ShowDialog();
-                    patient = dialog._patient;
-                }
+                PatientModel patient = BindPatient._patient;
+                //if (HttpUploadRequest.GetPrintSetting())
+                //{
+                //    BindPatient dialog = new BindPatient();
+                //    //dialog.Height = 460;
+                //    //dialog.Width = 800;
+                //    dialog.file = job.OutputFiles[0];
+                //    dialog.ShowDialog();
+                //    patient = dialog._patient;
+                //}
                 int i = 0;
                 foreach (var file in job.OutputFiles)
                 {

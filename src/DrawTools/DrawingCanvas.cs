@@ -327,7 +327,7 @@ namespace DrawTools
             for (var i = workingDrawTools.Count - 1; i >= 0; i--)
             {
                 tool = workingDrawTools[i];
-
+                
                 if (tool.CanKeyDown && (e.Handled = tool.OnKeyDown(e.Key)))
                     return;
             }

@@ -1,13 +1,13 @@
 ﻿using clawPDF.Core;
 using clawPDF.Signature;
+using clawPDF.Signature.Service;
 using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
-using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using Log = clawPDF.Core.Log;
 
 namespace clawSoft.clawPDF.Core.Views
 {
@@ -17,13 +17,14 @@ namespace clawSoft.clawPDF.Core.Views
     public partial class BindPatient : Window
     {
         public string file;
-        public PatientModel _patient;
+        public static PatientModel _patient;
         public LoginUser _user;
         public SystemConfigModel _systemConfig;
+        public bool isUpload;
         public BindPatient()
         {
             InitializeComponent();
-            //this.Topmost = true;
+            this.Topmost = true;
             this.WindowState = WindowState.Maximized;
             this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
@@ -69,6 +70,7 @@ namespace clawSoft.clawPDF.Core.Views
         {
             _patient = null;
             ImageEditor.SavePdfFile();
+            isUpload = true;
             this.Close();
         }
         /// <summary>
@@ -78,60 +80,68 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGrid.SelectedItem == null)
-            {
-                MessageBox.Show("请选择绑定患者！");
-                return;
-            }
-            _patient = (PatientModel)this.dataGrid.SelectedItem;
-            ImageEditor.SavePdfFile();
-            SignLogin();
-            this.Close();
+            SelectedRow();
         }
+
+        private void SelectedRow()
+        {
+            try
+            {
+                if (dataGrid.SelectedItem == null)
+                {
+                    MessageBox.Show("请选择绑定患者！");
+                    return;
+                }
+                _patient = (PatientModel)this.dataGrid.SelectedItem;
+                ImageEditor.SavePdfFile();
+                SignLogin();
+                isUpload = true;
+                this.Close();
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error(ex);
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         /// <summary>
         /// 签名登录
         /// </summary>
         private void SignLogin()
         {
-            try
+            var signbase64 = "";
+            // 判断是否配置独立签名
+            if (_systemConfig.SigningProcess == 1)
             {
-                // 判断是否配置独立签名，未配置直接上传
-                //if (_systemConfig?.SigningProcess != 1)
-                //    return;
                 MessageBoxResult messageBoxResult = MessageBox.Show("绑定成功并上传至后台，请确认是否签名？", "", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 // 1、取消：不签名，直接上传
                 if (messageBoxResult == MessageBoxResult.Cancel)
                     return;
-                var signbase64 = "";
-                if (_systemConfig.SignatureFirm == "bjca")
-                {
-                    // 2、确定：判断当前登录账号是否与绑定的一致？
-                    if (_user.UserCertID.IsEmpty() || _user.UserCertID != Login.strUserCertID)
-                    {
-                        // 2-1、不一致，弹出登录框
-                        Login login = new Login();
-                        login.ShowDialog();
-                        if (!login.IsLogin) return;
-                        HttpUploadRequest.BingdingUser(_user.UniqueId, Login.strUserCertID, Login.strPicBase64);
-                    }
-                    signbase64 = Login.strPicBase64;
-                }
                 if (_systemConfig.SignatureFirm == "ywq")
                 {
                     signbase64 = HttpUploadRequest.GetSignImage(_user.AccountNo);
                 }
-                var sign = HttpUploadRequest.GetSignSetting();
-                PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh);
-                // 账号一致，调用签名
-                //var res = SignatureService.Instance.SignData(Login.strCertId, file);
-                //if (res.Status == "-1") {
-                //    Log.Error($"签名失败：{res.Message}");
-                //}
             }
-            catch (System.Exception ex)
+            if (_systemConfig.SignatureFirm == "bjca")
             {
-                Log.Error(ex);
+                // 2、确定：判断当前登录账号是否与绑定的一致？
+                if (_user.UserCertID.IsEmpty() || _user.UserCertID != Login.strUserCertID)
+                {
+                    // 2-1、不一致，弹出登录框
+                    Login login = new Login();
+                    login.ShowDialog();
+                    if (!login.IsLogin) return;
+                    HttpUploadRequest.BingdingUser(_user.UniqueId, Login.strUserCertID, Login.strPicBase64);
+                }
+                // 账号一致，调用签名
+                var res = SignatureService.Instance.SignData(Login.strCertId, file);
+                if (res.Status == "-1")
+                    throw new System.Exception($"签名失败：{res.Message}");
+                signbase64 = Login.strPicBase64;
             }
+            var sign = HttpUploadRequest.GetSignSetting();
+            PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh);
         }
 
         /// <summary>
@@ -198,15 +208,9 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void dataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (dataGrid.SelectedItem == null)
-            {
-                MessageBox.Show("请选择绑定患者！");
-                return;
-            }
-            _patient = (PatientModel)this.dataGrid.SelectedItem;
-            ImageEditor.SavePdfFile();
-            this.Close();
+            SelectedRow();
         }
+
     }
 
     public class KeyValue

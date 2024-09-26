@@ -11,18 +11,43 @@
         <StackPanel>
             <HeaderedContentControl Name="SystemControl" Template="{StaticResource HeaderPanelTemplate}" Header="系统配置">
                 <StackPanel>
-                    <TextBlock Margin="0,6" TextWrapping="Wrap">单机设备管理系统地址：</TextBlock>
-                    <TextBox Name="txtRisUrl" Height="25" />
-                    <TextBlock Margin="0,6" TextWrapping="Wrap">打印类型：</TextBlock>
-                    <ComboBox x:Name="cbbPrintWay" ItemsSource="{Binding}" SelectionChanged="cbbPrintWay_SelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Value}" Tag="{Binding Key}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="22"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Margin="0,6" Grid.Column="0" Grid.Row="0" TextWrapping="Wrap">单机设备管理系统地址：</TextBlock>
+                        <TextBox Grid.Column="0" Grid.Row="1" Name="txtRisUrl" Height="22" />
+                        <TextBlock Grid.Column="2" Grid.Row="0" Margin="0,6" TextWrapping="Wrap">打印类型：</TextBlock>
+                        <ComboBox Grid.Column="2" Grid.Row="1" x:Name="cbbPrintWay" ItemsSource="{Binding}" SelectionChanged="cbbPrintWay_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Value}" Tag="{Binding Key}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center">图像DPI：</TextBlock>
+                        <TextBlock Grid.Column="2" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center">纸张大小：</TextBlock>
+                        <TextBox Name="txtDPI" Grid.Row="3"/>
+                        <ComboBox x:Name="cbbPageSize" ItemsSource="{Binding}" Grid.Column="2" Grid.Row="3" SelectionChanged="cbbPageSize_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Value}" Tag="{Binding Key}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
                 </StackPanel>
             </HeaderedContentControl>
             <HeaderedContentControl Margin="0,5,0,0" Name="ButtonControl" Template="{StaticResource HeaderPanelTemplate}" Header="按钮显示控制">

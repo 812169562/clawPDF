@@ -36,12 +36,13 @@ namespace clawSoft.clawPDF.Core.Actions
 
             try
             {
-                if (SystemConfig.Setting.PrintWay != 2)
-                {
-                    OutputDevice printingDevice = new PrintingDevice(job);
-                    _ghostscript.Run(printingDevice, job.JobTempFolder);
-                    return new ActionResult();
-                }
+                // 注释印刷体打印，由于印刷体打印无法打印编辑后文档
+                //if (SystemConfig.Setting.PrintWay != 2)
+                //{
+                //    OutputDevice printingDevice = new PrintingDevice(job);
+                //    _ghostscript.Run(printingDevice, job.JobTempFolder);
+                //    return new ActionResult();
+                //}
                 PrintQueue._selectPrinter = job.Profile.Printing.SelectPrinter;
                 PrintQueue._printer = job.Profile.Printing.PrinterName;
                 if (job.Profile.Printing.SelectPrinter == Settings.Enums.SelectPrinter.ShowDialog)

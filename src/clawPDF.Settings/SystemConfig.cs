@@ -22,6 +22,13 @@ namespace clawSoft.clawPDF.Core.Settings
             lincense = Path.Combine(System.Windows.Forms.Application.StartupPath, "ris.lincense");
             Load();
         }
+        public static LoginUserModel LoginUser => GetLoginUser();
+        public static LoginUserModel GetLoginUser()
+        {
+            if (string.IsNullOrEmpty(Setting.LoginUser)) return null;
+            var userJson = Encrypt.DesDecrypt(Setting.LoginUser);
+            return JsonConvert.DeserializeObject<LoginUserModel>(userJson);
+        }
         public static SystemSetting Setting => GetSetting();
         public static SystemSetting GetSetting()
         {
@@ -76,5 +83,65 @@ namespace clawSoft.clawPDF.Core.Settings
                 return 2;
             return 1;
         }
+    }
+
+    public class LoginUserModel
+    {
+        /// <summary>
+        ///主键ID
+        /// <summary>
+        public int UniqueId { get; set; }
+
+        /// <summary>
+        ///科室表主键ID
+        /// <summary>
+        public string HiscaDepartmentId { get; set; }
+        /// <summary>
+        ///
+        /// <summary>
+        public string DepartmentID { get { return HiscaDepartmentId; } }
+
+        /// <summary>
+        ///账户ID
+        /// <summary>
+        public string AccountNo { get; set; }
+
+        /// <summary>
+        ///账号名称
+        /// <summary>
+        public string AccountName { get; set; }
+
+        /// <summary>
+        ///手机号
+        /// <summary>
+        public string Phone { get; set; }
+
+        /// <summary>
+        ///账户类型(1-个人账号)
+        /// <summary>
+        public int Type { get; set; }
+
+        /// <summary>
+        ///创建时间
+        /// <summary>
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 签名账户类型 1-医网信 2-其他
+        /// <summary>
+        public int SignType { get; set; }
+        /// <summary>
+        /// 密码（密文）
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        ///证书用户唯一标识
+        /// <summary>
+        public string UserCertID { get; set; }
+        /// <summary>
+        ///签章
+        /// <summary>
+        public string Base64 { get; set; }
     }
 }

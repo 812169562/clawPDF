@@ -114,7 +114,9 @@
             </StackPanel>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="100" Margin="992,73.4,-318.4,0" Grid.Row="3" VerticalAlignment="Top" Width="100"/>
-        <Border BorderThickness="1" BorderBrush="Gainsboro" Grid.Column="1" Grid.RowSpan="5" Width="1"></Border>
-        <tools:ImageEditor Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" x:Name="ImageEditor"></tools:ImageEditor>
+        <Border BorderThickness="1" BorderBrush="Gainsboro" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Width="1"></Border>
+        <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="3">
+            <tools:ImageEditor x:Name="ImageEditor"></tools:ImageEditor>
+        </Border>
     </Grid>
 </Window>

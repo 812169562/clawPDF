@@ -5,6 +5,7 @@ using System.Windows.Interop;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
+using clawSoft.clawPDF.Utilities;
 using clawSoft.clawPDF.ViewModels;
 
 namespace clawSoft.clawPDF.Views
@@ -65,6 +66,8 @@ namespace clawSoft.clawPDF.Views
             setting.EmailSmtpActionVisible = RisSystemTabUserControl.FtpActionVisible.IsChecked ?? false;
             setting.FtpActionVisible = RisSystemTabUserControl.FtpActionVisible.IsChecked ?? false;
             setting.TextTemplate = RisSystemTabUserControl.txtTextTemplate.Text;
+            setting.PageSize = RisSystemTabUserControl._pageSize;
+            setting.Dpi = RisSystemTabUserControl.txtDPI.Text.IsEmpty() ? 150 : Convert.ToInt32(RisSystemTabUserControl.txtDPI.Text);
             SystemConfig.Save(setting);
             DialogResult = true;
         }

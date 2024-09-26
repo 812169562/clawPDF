@@ -1,12 +1,10 @@
 ﻿using clawPDF.Core;
-using clawSoft.clawPDF.Core.Printer;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Management;
@@ -43,6 +41,7 @@ namespace clawSoft.clawPDF.Core.Request
                         if (!string.IsNullOrEmpty(UploadUrl))
                         {
                             var directory = Application.StartupPath + "\\failfile\\";
+                            if (!Directory.Exists(directory)) return;
                             var files = Directory.GetFiles(directory);
                             foreach (var file in files)
                             {
@@ -134,6 +133,7 @@ namespace clawSoft.clawPDF.Core.Request
                 Log.PrintError("获取打印流程配置失败：" + model.Message);
                 return false;
             }
+            Log.Trace("绑定配置：" + model.Data);
             return model.Data.ToString() == "2";
         }
 
@@ -508,9 +508,9 @@ namespace clawSoft.clawPDF.Core.Request
                 if (model.Status != "0")
                 {
                     Log.Error("获取医网信签章图片失败：" + model.Message);
-                    return ;
+                    return;
                 }
-                 model.Data.ToString();
+                model.Data.ToString();
             }
             catch (Exception ex)
             {

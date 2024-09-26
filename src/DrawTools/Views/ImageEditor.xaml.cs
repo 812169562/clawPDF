@@ -39,6 +39,7 @@ namespace DrawTools.Views
             color_picker.Canceled += delegate { btn_color.IsChecked = false; };
 
             this.toolbar.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(OnDrawToolChecked));
+            drawCanvas.FontSize = SystemConfig.Setting.FontSize > 14 ? SystemConfig.Setting.FontSize : 14;
         }
         /// <summary>
         /// 鼠标点击空白区域默认选择拾取操作
@@ -418,6 +419,12 @@ namespace DrawTools.Views
                 this.drawCanvas.AddTextDrawTool(this.cbxTextTemplate.SelectedItem.ToString());
                 this.cbxTextTemplate.SelectedIndex = 0;
             }
+        }
+        private void font_size_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        {
+            SystemSetting setting = SystemConfig.Setting;
+            setting.FontSize = font_size.Value;
+            SystemConfig.Save(setting);
         }
     }
 }

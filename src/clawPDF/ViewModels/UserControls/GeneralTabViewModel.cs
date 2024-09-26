@@ -70,7 +70,7 @@ namespace clawSoft.clawPDF.ViewModels.UserControls
 
         public string CurrentLanguage
         {
-            get => ApplicationSettings.Language;
+            get => ApplicationSettings?.Language;
             set => ApplicationSettings.Language = value;
         }
 

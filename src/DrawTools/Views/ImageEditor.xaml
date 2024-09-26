@@ -97,8 +97,8 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel>
-        <ToolBarTray DockPanel.Dock="Top">
+    <DockPanel Background="Gainsboro">
+        <ToolBarTray DockPanel.Dock="Top"  Background="White">
             <ToolBar x:Name="toolbar" ToolBarTray.IsLocked="True" Background="Transparent" Height="60" Margin="0">
                 <Button x:Name="btn_save" Style="{StaticResource Page.Styles.Button}" attach:IconElement.Image="../Images/save.png" attach:IconElement.ImageSelected="../Images/save.png" Click="btn_save_Click">保存图像</Button>
                 <Line Height="15" Y2="1" Stroke="#707070" Stretch="Uniform" Margin="6 0" />
@@ -135,7 +135,7 @@
                     <TextBlock FontSize="10" Foreground="#333" Margin="0 4 0 0" HorizontalAlignment="Center">画刷粗细</TextBlock>
                 </StackPanel>
                 <StackPanel Margin="16 6">
-                    <hc:NumericUpDown x:Name="font_size" FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding FontSize,ElementName=drawCanvas}" />
+                    <hc:NumericUpDown x:Name="font_size" FontSize="12" Height="24" MinHeight="0" Padding="5 0" Margin="0" hc:BorderElement.CornerRadius="2" Minimum="1" Maximum="100" Value="{Binding FontSize,ElementName=drawCanvas}" ValueChanged="font_size_ValueChanged" />
                     <TextBlock FontSize="10" Foreground="#333" Margin="0 4 0 0" HorizontalAlignment="Center">文本大小</TextBlock>
                 </StackPanel>
                 <StackPanel Margin="16 6">
@@ -158,7 +158,7 @@
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
-        <local:DrawingCanvasViewer x:Name="drawViewer" BackgroundImage="../Images/img1.jpg" Zoom="1">
+        <local:DrawingCanvasViewer x:Name="drawViewer" BackgroundImage="../Images/img1.jpg">
             <local:DrawingCanvas x:Name="drawCanvas" Background="Transparent" Zoom="{Binding Zoom,ElementName=drawViewer}" />
         </local:DrawingCanvasViewer>
     </DockPanel>

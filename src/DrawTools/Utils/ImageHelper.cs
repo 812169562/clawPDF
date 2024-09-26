@@ -99,29 +99,43 @@ namespace DrawTools.Utils
                     {
                         XImage image = XImage.FromFile(img);
                         var page = pdfDocument.AddPage();
-                        page.Size = PageSize.A4;
-                        //if (image.PixelWidth > image.PixelHeight)
-                        //{
-                        //    page.Orientation = PageOrientation.Landscape;
-                        //}
+                        if (SystemConfig.Setting.PageSize == "A4")
+                        {
+                            page.Size = PageSize.A4;
+                            double widthMm = image.PixelWidth / image.HorizontalResolution * 25.4;
+                            double a4WidthMm = 210.0;
+                            if (widthMm > a4WidthMm && image.PixelWidth > image.PixelHeight)
+                            {
+                                page.Orientation = PageOrientation.Landscape;
+                            }
+                        }
+                        else
+                        {
+                            page.Width = image.PixelWidth;
+                            page.Height = image.PixelHeight;
+                        }
                         XGraphics gfx = XGraphics.FromPdfPage(page);
                         double scaleX = page.Width / image.PixelWidth;
                         double scaleY = page.Height / image.PixelHeight;
-                        double scale = Math.Min(scaleX, scaleY);
+                        if (scaleX < scaleY)
+                        {
+                            scaleY = scaleX;
+                        }
                         XRect pageRect = new XRect(0, 0, image.PixelWidth * scaleX, image.PixelHeight * scaleY);
                         gfx.DrawImage(image, pageRect);
                         image.Dispose();
                         gfx.Dispose();
                     }
                     pdfDocument.Save(pdffile);
+                    //pdfDocument.Save("D:\\szyx\\test-pdf\\sign\\1.pdf");
                     pdfDocument?.Dispose();
                     pdfDocument?.Close();
                 }
             }
             catch (Exception ex)
             {
+                Log.Error(ex);
             }
         }
-
     }
 }
