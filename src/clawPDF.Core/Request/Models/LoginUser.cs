@@ -17,12 +17,12 @@ namespace clawSoft.clawPDF.Core.Request.Models
         /// <summary>
         public string HiscaDepartmentId { get; set; }
         /// <summary>
-        ///
+        ///科室名称
         /// <summary>
-        public string DepartmentID { get { return HiscaDepartmentId; } }
+        public string DepartmentName { get; set; }
 
         /// <summary>
-        ///账户ID
+        ///关联电子签名账户号 医网信openid ，北京ca ukey 账户唯一值
         /// <summary>
         public string AccountNo { get; set; }
 
@@ -47,25 +47,16 @@ namespace clawSoft.clawPDF.Core.Request.Models
         public DateTime CreateTime { get; set; }
 
         /// <summary>
-        /// 签名账户类型 1-医网信 2-其他
+        /// 签名账户类型 1-医网签 2-北京ca
         /// <summary>
         public int SignType { get; set; }
         /// <summary>
         /// 密码（密文）
         /// </summary>
         public string Password { get; set; }
-
         /// <summary>
-        ///证书操作唯一标识
-        /// <summary>
-        public string CertID { get; set; }
-        /// <summary>
-        ///证书用户唯一标识
-        /// <summary>
-        public string UserCertID { get; set; }
-        /// <summary>
-        ///签章
-        /// <summary>
-        public string Base64 { get; set; }
+        /// 电子签名账户名称
+        /// </summary>
+        public string DoctorInfo { get; set; }
     }
 }

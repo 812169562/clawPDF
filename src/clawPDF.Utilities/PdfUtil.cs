@@ -74,5 +74,37 @@ namespace clawSoft.clawPDF.Utilities
                 gfx.DrawImage(image, x, y);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="startPosition">从第X位开始</param>
+        /// <param name="length">读取X位，即X字节</param>
+        /// <returns></returns>
+        public static byte[] GetBytes(string path, long offset, int length)
+        {
+            // 确保文件存在
+            if (!File.Exists(path))
+                return null;
+            // 打开文件流
+            using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                if (length <= 0) length = (int)stream.Length;
+                // 创建缓冲区来存储读取的字节
+                byte[] buffer = new byte[length];
+                // 确保文件长度足够读取
+                if (stream.Length < offset + length)
+                {
+                    buffer = new byte[stream.Length < length ? stream.Length : length];
+                    stream.Read(buffer, 0, (int)stream.Length);
+                }
+                // 移动到起始位置
+                stream.Seek(offset - 1, SeekOrigin.Begin);
+                // 读取指定长度的字节
+                int bytesRead = stream.Read(buffer, 0, length);
+                return buffer;
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace clawSoft.clawPDF.Core.Views
         public SelectAccount()
         {
             InitializeComponent();
-            this.Topmost = true;
+            //this.Topmost = true;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -52,24 +52,32 @@ namespace clawSoft.clawPDF.Core.Views
 
         private void SelectedItem()
         {
-            if (dataGrid.SelectedItem == null) return;
-            LoginUser user = (LoginUser)dataGrid.SelectedItem;
-            // 判断
-            if (user.SignType == 2 && (user.UserCertID.IsEmpty() || Login.strUserCertID != user.UserCertID))
+            try
             {
-                Login login = new Login();
-                login.ShowDialog();
-                if (login.IsLogin)
+                if (dataGrid.SelectedItem == null) return;
+                LoginUser user = (LoginUser)dataGrid.SelectedItem;
+                // 判断 TODO
+                if (user.SignType == 2 && (user.AccountNo.IsEmpty() || Login.strUserCertID != user.AccountNo))
                 {
-                    user.UserCertID = Login.strUserCertID;
-                    user.Base64 = Login.strPicBase64;
+                    Login login = new Login();
+                    login.ShowDialog();
+                    user.AccountNo = Login.strUserCertID;
+                    user.DoctorInfo = $"{Login.strUserName}||{Login.strCertId}";
+                    user.SignType = 2;
+                    HttpUploadRequest.BindSignatureAccount(user);
                 }
+                else
+                {
+                    SystemSetting setting = SystemConfig.Setting;
+                    setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
+                    SystemConfig.Save(setting);
+                }
+                this.Close();
             }
-
-            SystemSetting setting = SystemConfig.Setting;
-            setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
-            SystemConfig.Save(setting);
-            this.Close();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)

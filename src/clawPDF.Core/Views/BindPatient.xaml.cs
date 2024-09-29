@@ -1,10 +1,9 @@
-﻿using clawPDF.Core;
-using clawPDF.Signature;
+﻿using clawPDF.Signature;
 using clawPDF.Signature.Service;
 using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Utilities;
-using System.Collections.Generic;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Log = clawPDF.Core.Log;
@@ -19,12 +18,12 @@ namespace clawSoft.clawPDF.Core.Views
         public string file;
         public static PatientModel _patient;
         public LoginUser _user;
-        public SystemConfigModel _systemConfig;
+        public SigningProcesModel signingProces;
         public bool isUpload;
         public BindPatient()
         {
             InitializeComponent();
-            this.Topmost = true;
+            //this.Topmost = true;
             this.WindowState = WindowState.Maximized;
             this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
@@ -38,26 +37,25 @@ namespace clawSoft.clawPDF.Core.Views
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ImageEditor.FilePath = file;// "D:\\szyx\\test-pdf\\00001\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
+            InitUser();
+            signingProces = HttpUploadRequest.GetSigningProces();
+            ok.Content = signingProces.SignatureProcessConfigWay == 2 ? "签名并上传" : "绑定";
+        }
+
+        private void InitUser()
+        {
             if (_user == null)
             {
                 MessageBox.Show("请选择医师账号！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
                 return;
             }
-            InitUser();
-            _systemConfig = HttpUploadRequest.GetSystemConfig();
-            ok.Content = _systemConfig.SigningProcess == 1 ? "签名并上传" : "绑定";
-        }
-
-        private void InitUser()
-        {
-            if (_user == null) return;
-            List<KeyValue> keys = new List<KeyValue>
-            {
-                new KeyValue { Key = "", Value = "全部" },
-                new KeyValue { Key = _user.DepartmentID, Value = _user.DepartmentID }
-            };
-            cbbExecDept.ItemsSource = keys;
-            cbbExecDept.DisplayMemberPath = "Value";
+            //List<KeyValue> keys = new List<KeyValue>
+            //{
+            //    new KeyValue { Key = "", Value = "全部" },
+            //    new KeyValue { Key = _user.HiscaDepartmentId, Value = _user.DepartmentName }
+            //};
+            //cbbExecDept.ItemsSource = keys;
+            //cbbExecDept.DisplayMemberPath = "Value";
             txtAccount.Text = _user.AccountName;
         }
 
@@ -112,35 +110,44 @@ namespace clawSoft.clawPDF.Core.Views
         {
             var signbase64 = "";
             // 判断是否配置独立签名
-            if (_systemConfig.SigningProcess == 1)
+            if (signingProces.SignatureProcessConfigWay == 2)
             {
                 MessageBoxResult messageBoxResult = MessageBox.Show("绑定成功并上传至后台，请确认是否签名？", "", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 // 1、取消：不签名，直接上传
                 if (messageBoxResult == MessageBoxResult.Cancel)
                     return;
-                if (_systemConfig.SignatureFirm == "ywq")
+                if (_user.SignType == 1)
                 {
                     signbase64 = HttpUploadRequest.GetSignImage(_user.AccountNo);
                 }
             }
-            if (_systemConfig.SignatureFirm == "bjca")
+            if (_user.SignType == 2)
             {
                 // 2、确定：判断当前登录账号是否与绑定的一致？
-                if (_user.UserCertID.IsEmpty() || _user.UserCertID != Login.strUserCertID)
+                if (_user.AccountNo.IsEmpty() || _user.AccountNo != Login.strUserCertID)
                 {
                     // 2-1、不一致，弹出登录框
                     Login login = new Login();
                     login.ShowDialog();
                     if (!login.IsLogin) return;
-                    HttpUploadRequest.BingdingUser(_user.UniqueId, Login.strUserCertID, Login.strPicBase64);
+                    _user.AccountNo = Login.strUserCertID;
+                    _user.DoctorInfo = $"{Login.strUserName}||{Login.strCertId}";
+                    _user.SignType = 2;
+                    HttpUploadRequest.BindSignatureAccount(_user);
                 }
                 // 账号一致，调用签名
-                var res = SignatureService.Instance.SignData(Login.strCertId, file);
+                var bytes = PdfUtil.GetBytes(file, 64, 99);
+                var res = SignatureService.Instance.SignData(Login.strCertId, Convert.ToBase64String(bytes));
                 if (res.Status == "-1")
                     throw new System.Exception($"签名失败：{res.Message}");
                 signbase64 = Login.strPicBase64;
+                _patient.Cert = res.Data.CertId;
+                _patient.SignData = res.Data.SignValue;
+                _patient.PlainData = res.Data.OrgData;
+                _patient.PlainTimestampData = res.Data.OrgData;
+                _patient.SignTimestamp = res.Data.TimeStamp;
             }
-            var sign = HttpUploadRequest.GetSignSetting();
+            var sign = HttpUploadRequest.GetSignSetting(_patient.CheckItem);
             PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh);
         }
 
@@ -199,6 +206,7 @@ namespace clawSoft.clawPDF.Core.Views
             this.txtNo.Text = "";
             this.txtAppNo.Text = "";
             this.txtName.Text = "";
+            //cbbExecDept.SelectedIndex = 0;
             this.dataGrid.ItemsSource = null;
         }
         /// <summary>

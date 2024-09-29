@@ -1,4 +1,6 @@
 ﻿using clawPDF.Signature.Model.Result;
+using System.IO;
+using System;
 using System.Windows.Forms;
 
 namespace clawPDF.Signature.Service
@@ -19,8 +21,8 @@ namespace clawPDF.Signature.Service
             //1、客户端签名，利用私钥对签名原文签名，签名时必须插上key而且必须已经登录  
             if (string.IsNullOrEmpty(strOrgData))
                 return ResultUtil.Fail<SignResult>("签名原文为空");
-            //string strSignValue = xtx.SOF_SignData(strCertId, strOrgData);//签名数据
-            string strSignValue = xtx.SOF_SignFile(strCertId, strOrgData);
+            string strSignValue = xtx.SOF_SignData(strCertId, strOrgData);//签名数据
+            //string strSignValue = xtx.SOF_SignFile(strCertId, strOrgData);
             if (string.IsNullOrEmpty(strSignValue))
                 return ResultUtil.Fail<SignResult>("客户端签名失败");
             //2、对原文加盖时间戳
@@ -31,8 +33,10 @@ namespace clawPDF.Signature.Service
             if (string.IsNullOrEmpty(strTimeStamp))
                 return ResultUtil.Fail<SignResult>("加盖时间戳失败");
             SignResult sign = new SignResult();
-            sign.TimeStamp = strTimeStamp;
+            sign.OrgData = strOrgData;
             sign.SignValue = strSignValue;
+            sign.CertId = strCertId;
+            sign.TimeStamp = strTimeStamp;
             return ResultUtil.Success(sign);
         }
     }

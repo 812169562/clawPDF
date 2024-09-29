@@ -58,5 +58,25 @@ namespace clawSoft.clawPDF.Core.Request.Models
         ///  0-查询，1-绑定
         /// <summary>
         public int BindSource { get; set; }
+        /// <summary>
+        ///  签名证书
+        /// <summary>
+        public string Cert { get; set; }
+        /// <summary>
+        ///  签名原文
+        /// <summary>
+        public string PlainData { get; set; }
+        /// <summary>
+        ///  签名值
+        /// <summary>
+        public string SignData { get; set; }
+        /// <summary>
+        ///  时间戳原文
+        /// <summary>
+        public string PlainTimestampData { get; set; }
+        /// <summary>
+        ///  签名时间戳
+        /// <summary>
+        public string SignTimestamp { get; set; }
     }
 }

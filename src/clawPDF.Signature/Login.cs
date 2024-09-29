@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Interop;
 
 namespace clawPDF.Signature
 {
@@ -12,6 +12,7 @@ namespace clawPDF.Signature
         public static string strCertId;//certId
         public static string strUserCert;//用户证书
         public static string strUserCertID;//用户证书Id
+        public static string strUserName;//用户证书名称
         public static string strPicBase64;// = "R0lGODlhWwA3ANUAAAAAAP///wUGBhgZGRcaGB8jIAABAAECAQIDAgYIBgMEAwQFBAUGBRIVEhoeGg0PDQ4QDgcIBw8RDwgJCBodGgkKCQoLChUXFQwNDBweHA4PDhAREBITEhoeGR4iHSEkIBocGRsdGgkKCAEBAAICAQMDAgUFBAkJCBgYGAYGBgUFBQQEBAMDAwICAgEBAf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAABbADcAAAb/wJdwSCwaj8ikcslsOp/QaKuFdAGu0aL1yu0CVtnsyusttq4KQFi4BbimrTZ33SS7wGeW2oilL/VXLn5ICG5JaHx7g0tuiotPfUSRj0mAlJCOL2OCl4yZnUeTL5ErpaBFKqKnko5XK2dkKmGqRbSro4pfGVYuCK9ynJBxnrdsLEKRXSYHBlRDZwYAznUJn7XWl322uEZ6Vk4t0cSnsi5vyNjcoemJCLJV5rPYWwpj6IfWACbsQoAYHVumEUkTDMqXKweGgBGSqoK9barGICgYileLEwZSndMC4JiTNhEmLHiwxYVHNi0GqNnGohkRKyT4qYuzR9W2ImPINCAAAQAD/yPm7LEYgQCJpRfReDkJxM2cwBcs4jUp8QkAh29Gcg6x9SYNF4pMYDkAkEJUCaxOFqTQ4kIF2q0b1YUSETfMGwqTNMo8sqBWoVYAUBwYc+wtx4V+AES4QEaanxXvsBhCx6IAVj19jzC42STOBzUsWqy4s4hBvG+iOrYCu3UvPgAhcnU6wyBqqkSs8K05mow1nQUANhzN3Vp3lNGk7wk5c+rKu2tEaFdx3c8NYnSQQ1PHdKhWQiQASDTJOe3VFQkeuvj2w3xpOs4vnGpqrAFE8mJK1hYHz84KCwuwBHISABPhF4VhxBlxRgsHdPEUMnUZiARimymAxBnPRYeQCUuM0KGLhEu4Bdch6zkRVYkgjsIJRNvxl6ISGsmF2yDwgeiGaO+1uM6LjLggQDp50KhjMXOQKCSPTLBw0o6JDYlkgmvU+KRxdEg55REIRmHllah01CSXUY7ghxWZgWmQk8t9YaaWaL5wxnVrMrFlNybF+cRESx43mZ11oJlKm1POScSffLpHB6GFhgVAhlAAB2igTpb16JOC7pfoOJcWo0emBiIWBAA7";
         /// <summary>
         /// 是否登录成功
@@ -82,6 +83,7 @@ namespace clawPDF.Signature
             if (cbxUsername.SelectedIndex == -1) return;
 
             strCertId = ((User)cbxUsername.SelectedItem).CertId;
+            strUserName = ((User)cbxUsername.SelectedItem).Username;
             strUserCert = axXTXApp1.SOF_ExportUserCert(strCertId);//导出用户证书
             var certType = axXTXApp1.SOF_GetCertInfo(strUserCert, 3); // 证书类型 返回"RSA"或"SM2"
             oid = certType == "SM2" ? "1.2.156.112562.2.1.1.1" : "2.16.840.1.113732.2";
@@ -105,7 +107,6 @@ namespace clawPDF.Signature
             if (string.IsNullOrEmpty(txtPassword.Text))
             {
                 msg.Text = "提示：密码不能为空";
-                //MessageBox.Show("请输入密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
                 return;
             }
             //获取随机数  随机数签名值 服务器证书
@@ -123,7 +124,6 @@ namespace clawPDF.Signature
             if (!blRet)
             {
                 msg.Text = "提示：客户端验证服务器签名失败";
-                //MessageBox.Show("客户端验证服务器签名失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); //弹出提示框
                 return;
             }
             // 验证密码是否通过
@@ -136,17 +136,14 @@ namespace clawPDF.Signature
                 if (errorTimes < 0)
                 {
                     msg.Text = "提示：获取重试次数失败";
-                    //MessageBox.Show("获取重试次数失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 if (errorTimes == 0)
                 {
-                    msg.Text = "提示：您的证书已经锁死，请到相关部门进行解锁.";
-                    //MessageBox.Show("您的证书已经锁死，请到相关部门进行解锁.", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    msg.Text = "提示：您的证书已经锁死，请联系北京CA进行解锁.";
                     return;
                 }
                 msg.Text = $"提示：账号密码不正确，您还有{errorTimes}次机会";
-                //MessageBox.Show($"登录失败，您还有{errorTimes}次机会", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             string strSingnValue = xtx.SOF_SignData(strCertId, Random_num);
@@ -154,7 +151,6 @@ namespace clawPDF.Signature
             if (ret != 0)
             {
                 msg.Text = "提示：服务器验证签名失败";
-                //MessageBox.Show("服务器验证签名失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             int retV_cert = svs.ValidateCertificate(strUserCert);//验证客户端证书有效性操作
@@ -164,23 +160,18 @@ namespace clawPDF.Signature
                 case 0: break;
                 case -1:
                     msg.Text = "提示：不是所信任的根";
-                    //MessageBox.Show("不是所信任的根", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
                     return;
                 case -2:
                     msg.Text = "提示：超过有效期，请更换证书";
-                    //MessageBox.Show("超过有效期，请更换证书", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
                     return;
                 case -3:
                     msg.Text = "提示：证书已作废";
-                    //MessageBox.Show("作废证书", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
                     return;
                 case -4:
                     msg.Text = "提示：证书已加入黑名单";
-                    //MessageBox.Show("证书已加入黑名单", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
                     return;
                 case -5:
                     msg.Text = "提示：证书未生效";
-                    //MessageBox.Show("证书未生效", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
                     return;
                 default: return;
             }
@@ -191,11 +182,10 @@ namespace clawPDF.Signature
             if (string.IsNullOrEmpty(strPicBase64))
             {
                 msg.Text = "提示：获取签章图片失败";
-                //MessageBox.Show("获取签章图片失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             IsLogin = true;
-            MessageBox.Show("登录成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            System.Windows.MessageBox.Show("登录成功！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, System.Windows.MessageBoxOptions.DefaultDesktopOnly);
             this.Close();
         }
 

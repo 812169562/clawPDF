@@ -18,12 +18,19 @@ namespace clawSoft.clawPDF.Core.Request
 {
     public static class HttpUploadRequest
     {
-        private static string QueryUsersUrl = "/ris/out-api/print/getAccountListByEquipment";
-        private static string QueryPatientsUrl = "/ris/out-api/print/queryPatientInfo";
-        private static string PrintSettingUrl = "/ris/out-api/print/getPrintConfig";
-        private static string SignSettingUrl = "/ris/out-api/print/getSignConfig";
+        private static string QueryUsersUrl = "/ris/out-api/print/getAccountListByEquipment"; // 获取设备下所有账户
+        private static string QueryPatientsUrl = "/ris/out-api/print/queryPatientInfo"; // 绑定操作 查询患者信息
+        private static string PrintSettingUrl = "/ris/out-api/print/getPrintConfig"; // 获取设备打印配置
+        private static string SigningProcesUrl = "/ris/setting/signing-process/get"; // 获取是否存在签名流程
+        private static string SignSettingUrl = "/ris/out-api/print/getSignConfig"; // 根据绑定患者的检查项目获取签章配置
+        private static string BindSignatureAccountUrl = "/ris/out-api/print/bindSignatureAccount"; // 绑定签名账户
+        private static string GetUserSignStampUrl = "/ris/out-api/print/getUserSignStamp"; // 获取用户签章信息
+
+
+
         public static string UploadUrl;
         private static string guid = "QzwQbZxDanJiRistkhHARz9fdBehDF8r";
+        public static string _equipmentId;
 
         static HttpUploadRequest()
         {
@@ -133,8 +140,9 @@ namespace clawSoft.clawPDF.Core.Request
                 Log.PrintError("获取打印流程配置失败：" + model.Message);
                 return false;
             }
-            Log.Trace("绑定配置：" + model.Data);
-            return model.Data.ToString() == "2";
+            PrintSettingModel settingModel = JsonConvert.DeserializeObject<PrintSettingModel>(model.Data.ToString());
+            _equipmentId = settingModel.EquipmentId;
+            return settingModel.PrintProcess == 2;
         }
 
         /// <summary>
@@ -155,7 +163,7 @@ namespace clawSoft.clawPDF.Core.Request
             LoginUser loginUser = GetLoginUser();
             if (loginUser == null)
                 throw new Exception("请选择登录账号！");
-            var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, HiscaDepartmentId = loginUser.HiscaDepartmentId, guid };
+            var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, loginUser.HiscaDepartmentId, guid };
             request.AddJsonBody(body);
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
@@ -183,18 +191,23 @@ namespace clawSoft.clawPDF.Core.Request
                 patientDto = new
                 {
                     PatientCode = patient.InpatientNum,
-                    PatientName = patient.PatientName,
                     ApplyCode = patient.RequestNum,
+                    ApplyTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     PatientNo = "",
                     AdviceCode = "",
-                    PatientType = patient.PatientType,
-                    Times = patient.Times,
-                    Sex = patient.Sex,
-                    Age = patient.Age,
-                    CheckItem = patient.CheckItem,
-                    ApplyTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    DocTitle = patient.DocTitle,
-                    BindSource = patient.BindSource
+                    patient.PatientName,
+                    patient.PatientType,
+                    patient.Times,
+                    patient.Sex,
+                    patient.Age,
+                    patient.CheckItem,
+                    patient.DocTitle,
+                    patient.BindSource,
+                    patient.Cert,
+                    patient.PlainData,
+                    patient.SignData,
+                    patient.PlainTimestampData,
+                    patient.SignTimestamp
                 };
             }
             var list = SplitFileUpload(file);
@@ -371,10 +384,10 @@ namespace clawSoft.clawPDF.Core.Request
         }
 
         /// <summary>
-        /// 获取签名配置
+        /// 根据绑定患者的检查项目获取签章配置
         /// </summary>
         /// <returns></returns>
-        public static SignConfigModel GetSignSetting()
+        public static SignConfigModel GetSignSetting(string checkItem)
         {
             SignConfigModel config = new SignConfigModel();
             try
@@ -384,7 +397,8 @@ namespace clawSoft.clawPDF.Core.Request
                 var client = new RestClient(SystemConfig.Setting.RisUrl);
                 var request = new RestRequest(SignSettingUrl, Method.GET);
                 request.AddHeader("Content-Type", "application/json");
-                request.AddParameter("mac", GetMacByWMI());
+                request.AddParameter("checkItem", checkItem);
+                request.AddParameter("equipmentId", _equipmentId);
                 request.AddParameter("guid", guid);
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
@@ -398,7 +412,8 @@ namespace clawSoft.clawPDF.Core.Request
                     Log.Error("获取签名配置失败：" + model.Message);
                     return config;
                 }
-                config = JsonConvert.DeserializeObject<SignConfigModel>(model.Data.ToString());
+                if (model.Data != null)
+                    config = JsonConvert.DeserializeObject<SignConfigModel>(model.Data.ToString());
             }
             catch (Exception ex)
             {
@@ -407,45 +422,45 @@ namespace clawSoft.clawPDF.Core.Request
             return config;
         }
         /// <summary>
-        /// 获取系统配置
+        /// 获取是否存在签名流程
         /// </summary>
         /// <returns></returns>
-        public static SystemConfigModel GetSystemConfig()
+        public static SigningProcesModel GetSigningProces()
         {
-            var config = new SystemConfigModel();
-            //try
-            //{
-            //    if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
-            //        return config;
-            //    var client = new RestClient(SystemConfig.Setting.RisUrl);
-            //    var request = new RestRequest(SignSettingUrl, Method.GET);
-            //    request.AddHeader("Content-Type", "application/json");
-            //    request.AddParameter("guid", guid);
-            //    IRestResponse response = client.Execute(request);
-            //    if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
-            //    {
-            //        Log.Error("获取系统配置失败：" + response.StatusDescription + response.ErrorMessage);
-            //        return config;
-            //    }
-            //    ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
-            //    if (model.Status != "0")
-            //    {
-            //        Log.Error("获取系统配置失败：" + model.Message);
-            //        return config;
-            //    }
-            //    config = JsonConvert.DeserializeObject<SystemConfigModel>(model.Data.ToString());
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error("获取系统配置异常：" + ex.Message);
-            //}
+            var config = new SigningProcesModel();
+            try
+            {
+                if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+                    return config;
+                var client = new RestClient(SystemConfig.Setting.RisUrl);
+                var request = new RestRequest(SigningProcesUrl, Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("guid", guid);
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                {
+                    Log.Error("获取签名流程失败：" + response.StatusDescription + response.ErrorMessage);
+                    return config;
+                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                {
+                    Log.Error("获取签名流程失败：" + model.Message);
+                    return config;
+                }
+                config = JsonConvert.DeserializeObject<SigningProcesModel>(model.Data.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error("获取签名流程异常：" + ex.Message);
+            }
             return config;
         }
         /// <summary>
         /// 获取医网信签章图片
         /// </summary>
         /// <returns></returns>
-        public static string GetSignImage(string openId)
+        public static string GetSignImage(string accountNo)
         {
             try
             {
@@ -453,10 +468,10 @@ namespace clawSoft.clawPDF.Core.Request
                     return string.Empty;
                 var client = new RestClient(SystemConfig.Setting.RisUrl);
                 client.Timeout = 6000;
-                var request = new RestRequest(SignSettingUrl, Method.GET);
+                var request = new RestRequest(GetUserSignStampUrl, Method.GET);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("guid", guid);
-                request.AddParameter("openId", openId);
+                request.AddParameter("accountNo", accountNo);
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 {
@@ -478,13 +493,11 @@ namespace clawSoft.clawPDF.Core.Request
             }
         }
         /// <summary>
-        /// 绑定用户签名
+        /// 绑定签名账户
         /// </summary>
-        /// <param name="uniqueId"></param>
-        /// <param name="strUserCertID"></param>
-        /// <param name="strPicBase64"></param>
+        /// <param name="user"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public static void BingdingUser(int uniqueId, string strUserCertID, string strPicBase64)
+        public static void BindSignatureAccount(LoginUser user)
         {
             try
             {
@@ -492,29 +505,39 @@ namespace clawSoft.clawPDF.Core.Request
                     return;
                 var client = new RestClient(SystemConfig.Setting.RisUrl);
                 client.Timeout = 6000;
-                var request = new RestRequest(SignSettingUrl, Method.POST);
+                var request = new RestRequest(BindSignatureAccountUrl, Method.POST);
                 request.AddHeader("Content-Type", "application/json");
-                request.AddParameter("guid", guid);
-                request.AddParameter("uniqueId", uniqueId);
-                request.AddParameter("userCertID", strUserCertID);
-                request.AddParameter("picBase64", strPicBase64);
+                var body = new
+                {
+                    guid,
+                    uniqueId = user.UniqueId,
+                    departmentId = user.HiscaDepartmentId,
+                    accountName = user.AccountName,
+                    accountNo = user.AccountNo,
+                    doctorInfo = user.DoctorInfo,
+                    phone = user.Phone,
+                    signType = user.SignType,
+                };
+                request.AddJsonBody(body);
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 {
-                    Log.Error("获取医网信签章图片失败：" + response.StatusDescription + response.ErrorMessage);
+                    Log.Error("绑定签名账户失败：" + response.StatusDescription + response.ErrorMessage);
                     return;
                 }
                 ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
                 if (model.Status != "0")
                 {
-                    Log.Error("获取医网信签章图片失败：" + model.Message);
+                    Log.Error("绑定签名账户失败：" + model.Message);
                     return;
                 }
-                model.Data.ToString();
+                SystemSetting setting = SystemConfig.Setting;
+                setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
+                SystemConfig.Save(setting);
             }
             catch (Exception ex)
             {
-                Log.Error("获取医网信签章图片异常：" + ex.Message);
+                Log.Error("绑定签名账户异常：" + ex.Message);
             }
         }
     }

@@ -12,8 +12,16 @@ namespace clawPDF.Signature.Model.Result
         /// </summary>
         public string SignValue { get; set; }
         /// <summary>
+        /// 签名原文
+        /// </summary>
+        public string OrgData { get; set; }
+        /// <summary>
         /// 时间戳
         /// </summary>
         public string TimeStamp { get; set; }
+        /// <summary>
+        /// 签名证书
+        /// </summary>
+        public string CertId { get; set; }
     }
 }
