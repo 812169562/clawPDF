@@ -28,7 +28,7 @@ namespace clawSoft.clawPDF
     public partial class App
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
         public App()
         {
             InitializeComponent();
@@ -69,6 +69,14 @@ namespace clawSoft.clawPDF
                 MessageBox.Show(key);
                 //return;
             }
+
+            if (!Cmd.IsExistApp("clawPDF.Signature"))
+            {
+                Log.Debug("开始启动clawPDF.Signature");
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Signature", "clawPDF.Signature.exe");
+                Cmd.StartApp(path, SystemConfig.Setting.SignServer);
+            }
+
             //var client = new RestClient("https://betainner.51trust.com/ris/hospital/reportDoc/queryPatientInfo");
             //var request = new RestRequest("", Method.POST);
             //client.Proxy = WebRequest.DefaultWebProxy;  // <== Add this line in your code?
@@ -138,7 +146,7 @@ namespace clawSoft.clawPDF
         {
             Log.Batch("当前计算机名：" + Environment.UserName);
             Log.Batch("当前计算机域：" + Environment.UserDomainName);
-            Log.Debug("开始启动8"+ commandLineArguments);
+            Log.Debug("开始启动8" + commandLineArguments);
             CheckSpoolerRunning();
             Log.Debug("开始启动9");
             // Must be done before the other checks to initialize the translator

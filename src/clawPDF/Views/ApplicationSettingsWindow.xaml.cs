@@ -68,6 +68,7 @@ namespace clawSoft.clawPDF.Views
             setting.TextTemplate = RisSystemTabUserControl.txtTextTemplate.Text;
             setting.PageSize = RisSystemTabUserControl._pageSize;
             setting.Dpi = RisSystemTabUserControl.txtDPI.Text.IsEmpty() ? 150 : Convert.ToInt32(RisSystemTabUserControl.txtDPI.Text);
+            setting.SignServer = RisSystemTabUserControl.txtSignServer.Text;
             SystemConfig.Save(setting);
             DialogResult = true;
         }

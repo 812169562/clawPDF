@@ -34,16 +34,16 @@ namespace clawSoft.clawPDF.Views.UserControls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.txtRisUrl.Text = SystemConfig.Setting.RisUrl;
-            List<KeyValue> keys = new List<KeyValue>
-            {
-                new KeyValue { Key = 1, Value = "印刷体打印" },
-                new KeyValue { Key = 2, Value = "PDF打印" }
-            };
-            cbbPrintWay.ItemsSource = keys;
-            if (SystemConfig.Setting.PrintWay <= 0 || !keys.Any(t => t.Key == SystemConfig.Setting.PrintWay))
-                cbbPrintWay.SelectedItem = keys[0];
-            else
-                cbbPrintWay.SelectedItem = keys.FirstOrDefault(t => t.Key == SystemConfig.Setting.PrintWay);
+            //List<KeyValue> keys = new List<KeyValue>
+            //{
+            //    new KeyValue { Key = 1, Value = "印刷体打印" },
+            //    new KeyValue { Key = 2, Value = "PDF打印" }
+            //};
+            //cbbPrintWay.ItemsSource = keys;
+            //if (SystemConfig.Setting.PrintWay <= 0 || !keys.Any(t => t.Key == SystemConfig.Setting.PrintWay))
+            //    cbbPrintWay.SelectedItem = keys[0];
+            //else
+            //    cbbPrintWay.SelectedItem = keys.FirstOrDefault(t => t.Key == SystemConfig.Setting.PrintWay);
 
             List<KeyValue> keys1 = new List<KeyValue>
             {
@@ -51,10 +51,10 @@ namespace clawSoft.clawPDF.Views.UserControls
                 new KeyValue { Key = 2, Value = "Other", Label = "其他" }
             };
             cbbPageSize.ItemsSource = keys1;
-            if (SystemConfig.Setting.PageSize.IsEmpty() || !keys.Any(t => t.Value == SystemConfig.Setting.PageSize))
-                cbbPrintWay.SelectedItem = keys[0];
+            if (SystemConfig.Setting.PageSize.IsEmpty() || !keys1.Any(t => t.Value == SystemConfig.Setting.PageSize))
+                cbbPageSize.SelectedItem = keys1[0];
             else
-                cbbPrintWay.SelectedItem = keys.FirstOrDefault(t => t.Value == SystemConfig.Setting.PageSize);
+                cbbPageSize.SelectedItem = keys1.FirstOrDefault(t => t.Value == SystemConfig.Setting.PageSize);
 
             PdfTabVisible.IsChecked = SystemConfig.Setting.PdfTabVisible;
             //OCRTabVisible.IsChecked = SystemConfig.Setting.OCRTabVisible;
@@ -67,22 +67,23 @@ namespace clawSoft.clawPDF.Views.UserControls
             FtpActionVisible.IsChecked = SystemConfig.Setting.FtpActionVisible;
             txtTextTemplate.Text = SystemConfig.Setting.TextTemplate;
             txtDPI.Text = (SystemConfig.Setting.Dpi ?? 150).ToString();
+            txtSignServer.Text = SystemConfig.Setting.SignServer;
         }
 
         private void cbbPrintWay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cbbPrintWay.SelectedItem == null)
-                _printWay = 1;
-            else
-                _printWay = ((KeyValue)cbbPrintWay.SelectedItem).Key;
+            //if (cbbPrintWay.SelectedItem == null)
+            //    _printWay = 1;
+            //else
+            //    _printWay = ((KeyValue)cbbPrintWay.SelectedItem).Key;
         }
 
         private void cbbPageSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cbbPrintWay.SelectedItem == null)
+            if (cbbPageSize.SelectedItem == null)
                 _pageSize = "A4";
             else
-                _pageSize = ((KeyValue)cbbPrintWay.SelectedItem).Value;
+                _pageSize = ((KeyValue)cbbPageSize.SelectedItem).Value;
         }
     }
 }

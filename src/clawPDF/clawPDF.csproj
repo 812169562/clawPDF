@@ -193,6 +193,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Startup\AppStart.cs" />
     <Compile Include="Startup\AppStartFactory.cs" />
+    <Compile Include="Startup\Cmd.cs" />
     <Compile Include="Startup\DragAndDropStart.cs" />
     <Compile Include="Startup\InitializeSettingsStart.cs" />
     <Compile Include="Startup\MainWindowStart.cs" />

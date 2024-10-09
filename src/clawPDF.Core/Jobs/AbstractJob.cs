@@ -644,6 +644,11 @@ namespace clawSoft.clawPDF.Core.Jobs
             {
                 BindPatient dialog = new BindPatient();
                 dialog.file = this.OutputFiles[0];
+#if DEBUG
+#else
+                dialog.Topmost = true;
+                dialog.Activate();
+#endif
                 dialog.ShowDialog();
                 if (!dialog.isUpload) 
                     return;

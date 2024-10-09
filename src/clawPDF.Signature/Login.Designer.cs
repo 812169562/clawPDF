@@ -35,8 +35,8 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.txtPassword = new System.Windows.Forms.MaskedTextBox();
             this.cbxUsername = new System.Windows.Forms.ComboBox();
-            this.axXTXApp1 = new AxXTXAppCOMLib.AxXTXApp();
             this.msg = new System.Windows.Forms.Label();
+            this.axXTXApp1 = new AxXTXAppCOMLib.AxXTXApp();
             ((System.ComponentModel.ISupportInitialize)(this.axXTXApp1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,7 +61,7 @@
             // btnLogin
             // 
             this.btnLogin.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btnLogin.Location = new System.Drawing.Point(296, 189);
+            this.btnLogin.Location = new System.Drawing.Point(141, 189);
             this.btnLogin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 34);
@@ -72,7 +72,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(129, 189);
+            this.btnCancel.Location = new System.Drawing.Point(282, 189);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 34);
@@ -100,18 +100,6 @@
             this.cbxUsername.TabIndex = 8;
             this.cbxUsername.SelectedIndexChanged += new System.EventHandler(this.cbxUsername_SelectedIndexChanged);
             // 
-            // axXTXApp1
-            // 
-            this.axXTXApp1.Enabled = true;
-            this.axXTXApp1.Location = new System.Drawing.Point(1, 0);
-            this.axXTXApp1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.axXTXApp1.Name = "axXTXApp1";
-            this.axXTXApp1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axXTXApp1.OcxState")));
-            this.axXTXApp1.Size = new System.Drawing.Size(240, 240);
-            this.axXTXApp1.TabIndex = 7;
-            this.axXTXApp1.Visible = false;
-            this.axXTXApp1.OnUsbkeyChange += new System.EventHandler(this.axXTXApp1_OnUsbkeyChange);
-            // 
             // msg
             // 
             this.msg.AutoSize = true;
@@ -122,11 +110,22 @@
             this.msg.Size = new System.Drawing.Size(0, 15);
             this.msg.TabIndex = 9;
             // 
+            // axXTXApp1
+            // 
+            this.axXTXApp1.Enabled = true;
+            this.axXTXApp1.Location = new System.Drawing.Point(25, 13);
+            this.axXTXApp1.Name = "axXTXApp1";
+            this.axXTXApp1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axXTXApp1.OcxState")));
+            this.axXTXApp1.Size = new System.Drawing.Size(240, 240);
+            this.axXTXApp1.TabIndex = 10;
+            this.axXTXApp1.Visible = false;
+            this.axXTXApp1.OnUsbkeyChange += new System.EventHandler(this.axXTXApp1_OnUsbkeyChange);
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(479, 236);
+            this.ClientSize = new System.Drawing.Size(482, 273);
             this.Controls.Add(this.msg);
             this.Controls.Add(this.cbxUsername);
             this.Controls.Add(this.txtPassword);
@@ -142,6 +141,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "数字认证签名账号登录";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Login_FormClosing);
             this.Load += new System.EventHandler(this.Login_Load);
             ((System.ComponentModel.ISupportInitialize)(this.axXTXApp1)).EndInit();
             this.ResumeLayout(false);
@@ -157,7 +157,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.MaskedTextBox txtPassword;
         private System.Windows.Forms.ComboBox cbxUsername;
-        private AxXTXAppCOMLib.AxXTXApp axXTXApp1;
         private System.Windows.Forms.Label msg;
+        private AxXTXAppCOMLib.AxXTXApp axXTXApp1;
     }
 }

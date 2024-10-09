@@ -249,14 +249,16 @@ namespace clawSoft.clawPDF.Core.Actions
         public void ClearImage(string file)
         {
             var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
-            var files = Directory.GetFiles(directory);
-            foreach (var item in files)
-            {
-                if (File.Exists(item))
-                    File.Delete(item);
-            }
             if (Directory.Exists(directory))
+            {
+                var files = Directory.GetFiles(directory);
+                foreach (var item in files)
+                {
+                    if (File.Exists(item))
+                        File.Delete(item);
+                }
                 Directory.Delete(directory);
+            }
             File.Delete(file);
         }
 

@@ -25,7 +25,9 @@
                         </Grid.RowDefinitions>
                         <TextBlock Margin="0,6" Grid.Column="0" Grid.Row="0" TextWrapping="Wrap">单机设备管理系统地址：</TextBlock>
                         <TextBox Grid.Column="0" Grid.Row="1" Name="txtRisUrl" Height="22" />
-                        <TextBlock Grid.Column="2" Grid.Row="0" Margin="0,6" TextWrapping="Wrap">打印类型：</TextBlock>
+                        <TextBlock Grid.Column="2" Grid.Row="0" Margin="0,6" TextWrapping="Wrap">签名服务地址：</TextBlock>
+                        <TextBox Grid.Column="2" Grid.Row="1" Name="txtSignServer" Height="22" />
+                        <!--<TextBlock Grid.Column="2" Grid.Row="0" Margin="0,6" TextWrapping="Wrap">打印类型：</TextBlock>
                         <ComboBox Grid.Column="2" Grid.Row="1" x:Name="cbbPrintWay" ItemsSource="{Binding}" SelectionChanged="cbbPrintWay_SelectionChanged">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -34,7 +36,7 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
-                        </ComboBox>
+                        </ComboBox>-->
                         <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center">图像DPI：</TextBlock>
                         <TextBlock Grid.Column="2" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center">纸张大小：</TextBlock>
                         <TextBox Name="txtDPI" Grid.Row="3"/>

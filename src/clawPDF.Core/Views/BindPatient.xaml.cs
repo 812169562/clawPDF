@@ -1,9 +1,12 @@
-﻿using clawPDF.Signature;
-using clawPDF.Signature.Service;
-using clawSoft.clawPDF.Core.Request;
+﻿using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
+using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
+using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using Log = clawPDF.Core.Log;
@@ -102,7 +105,6 @@ namespace clawSoft.clawPDF.Core.Views
                 MessageBox.Show(ex.Message);
             }
         }
-
         /// <summary>
         /// 签名登录
         /// </summary>
@@ -118,34 +120,48 @@ namespace clawSoft.clawPDF.Core.Views
                     return;
                 if (_user.SignType == 1)
                 {
+                    //_user.AccountNo = "656b8a1522a3b358q4ad4w3d18y687682eb";
                     signbase64 = HttpUploadRequest.GetSignImage(_user.AccountNo);
                 }
             }
             if (_user.SignType == 2)
             {
+                var userCert = HttpSignRequest.GetUserCert();
                 // 2、确定：判断当前登录账号是否与绑定的一致？
-                if (_user.AccountNo.IsEmpty() || _user.AccountNo != Login.strUserCertID)
+                if (!userCert.IsLogin || _user.AccountNo.IsEmpty() || _user.AccountNo != userCert.UserCertID)
                 {
                     // 2-1、不一致，弹出登录框
-                    Login login = new Login();
-                    login.ShowDialog();
-                    if (!login.IsLogin) return;
-                    _user.AccountNo = Login.strUserCertID;
-                    _user.DoctorInfo = $"{Login.strUserName}||{Login.strCertId}";
-                    _user.SignType = 2;
-                    HttpUploadRequest.BindSignatureAccount(_user);
+                    Cmd.KillApp("clawPDF.Signature");
+                    var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Signature", "clawPDF.Signature.exe");
+                    Cmd.StartApp(path, SystemConfig.Setting.SignServer, ProcessWindowStyle.Normal, false);
+                    var visible = true;
+                    while (visible)
+                    {
+                        Thread.Sleep(1000);
+                        visible = Cmd.AppVisible("clawPDF.Signature");
+                        if (!visible)
+                        {
+                            userCert = HttpSignRequest.GetUserCert();
+                            if (!userCert.IsLogin) return;
+                            _user.AccountNo = userCert.UserCertID;
+                            _user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
+                            _user.SignType = 2;
+                            HttpUploadRequest.BindSignatureAccount(_user);
+                            SystemSetting setting = SystemConfig.Setting;
+                            setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(_user));
+                            SystemConfig.Save(setting);
+                        }
+                    }
                 }
                 // 账号一致，调用签名
                 var bytes = PdfUtil.GetBytes(file, 64, 99);
-                var res = SignatureService.Instance.SignData(Login.strCertId, Convert.ToBase64String(bytes));
-                if (res.Status == "-1")
-                    throw new System.Exception($"签名失败：{res.Message}");
-                signbase64 = Login.strPicBase64;
-                _patient.Cert = res.Data.CertId;
-                _patient.SignData = res.Data.SignValue;
-                _patient.PlainData = res.Data.OrgData;
-                _patient.PlainTimestampData = res.Data.OrgData;
-                _patient.SignTimestamp = res.Data.TimeStamp;
+                var res = HttpSignRequest.SignData(userCert.CertId, Convert.ToBase64String(bytes));
+                signbase64 = userCert.PicBase64;
+                _patient.Cert = res.CertId;
+                _patient.SignData = res.SignValue;
+                _patient.PlainData = res.OrgData;
+                _patient.PlainTimestampData = res.OrgData;
+                _patient.SignTimestamp = res.TimeStamp;
             }
             var sign = HttpUploadRequest.GetSignSetting(_patient.CheckItem);
             PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh);
@@ -192,6 +208,12 @@ namespace clawSoft.clawPDF.Core.Views
             SelectAccount form = new SelectAccount();
             form.Width = 300;
             form.Height = 400;
+#if DEBUG
+#else
+            form.Topmost = true;
+            form.Activate();
+#endif
+
             form.ShowDialog();
             _user = HttpUploadRequest.GetLoginUser();
             InitUser();

@@ -1,8 +1,6 @@
 ﻿using clawSoft.clawPDF.Core.Settings;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Forms;
 
 namespace clawPDF.Signature
@@ -17,14 +15,13 @@ namespace clawPDF.Signature
         /// <summary>
         /// 是否登录成功
         /// </summary>
-        public bool IsLogin = false;
+        public static bool IsLogin = false;
         public Login()
         {
             InitializeComponent();
         }
 
         private string oid = "2.16.840.1.113732.2";//RSA 对象唯一标示符 SM2 1.2.156.112562.2.1.1.1
-
         private void Login_Load(object sender, EventArgs e)
         {
             GetUserList();
@@ -71,6 +68,12 @@ namespace clawPDF.Signature
         /// <param name="e"></param>
         private void axXTXApp1_OnUsbkeyChange(object sender, EventArgs e)
         {
+            strCertId = "";
+            strUserCert = "";
+            strUserCertID = "";
+            strUserName = "";
+            strPicBase64 = "";
+            IsLogin = false;
             GetUserList();
         }
         /// <summary>
@@ -88,7 +91,7 @@ namespace clawPDF.Signature
             var certType = axXTXApp1.SOF_GetCertInfo(strUserCert, 3); // 证书类型 返回"RSA"或"SM2"
             oid = certType == "SM2" ? "1.2.156.112562.2.1.1.1" : "2.16.840.1.113732.2";
             strUserCertID = axXTXApp1.SOF_GetCertInfoByOid(strUserCert, oid); //注意oid的加密方式要对应才行
-            if (!string.IsNullOrEmpty(SystemConfig.LoginUser?.UserCertID) && SystemConfig.LoginUser.UserCertID != strUserCertID)
+            if (!string.IsNullOrEmpty(SystemConfig.LoginUser?.UserCertID) && SystemConfig.LoginUser?.UserCertID != strUserCertID)
             {
                 msg.Text = "提示：插入的实体key与单机账号不匹配！";
             }
@@ -132,18 +135,20 @@ namespace clawPDF.Signature
             bool isLogin = xtx.SOF_Login(strCertId, PassWd);
             if (!isLogin)
             {
-                int errorTimes = xtx.SOF_GetRetryCount(strCertId);//获取容错次数
+                int errorTimes = xtx.SOF_GetPinRetryCount(strCertId);//获取容错次数
+                //int errorTimes = xtx.SOF_GetRetryCount(strCertId);//获取容错次数
                 if (errorTimes < 0)
                 {
                     msg.Text = "提示：获取重试次数失败";
-                    return;
                 }
-                if (errorTimes == 0)
+                else if (errorTimes == 0)
                 {
                     msg.Text = "提示：您的证书已经锁死，请联系北京CA进行解锁.";
-                    return;
                 }
-                msg.Text = $"提示：账号密码不正确，您还有{errorTimes}次机会";
+                else
+                {
+                    msg.Text = $"提示：账号密码不正确，您还有{errorTimes}次机会";
+                }
                 return;
             }
             string strSingnValue = xtx.SOF_SignData(strCertId, Random_num);
@@ -165,7 +170,7 @@ namespace clawPDF.Signature
                     msg.Text = "提示：超过有效期，请更换证书";
                     return;
                 case -3:
-                    msg.Text = "提示：证书已作废";
+                    msg.Text = "提示：作废证书";
                     return;
                 case -4:
                     msg.Text = "提示：证书已加入黑名单";
@@ -185,14 +190,30 @@ namespace clawPDF.Signature
                 return;
             }
             IsLogin = true;
-            System.Windows.MessageBox.Show("登录成功！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, System.Windows.MessageBoxOptions.DefaultDesktopOnly);
-            this.Close();
+            this.Hide();
+            MessageBox.Show("登录成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             IsLogin = false;
-            this.Close();
+            this.Hide();
+        }
+        /// <summary>
+        /// 获取设备数量
+        /// </summary>
+        /// <returns></returns>
+        private int GetDeviceCount()
+        {
+            //var a = axXTXApp1.GetDeviceSNByIndex(0);
+            //var b = axXTXApp1.IsDeviceExist(a);
+            return axXTXApp1.GetDeviceCount();
+        }
+
+        private void Login_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
         }
     }
 

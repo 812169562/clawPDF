@@ -33,6 +33,7 @@ namespace DrawTools.Views
             InitializeComponent();
             this.PreviewMouseMove += MainWindow_PreviewMouseMove;
             this.Loaded += MainWindow_Loaded;
+            this.PreviewKeyDown += ImageEditor_PreviewKeyDown;
             this.AddHandler(Mouse.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
 
             color_picker.SelectedColorChanged += delegate { this.drawCanvas.Brush = color_picker.SelectedBrush; btn_color.IsChecked = false; };
@@ -41,6 +42,33 @@ namespace DrawTools.Views
             this.toolbar.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(OnDrawToolChecked));
             drawCanvas.FontSize = SystemConfig.Setting.FontSize > 14 ? SystemConfig.Setting.FontSize : 14;
         }
+
+        /// <summary>
+        /// 快捷键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImageEditor_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            ModifierKeys key = e.KeyboardDevice.Modifiers & ModifierKeys.Control;
+            if (key == ModifierKeys.Control && e.Key == Key.Z)
+            {
+                Undo_Click(sender, null);
+            }
+            if (key == ModifierKeys.Control && e.Key == Key.S)
+            {
+                btn_save_Click(sender, null);
+            }
+            if (e.Key == Key.Up)
+            {
+                before_Click(sender, null);
+            }
+            if (e.Key == Key.Down)
+            {
+                after_Click(sender, null);
+            }
+        }
+
         /// <summary>
         /// 鼠标点击空白区域默认选择拾取操作
         /// </summary>

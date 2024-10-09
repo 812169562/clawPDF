@@ -72,5 +72,9 @@ namespace clawSoft.clawPDF.Core.Settings
         /// 文本字体大小
         /// </summary>
         public double FontSize { get; set; }
+        /// <summary>
+        /// 签名服务地址
+        /// </summary>
+        public string SignServer { get; set; }
     }
 }

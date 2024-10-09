@@ -1,11 +1,13 @@
-﻿using clawPDF.Signature;
-using clawSoft.clawPDF.Core.Request;
+﻿using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -57,21 +59,36 @@ namespace clawSoft.clawPDF.Core.Views
                 if (dataGrid.SelectedItem == null) return;
                 LoginUser user = (LoginUser)dataGrid.SelectedItem;
                 // 判断 TODO
-                if (user.SignType == 2 && (user.AccountNo.IsEmpty() || Login.strUserCertID != user.AccountNo))
+                if (user.SignType == 2)
                 {
-                    Login login = new Login();
-                    login.ShowDialog();
-                    user.AccountNo = Login.strUserCertID;
-                    user.DoctorInfo = $"{Login.strUserName}||{Login.strCertId}";
-                    user.SignType = 2;
-                    HttpUploadRequest.BindSignatureAccount(user);
+                    var userCert = HttpSignRequest.GetUserCert();
+                    if (!userCert.IsLogin || user.AccountNo.IsEmpty() || user.AccountNo != userCert.UserCertID)
+                    {
+                        Cmd.KillApp("clawPDF.Signature");
+                        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Signature", "clawPDF.Signature.exe");
+                        Cmd.StartApp(path, SystemConfig.Setting.SignServer, ProcessWindowStyle.Normal, false);
+                        var visible = true;
+                        while (visible)
+                        {
+                            Thread.Sleep(1000);
+                            visible = Cmd.AppVisible("clawPDF.Signature");
+                            if (!visible)
+                            {
+                                userCert = HttpSignRequest.GetUserCert();
+                                if (userCert.IsLogin)
+                                {
+                                    user.AccountNo = userCert.UserCertID;
+                                    user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
+                                    user.SignType = 2;
+                                    HttpUploadRequest.BindSignatureAccount(user);
+                                }
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    SystemSetting setting = SystemConfig.Setting;
-                    setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
-                    SystemConfig.Save(setting);
-                }
+                SystemSetting setting = SystemConfig.Setting;
+                setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
+                SystemConfig.Save(setting);
                 this.Close();
             }
             catch (Exception ex)

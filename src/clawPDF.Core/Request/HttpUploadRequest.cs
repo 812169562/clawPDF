@@ -229,7 +229,7 @@ namespace clawSoft.clawPDF.Core.Request
                     BandPatientDto = patientDto,
                     LoginCache = loginUser,
                     FileParam = item,
-                    AuthorizationStatus = SystemConfig.AuthorizationStatus
+                    SystemConfig.AuthorizationStatus
                 };
                 request.AddJsonBody(body);
                 Log.Trace("上传单机系统--request:" + JsonConvert.SerializeObject(body));
@@ -472,25 +472,25 @@ namespace clawSoft.clawPDF.Core.Request
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("guid", guid);
                 request.AddParameter("accountNo", accountNo);
+                Log.Info($"获取签章图片入参：{GetUserSignStampUrl}accountNo={accountNo}&guid={guid}");
                 IRestResponse response = client.Execute(request);
+                Log.Info("获取签章图片返回：" + JsonConvert.SerializeObject(response.Content));
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 {
                     Log.Error("获取医网信签章图片失败：" + response.StatusDescription + response.ErrorMessage);
-                    return string.Empty;
                 }
                 ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
                 if (model.Status != "0")
                 {
                     Log.Error("获取医网信签章图片失败：" + model.Message);
-                    return string.Empty;
                 }
-                return model.Data.ToString();
+                return model.Data == null ? "" : model.Data.ToString();
             }
             catch (Exception ex)
             {
                 Log.Error("获取医网信签章图片异常：" + ex.Message);
-                return string.Empty;
             }
+            return string.Empty;
         }
         /// <summary>
         /// 绑定签名账户
@@ -523,21 +523,22 @@ namespace clawSoft.clawPDF.Core.Request
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 {
                     Log.Error("绑定签名账户失败：" + response.StatusDescription + response.ErrorMessage);
-                    return;
+                    throw new Exception(response.StatusDescription + response.ErrorMessage);
                 }
                 ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
                 if (model.Status != "0")
                 {
                     Log.Error("绑定签名账户失败：" + model.Message);
-                    return;
+                    throw new Exception(model.Message);
                 }
-                SystemSetting setting = SystemConfig.Setting;
-                setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
-                SystemConfig.Save(setting);
+                //SystemSetting setting = SystemConfig.Setting;
+                //setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
+                //SystemConfig.Save(setting);
             }
             catch (Exception ex)
             {
                 Log.Error("绑定签名账户异常：" + ex.Message);
+                throw new Exception("绑定签名账户异常：" + ex.Message);
             }
         }
     }
