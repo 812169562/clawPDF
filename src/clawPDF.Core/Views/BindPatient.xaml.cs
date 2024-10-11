@@ -95,7 +95,7 @@ namespace clawSoft.clawPDF.Core.Views
                 }
                 _patient = (PatientModel)this.dataGrid.SelectedItem;
                 ImageEditor.SavePdfFile();
-                SignLogin();
+                Sign();
                 isUpload = true;
                 this.Close();
             }
@@ -108,9 +108,11 @@ namespace clawSoft.clawPDF.Core.Views
         /// <summary>
         /// 签名登录
         /// </summary>
-        private void SignLogin()
+        private void Sign()
         {
             var signbase64 = "";
+            var signatureFirm = HttpUploadRequest.GetSignatureFirm();
+            if (signatureFirm == null) return;
             // 判断是否配置独立签名
             if (signingProces.SignatureProcessConfigWay == 2)
             {
@@ -118,13 +120,15 @@ namespace clawSoft.clawPDF.Core.Views
                 // 1、取消：不签名，直接上传
                 if (messageBoxResult == MessageBoxResult.Cancel)
                     return;
-                if (_user.SignType == 1)
-                {
-                    //_user.AccountNo = "656b8a1522a3b358q4ad4w3d18y687682eb";
-                    signbase64 = HttpUploadRequest.GetSignImage(_user.AccountNo);
-                }
             }
-            if (_user.SignType == 2)
+            var outPath = file; // 医网信签名，打印需要贴签章图片，上传单机需要源文件
+            if (signatureFirm.SignType == 1)
+            {
+                //_user.AccountNo = "656b8a1522a3b358q4ad4w3d18y687682eb";
+                signbase64 = HttpUploadRequest.GetSignImage(_user.AccountNo);
+                outPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
+            }
+            if (signatureFirm.SignType == 2)
             {
                 var userCert = HttpSignRequest.GetUserCert();
                 // 2、确定：判断当前登录账号是否与绑定的一致？
@@ -137,7 +141,7 @@ namespace clawSoft.clawPDF.Core.Views
                     var visible = true;
                     while (visible)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2000);
                         visible = Cmd.AppVisible("clawPDF.Signature");
                         if (!visible)
                         {
@@ -163,8 +167,9 @@ namespace clawSoft.clawPDF.Core.Views
                 _patient.PlainTimestampData = res.OrgData;
                 _patient.SignTimestamp = res.TimeStamp;
             }
+            _patient.IsSign = true;
             var sign = HttpUploadRequest.GetSignSetting(_patient.CheckItem);
-            PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh);
+            PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh, outPath);
         }
 
         /// <summary>

@@ -243,8 +243,50 @@ namespace clawSoft.clawPDF.Core.Jobs
             {
                 Logger.Warn("Error while deleting job file: " + ex.Message);
             }
-
+            // delete output files
+            try
+            {
+                foreach (var item in OutputFiles)
+                {
+                    if (File.Exists(item))
+                    {
+                        ClearImage(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("删除文件错误：" + ex.Message);
+            }
             _cleanedUp = true;
+        }
+
+        /// <summary>
+        /// 删除临时pdf文件
+        /// </summary>
+        /// <param name="file"></param>
+        public void ClearImage(string file)
+        {
+            // 删除签名文件
+            var signPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
+            if (File.Exists(signPath))
+            {
+                File.Delete(signPath);
+            }
+
+            File.Delete(file);
+            var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
+            // 删除图片
+            if (Directory.Exists(directory))
+            {
+                var files = Directory.GetFiles(directory);
+                foreach (var item in files)
+                {
+                    if (File.Exists(item))
+                        File.Delete(item);
+                }
+                Directory.Delete(directory);
+            }
         }
 
         /// <summary>
@@ -491,7 +533,7 @@ namespace clawSoft.clawPDF.Core.Jobs
         {
             //Ensure the the first file is the first in TempOutputFiles
 
-            if(Profile.OutputFormat == OutputFormat.SVG)
+            if (Profile.OutputFormat == OutputFormat.SVG)
             {
                 TempOutputFiles = Directory.GetFiles(Path.GetDirectoryName(TempOutputFiles[0]));
             }
@@ -650,7 +692,7 @@ namespace clawSoft.clawPDF.Core.Jobs
                 dialog.Activate();
 #endif
                 dialog.ShowDialog();
-                if (!dialog.isUpload) 
+                if (!dialog.isUpload)
                     return;
 
             }

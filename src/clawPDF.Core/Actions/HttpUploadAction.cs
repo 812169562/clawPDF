@@ -1,11 +1,9 @@
 ﻿using clawPDF.Core;
 using clawSoft.clawPDF.Core.Jobs;
-using clawSoft.clawPDF.Core.Printer;
 using clawSoft.clawPDF.Core.Request;
 using clawSoft.clawPDF.Core.Request.Models;
 using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Core.Views;
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -142,17 +140,17 @@ namespace clawSoft.clawPDF.Core.Actions
                         var response = HttpUploadRequest.Upload(job.Profile.HttpUploader.HttpUploadUrl, file, fileName, patient);
                         Log.Info("上传成功");
                         //Log.Print(response);
-                        if (File.Exists(file))
-                        {
-                            try
-                            {
-                                ClearImage(file);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.PrintError("删除文件错误：" + ex.Message);
-                            }
-                        }
+                        //if (File.Exists(file))
+                        //{
+                        //    try
+                        //    {
+                        //        ClearImage(file);
+                        //    }
+                        //    catch (Exception ex)
+                        //    {
+                        //        Log.PrintError("删除文件错误：" + ex.Message);
+                        //    }
+                        //}
                         //ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response);
                         //string status = model.Status;
                         //if (!status.Equals("0"))
@@ -245,22 +243,29 @@ namespace clawSoft.clawPDF.Core.Actions
             }
             return new ActionResult();
         }
-
-        public void ClearImage(string file)
-        {
-            var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
-            if (Directory.Exists(directory))
-            {
-                var files = Directory.GetFiles(directory);
-                foreach (var item in files)
-                {
-                    if (File.Exists(item))
-                        File.Delete(item);
-                }
-                Directory.Delete(directory);
-            }
-            File.Delete(file);
-        }
+        //public void ClearImage(string file)
+        //{
+        //    var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
+        //    // 删除图片
+        //    if (Directory.Exists(directory))
+        //    {
+        //        var files = Directory.GetFiles(directory);
+        //        foreach (var item in files)
+        //        {
+        //            if (File.Exists(item))
+        //                File.Delete(item);
+        //        }
+        //        Directory.Delete(directory);
+        //    }
+        //    // 删除签名文件
+        //    var signPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
+        //    if (File.Exists(signPath))
+        //    {
+        //        File.Delete(signPath);
+        //    }
+            
+        //    File.Delete(file);
+        //}
 
         private bool foxitReaderPrintPdf(string url)
         {

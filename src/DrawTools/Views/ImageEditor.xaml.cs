@@ -115,7 +115,15 @@ namespace DrawTools.Views
             }
             // 加载页面图片
             this.currentFilePath = images[currentIndex];
-            this.drawViewer.BackgroundImage = new BitmapImage(new Uri(currentFilePath));
+            //this.drawViewer.BackgroundImage = new BitmapImage(new Uri(currentFilePath));
+            // 用完之后删除图片避免进程占用
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri(currentFilePath, UriKind.RelativeOrAbsolute);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+            this.drawViewer.BackgroundImage = bitmapImage.Clone();
+
             this.currentPage.Text = (currentIndex + 1).ToString();
 
             if (VisualList == null || !VisualList.Any(t => t.Key == currentFilePath)) return;
@@ -128,12 +136,6 @@ namespace DrawTools.Views
             }
             var data = new List<Visual>();
             this.VisualList.TryRemove(currentFilePath, out data);
-            //var bitmapImage = new BitmapImage();
-            //bitmapImage.BeginInit();
-            //bitmapImage.UriSource = new Uri(currentFilePath, UriKind.RelativeOrAbsolute);
-            //bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            //bitmapImage.EndInit();
-            //this.drawViewer.BackgroundImage = bitmapImage.Clone();
             //this.drawViewer.InvalidateVisual();
             //UpdateImage();
         }

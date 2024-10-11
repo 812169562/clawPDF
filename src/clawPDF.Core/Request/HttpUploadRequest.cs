@@ -7,6 +7,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net;
 using System.Threading;
@@ -25,6 +26,7 @@ namespace clawSoft.clawPDF.Core.Request
         private static string SignSettingUrl = "/ris/out-api/print/getSignConfig"; // 根据绑定患者的检查项目获取签章配置
         private static string BindSignatureAccountUrl = "/ris/out-api/print/bindSignatureAccount"; // 绑定签名账户
         private static string GetUserSignStampUrl = "/ris/out-api/print/getUserSignStamp"; // 获取用户签章信息
+        private static string GetSignatureFirmUrl = "/ris/setting/signature-firm/get"; // 获取签名厂商配置
 
 
 
@@ -207,7 +209,8 @@ namespace clawSoft.clawPDF.Core.Request
                     patient.PlainData,
                     patient.SignData,
                     patient.PlainTimestampData,
-                    patient.SignTimestamp
+                    patient.SignTimestamp,
+                    patient.IsSign
                 };
             }
             var list = SplitFileUpload(file);
@@ -492,6 +495,7 @@ namespace clawSoft.clawPDF.Core.Request
             }
             return string.Empty;
         }
+
         /// <summary>
         /// 绑定签名账户
         /// </summary>
@@ -540,6 +544,45 @@ namespace clawSoft.clawPDF.Core.Request
                 Log.Error("绑定签名账户异常：" + ex.Message);
                 throw new Exception("绑定签名账户异常：" + ex.Message);
             }
+        }
+        /// <summary>
+        /// 获取签名厂商
+        /// </summary>
+        /// <returns></returns>
+        public static SignatureFirmModel GetSignatureFirm()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+                    return null;
+                var client = new RestClient(SystemConfig.Setting.RisUrl);
+                client.Timeout = 6000;
+                var request = new RestRequest(GetSignatureFirmUrl, Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("guid", guid);
+                IRestResponse response = client.Execute(request);
+                Log.Info("获取签名厂商返回：" + JsonConvert.SerializeObject(response.Content));
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                {
+                    Log.Error("获取签名厂商失败：" + response.StatusDescription + response.ErrorMessage);
+                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                {
+                    Log.Error("获取签名厂商失败：" + model.Message);
+                }
+                if (model.Data != null)
+                {
+                    var list = JsonConvert.DeserializeObject<List<SignatureFirmModel>>(model.Data.ToString());
+                    if (list != null && list.Any())
+                        return list.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("获取签名厂商异常：" + ex.Message);
+            }
+            return null;
         }
     }
 }

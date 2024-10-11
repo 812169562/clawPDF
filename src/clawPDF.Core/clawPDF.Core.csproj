@@ -156,6 +156,7 @@
     <Compile Include="Request\Models\LoginUser.cs" />
     <Compile Include="Request\Models\PatientModel.cs" />
     <Compile Include="Request\Models\PrintSettingModel.cs" />
+    <Compile Include="Request\Models\SignatureFirmModel.cs" />
     <Compile Include="Request\Models\SignConfigModel.cs" />
     <Compile Include="Request\Models\SigningProcesModel.cs" />
     <Compile Include="Request\Models\SignResult.cs" />

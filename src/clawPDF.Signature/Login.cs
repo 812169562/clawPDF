@@ -107,9 +107,10 @@ namespace clawPDF.Signature
         /// <param name="e"></param>
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtPassword.Text))
+            if (string.IsNullOrEmpty(txtPassword.Text) || txtPassword.Text.Length < 6 || txtPassword.Text.Length > 16)
             {
-                msg.Text = "提示：密码不能为空";
+                //msg.Text = "提示：密码不能为空";
+                msg.Text = "提示：请输入6-16位密码";
                 return;
             }
             //获取随机数  随机数签名值 服务器证书

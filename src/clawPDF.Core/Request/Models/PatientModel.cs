@@ -78,5 +78,9 @@ namespace clawSoft.clawPDF.Core.Request.Models
         ///  签名时间戳
         /// <summary>
         public string SignTimestamp { get; set; }
+        /// <summary>
+        /// 是否签名
+        /// </summary>
+        public bool IsSign { get; set; }
     }
 }

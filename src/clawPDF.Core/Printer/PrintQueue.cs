@@ -3,6 +3,7 @@ using clawSoft.clawPDF.Core.Settings.Enums;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,7 +59,15 @@ namespace clawSoft.clawPDF.Core.Printer
                     string key;
                     PdfQueue.TryDequeue(out key);
                     var pdfFile = PdfFiles[key];
-                    foxitReaderPrintPdf(pdfFile);
+                    var newPath = Path.Combine(Path.GetDirectoryName(pdfFile), Path.GetFileNameWithoutExtension(pdfFile) + "_sign" + Path.GetExtension(pdfFile));
+                    if (File.Exists(newPath))
+                    {
+                        foxitReaderPrintPdf(newPath);
+                    }
+                    else
+                    {
+                        foxitReaderPrintPdf(pdfFile);
+                    }
                     var files = "";
                     PdfFiles.TryRemove(key, out files);
                     return true;

@@ -17,7 +17,7 @@ namespace clawSoft.clawPDF.Utilities
         /// <param name="x">签名位置X轴</param>
         /// <param name="y">签名位置Y轴</param>
         /// <exception cref="Exception"></exception>
-        public static void AddBase64Image(string pdfPath, string base64Image, int signPage, int x, int y)
+        public static void AddBase64Image(string pdfPath, string base64Image, int signPage, int x, int y, string outPath)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace clawSoft.clawPDF.Utilities
                         DrawImage(x, y, page, image);
                     }
                     image.Dispose();
-                    document.Save(pdfPath);
+                    document.Save(outPath);
                     document.Close();
                 }
             }

@@ -33,10 +33,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.txtPassword = new System.Windows.Forms.MaskedTextBox();
             this.cbxUsername = new System.Windows.Forms.ComboBox();
             this.msg = new System.Windows.Forms.Label();
             this.axXTXApp1 = new AxXTXAppCOMLib.AxXTXApp();
+            this.txtPassword = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.axXTXApp1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,15 +81,6 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // txtPassword
-            // 
-            this.txtPassword.Location = new System.Drawing.Point(141, 108);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(227, 25);
-            this.txtPassword.TabIndex = 6;
-            // 
             // cbxUsername
             // 
             this.cbxUsername.FormattingEnabled = true;
@@ -121,14 +112,23 @@
             this.axXTXApp1.Visible = false;
             this.axXTXApp1.OnUsbkeyChange += new System.EventHandler(this.axXTXApp1_OnUsbkeyChange);
             // 
+            // txtPassword
+            // 
+            this.txtPassword.Location = new System.Drawing.Point(141, 115);
+            this.txtPassword.MaxLength = 16;
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
+            this.txtPassword.Size = new System.Drawing.Size(228, 25);
+            this.txtPassword.TabIndex = 11;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(482, 273);
+            this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.msg);
             this.Controls.Add(this.cbxUsername);
-            this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.label2);
@@ -155,9 +155,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.MaskedTextBox txtPassword;
         private System.Windows.Forms.ComboBox cbxUsername;
         private System.Windows.Forms.Label msg;
         private AxXTXAppCOMLib.AxXTXApp axXTXApp1;
+        private System.Windows.Forms.TextBox txtPassword;
     }
 }

@@ -58,8 +58,8 @@ namespace clawSoft.clawPDF.Core.Views
             {
                 if (dataGrid.SelectedItem == null) return;
                 LoginUser user = (LoginUser)dataGrid.SelectedItem;
-                // 判断 TODO
-                if (user.SignType == 2)
+                var signatureFirm = HttpUploadRequest.GetSignatureFirm();
+                if (signatureFirm?.SignType == 2)
                 {
                     var userCert = HttpSignRequest.GetUserCert();
                     if (!userCert.IsLogin || user.AccountNo.IsEmpty() || user.AccountNo != userCert.UserCertID)
@@ -70,7 +70,7 @@ namespace clawSoft.clawPDF.Core.Views
                         var visible = true;
                         while (visible)
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(2000);
                             visible = Cmd.AppVisible("clawPDF.Signature");
                             if (!visible)
                             {
