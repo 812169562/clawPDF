@@ -21,7 +21,7 @@ namespace clawSoft.clawPDF.Core.Views
         public string file;
         public static PatientModel _patient;
         public LoginUser _user;
-        public SigningProcesModel signingProces;
+        public SigningProcesModel _signingProces;
         public bool isUpload;
         public BindPatient()
         {
@@ -31,6 +31,7 @@ namespace clawSoft.clawPDF.Core.Views
             this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             _user = HttpUploadRequest.GetLoginUser();
+            _signingProces = HttpUploadRequest.GetSigningProces();
         }
         /// <summary>
         /// 窗口加载
@@ -41,8 +42,7 @@ namespace clawSoft.clawPDF.Core.Views
         {
             ImageEditor.FilePath = file;// "D:\\szyx\\test-pdf\\00001\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
             InitUser();
-            signingProces = HttpUploadRequest.GetSigningProces();
-            ok.Content = signingProces.SignatureProcessConfigWay == 2 ? "签名并上传" : "绑定";
+            ok.Content = _signingProces.SignatureProcessConfigWay == 2 ? "签名并上传" : "绑定";
         }
 
         private void InitUser()
@@ -114,7 +114,7 @@ namespace clawSoft.clawPDF.Core.Views
             var signatureFirm = HttpUploadRequest.GetSignatureFirm();
             if (signatureFirm == null) return;
             // 判断是否配置独立签名
-            if (signingProces.SignatureProcessConfigWay == 2)
+            if (_signingProces.SignatureProcessConfigWay == 2)
             {
                 MessageBoxResult messageBoxResult = MessageBox.Show("绑定成功并上传至后台，请确认是否签名？", "", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 // 1、取消：不签名，直接上传

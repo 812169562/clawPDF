@@ -55,8 +55,8 @@
                     MinWidth="150" Click="ProfileSettingsButton_OnClick" HorizontalAlignment="Right" />
             <Button DockPanel.Dock="Right" Name="AppSettingsButton" BorderThickness="0" Content="Application Settings"
                     MinWidth="150" Click="AppSettingsButton_OnClick" HorizontalAlignment="Right" />
-            <Button DockPanel.Dock="Right" Name="test" BorderThickness="0" Content="test"
-                    MinWidth="40" HorizontalAlignment="Right" Click="test_Click" />
+            <!--<Button DockPanel.Dock="Right" Name="test" BorderThickness="0" Content="test"
+                    MinWidth="40" HorizontalAlignment="Right" Click="test_Click" />-->
         </DockPanel>
     </Grid>
 </Window>

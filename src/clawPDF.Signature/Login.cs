@@ -107,6 +107,11 @@ namespace clawPDF.Signature
         /// <param name="e"></param>
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(SystemConfig.LoginUser?.UserCertID) && SystemConfig.LoginUser?.UserCertID != strUserCertID)
+            {
+                msg.Text = "提示：插入的实体key与单机账号不匹配！";
+                return;
+            }
             if (string.IsNullOrEmpty(txtPassword.Text) || txtPassword.Text.Length < 6 || txtPassword.Text.Length > 16)
             {
                 //msg.Text = "提示：密码不能为空";
