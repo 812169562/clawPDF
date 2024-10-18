@@ -206,10 +206,8 @@ namespace clawSoft.clawPDF.Core.Request
                     patient.DocTitle,
                     patient.BindSource,
                     patient.Cert,
-                    patient.PlainData,
-                    patient.SignData,
-                    patient.PlainTimestampData,
-                    patient.SignTimestamp,
+                    patient.ReportSignatureReqs,
+                    //patient.UKeySignPicture,
                     patient.IsSign
                 };
             }
@@ -403,7 +401,9 @@ namespace clawSoft.clawPDF.Core.Request
                 request.AddParameter("checkItem", checkItem);
                 request.AddParameter("equipmentId", _equipmentId);
                 request.AddParameter("guid", guid);
+                Log.Trace($"获取签章配置: {SystemConfig.Setting.RisUrl}{SignSettingUrl}?checkItem={checkItem}&equipmentId={_equipmentId}&guid={guid}");
                 IRestResponse response = client.Execute(request);
+                Log.Trace($"获取签章配置res: {response.Content}");
                 if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
                 {
                     Log.Error("获取签名配置失败：" + response.StatusDescription + response.ErrorMessage);

@@ -63,6 +63,25 @@ namespace clawSoft.clawPDF.Core.Request.Models
         /// <summary>
         public string Cert { get; set; }
         /// <summary>
+        /// 是否签名
+        /// </summary>
+        public bool IsSign { get; set; }
+        /// <summary>
+        /// userKey 签章图片
+        /// </summary>
+        public string UKeySignPicture { get; set; }
+        /// <summary>
+        /// 报告签名信息
+        /// </summary>
+        public List<ReportSignature> ReportSignatureReqs { get; set; }
+    }
+    public class ReportSignature
+    {
+        /// <summary>
+        ///  时间戳原文
+        /// <summary>
+        public string ReportId { get; set; }
+        /// <summary>
         ///  签名原文
         /// <summary>
         public string PlainData { get; set; }
@@ -71,16 +90,8 @@ namespace clawSoft.clawPDF.Core.Request.Models
         /// <summary>
         public string SignData { get; set; }
         /// <summary>
-        ///  时间戳原文
-        /// <summary>
-        public string PlainTimestampData { get; set; }
-        /// <summary>
         ///  签名时间戳
         /// <summary>
         public string SignTimestamp { get; set; }
-        /// <summary>
-        /// 是否签名
-        /// </summary>
-        public bool IsSign { get; set; }
     }
 }

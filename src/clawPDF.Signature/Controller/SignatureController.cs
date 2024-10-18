@@ -25,6 +25,20 @@ namespace clawPDF.Signature.Controller
                 var strOrgData = Request.Query["OrgData"];
                 return SignatureService.Instance.SignData(strCertId, strOrgData);
             };
+            Get["version"] = _ =>
+            {
+                var a = new
+                {
+                    sysCode = "QC",
+                    version = "v1.0.0.2",
+                    state = 1,
+                    isConstrain = true,
+                    type = 1,
+                    downLoadUrl = "https://betainner.51trust.com/opt/hgmd/files/printRegistration/Debug.zip",
+                    remark = 1
+                };
+                return a;
+            };
         }
     }
 }

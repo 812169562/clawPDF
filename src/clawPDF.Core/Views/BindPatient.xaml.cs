@@ -4,6 +4,7 @@ using clawSoft.clawPDF.Core.Settings;
 using clawSoft.clawPDF.Utilities;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -162,10 +163,16 @@ namespace clawSoft.clawPDF.Core.Views
                 var res = HttpSignRequest.SignData(userCert.CertId, Convert.ToBase64String(bytes));
                 signbase64 = userCert.PicBase64;
                 _patient.Cert = res.CertId;
-                _patient.SignData = res.SignValue;
-                _patient.PlainData = res.OrgData;
-                _patient.PlainTimestampData = res.OrgData;
-                _patient.SignTimestamp = res.TimeStamp;
+                _patient.UKeySignPicture = userCert.PicBase64;
+                _patient.ReportSignatureReqs = new List<ReportSignature>
+                {
+                    new ReportSignature()
+                    {
+                        PlainData = res.SignValue,
+                        SignData = res.OrgData,
+                        SignTimestamp = res.TimeStamp 
+                    }
+                };
             }
             _patient.IsSign = true;
             var sign = HttpUploadRequest.GetSignSetting(_patient.CheckItem);
