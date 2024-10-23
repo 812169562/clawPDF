@@ -8,7 +8,7 @@ namespace clawPDF.Signature.Controller
     {
         public SignatureController()
         {
-            Get["/SignatureController/GetUserCert"] = _ =>
+            Get["/Signature/GetUserCert"] = _ =>
             {
                 UserCertResult certResult = new UserCertResult();
                 certResult.CertId = Login.strCertId;
@@ -19,7 +19,7 @@ namespace clawPDF.Signature.Controller
                 certResult.IsLogin = Login.IsLogin;
                 return ResultUtil.Success(certResult);
             };
-            Get["/SignatureController/SignData"] = _ =>
+            Get["/Signature/SignData"] = _ =>
             {
                 var strCertId = Request.Query["CertId"];
                 var strOrgData = Request.Query["OrgData"];

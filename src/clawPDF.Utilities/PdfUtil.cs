@@ -13,7 +13,7 @@ namespace clawSoft.clawPDF.Utilities
         /// </summary>
         /// <param name="pdfPath">PDF文件路径</param>
         /// <param name="base64Image">签名base64值</param>
-        /// <param name="signPage">签名页码 1、第一页 2、每一页 3、最后一页</param>
+        /// <param name="signPage">签名页码 1-第一页，2-最后一页面，3-每页 </param>
         /// <param name="x">签名位置X轴</param>
         /// <param name="y">签名位置Y轴</param>
         /// <exception cref="Exception"></exception>
@@ -35,7 +35,7 @@ namespace clawSoft.clawPDF.Utilities
                         PdfPage page = document.Pages[0];
                         DrawImage(x, y, page, image);
                     }
-                    else if (signPage == 2)
+                    else if (signPage == 3)
                     {
                         foreach (PdfPage page in document.Pages)
                         {
@@ -67,11 +67,11 @@ namespace clawSoft.clawPDF.Utilities
         /// <param name="image"></param>
         private static void DrawImage(int x, int y, PdfPage page, XImage image)
         {
-            double scale = 1.5;
+            double scale = 1;
             int width = Convert.ToInt32(image.PixelWidth * scale);
             int height = Convert.ToInt32(image.PixelHeight * scale);
             x = page.Width - width >= x ? x : Convert.ToInt32(page.Width - width);
-            y = page.Height - height >= y ? Convert.ToInt32(page.Height - y - 22) : Convert.ToInt32(page.Height - height);
+            y = page.Height - height >= y ? Convert.ToInt32(page.Height - y) : Convert.ToInt32(page.Height - height);
             using (XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append))
             {
                 XRect pageRect = new XRect(x, y, width, height);
@@ -79,7 +79,6 @@ namespace clawSoft.clawPDF.Utilities
                 //gfx.DrawImage(image, x, y);
             }
         }
-
         /// <summary>
         /// 
         /// </summary>

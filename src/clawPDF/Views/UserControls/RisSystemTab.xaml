@@ -44,7 +44,7 @@
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding Value}" Tag="{Binding Key}"/>
+                                        <TextBlock Text="{Binding Label}" Tag="{Binding Key}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>

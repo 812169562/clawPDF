@@ -111,9 +111,10 @@ namespace clawSoft.clawPDF.Core.Views
         /// </summary>
         private void Sign()
         {
+            //var signatureFirm = HttpUploadRequest.GetSignatureFirm();
+            //if (signatureFirm == null) return;
+            if (_user.SignType != 1 && _user.SignType != 2) return;
             var signbase64 = "";
-            var signatureFirm = HttpUploadRequest.GetSignatureFirm();
-            if (signatureFirm == null) return;
             // 判断是否配置独立签名
             if (_signingProces.SignatureProcessConfigWay == 2)
             {
@@ -123,13 +124,13 @@ namespace clawSoft.clawPDF.Core.Views
                     return;
             }
             var outPath = file; // 医网信签名，打印需要贴签章图片，上传单机需要源文件
-            if (signatureFirm.SignType == 1)
+            if (_user.SignType == 1)
             {
                 //_user.AccountNo = "656b8a1522a3b358q4ad4w3d18y687682eb";
                 signbase64 = HttpUploadRequest.GetSignImage(_user.AccountNo);
                 outPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
             }
-            if (signatureFirm.SignType == 2)
+            if (_user.SignType == 2)
             {
                 var userCert = HttpSignRequest.GetUserCert();
                 // 2、确定：判断当前登录账号是否与绑定的一致？
@@ -147,30 +148,34 @@ namespace clawSoft.clawPDF.Core.Views
                         if (!visible)
                         {
                             userCert = HttpSignRequest.GetUserCert();
-                            if (!userCert.IsLogin) return;
-                            _user.AccountNo = userCert.UserCertID;
-                            _user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
-                            _user.SignType = 2;
-                            HttpUploadRequest.BindSignatureAccount(_user);
-                            SystemSetting setting = SystemConfig.Setting;
-                            setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(_user));
-                            SystemConfig.Save(setting);
+                            if (userCert.IsLogin && _user.AccountNo != userCert.UserCertID)
+                            {
+                                _user.AccountNo = userCert.UserCertID;
+                                _user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
+                                _user.SignType = 2;
+                                HttpUploadRequest.BindSignatureAccount(_user);
+                                SystemSetting setting = SystemConfig.Setting;
+                                setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(_user));
+                                SystemConfig.Save(setting);
+                            }
                         }
                     }
                 }
                 // 账号一致，调用签名
-                var bytes = PdfUtil.GetBytes(file, 64, 99);
-                var res = HttpSignRequest.SignData(userCert.CertId, Convert.ToBase64String(bytes));
+                var hash = HashUtil.GetSha256Hash(file);
+                var res = HttpSignRequest.SignData(userCert.CertId, hash);
+                //var bytes = PdfUtil.GetBytes(file, 64, 99);
+                //var res = HttpSignRequest.SignData(userCert.CertId, Convert.ToBase64String(bytes));
                 signbase64 = userCert.PicBase64;
-                _patient.Cert = res.CertId;
+                _patient.Cert = userCert.UserCert;
                 _patient.UKeySignPicture = userCert.PicBase64;
                 _patient.ReportSignatureReqs = new List<ReportSignature>
                 {
                     new ReportSignature()
                     {
-                        PlainData = res.SignValue,
-                        SignData = res.OrgData,
-                        SignTimestamp = res.TimeStamp 
+                        PlainData = res.OrgData,
+                        SignData = res.SignValue,
+                        SignTimestamp = res.TimeStamp
                     }
                 };
             }

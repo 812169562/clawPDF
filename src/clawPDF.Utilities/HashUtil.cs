@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -29,6 +30,30 @@ namespace clawSoft.clawPDF.Utilities
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the SHA256 hash.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string GetSha256Hash(string filePath)
+        {
+            var sha256 = new SHA256CryptoServiceProvider();
+            byte[] hash = null;
+            if (File.Exists(filePath))
+            {
+                using (FileStream stream = File.OpenRead(filePath))
+                {
+                    hash = sha256.ComputeHash(stream);
+                }
+            }
+            else
+            {
+                var arrayData = Encoding.ASCII.GetBytes(filePath);
+                hash = sha256.ComputeHash(arrayData);
+            }
+            return BitConverter.ToString(hash).Replace("-", "").ToUpperInvariant();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace clawSoft.clawPDF.Core.Request
         public static SignResult SignData(string strCertId, string strOrgData)
         {
             var client = new RestClient(SystemConfig.Setting.SignServer);
-            var request = new RestRequest("/SignatureController/SignData", Method.GET);
+            var request = new RestRequest("/Signature/SignData", Method.GET);
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("CertId", strCertId);
             request.AddParameter("OrgData", strOrgData);
@@ -48,7 +48,7 @@ namespace clawSoft.clawPDF.Core.Request
         public static UserCertResult GetUserCert()
         {
             var client = new RestClient(SystemConfig.Setting.SignServer);
-            var request = new RestRequest("/SignatureController/GetUserCert", Method.GET);
+            var request = new RestRequest("/Signature/GetUserCert", Method.GET);
             request.AddHeader("Content-Type", "application/json");
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)

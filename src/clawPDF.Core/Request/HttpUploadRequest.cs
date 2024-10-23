@@ -131,6 +131,7 @@ namespace clawSoft.clawPDF.Core.Request
             request.AddParameter("mac", GetMacByWMI());
             request.AddParameter("guid", guid);
             IRestResponse response = client.Execute(request);
+            Log.Info("获取打印流程配置返回：" + JsonConvert.SerializeObject(response.Content));
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
             {
                 Log.PrintError("获取打印流程配置失败：" + response.StatusDescription + response.ErrorMessage);
