@@ -61,14 +61,15 @@ namespace clawSoft.clawPDF.Core.Views
                 // 改为账号类型判断
                 //var signatureFirm = HttpUploadRequest.GetSignatureFirm();
                 //if (signatureFirm?.SignType == 2)
-                if(user.SignType == 2)
+                if (user.SignType == 2)
                 {
                     var userCert = HttpSignRequest.GetUserCert();
                     if (!userCert.IsLogin || user.AccountNo.IsEmpty() || user.AccountNo != userCert.UserCertID)
                     {
                         Cmd.KillApp("clawPDF.Signature");
                         var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Signature", "clawPDF.Signature.exe");
-                        Cmd.StartApp(path, SystemConfig.Setting.SignServer, ProcessWindowStyle.Normal, false);
+                        string[] arguments = { "true", SystemConfig.Setting.SignServer, user.AccountNo };
+                        Cmd.StartApp(path, string.Join(" ", arguments), ProcessWindowStyle.Normal, false);
                         var visible = true;
                         while (visible)
                         {
@@ -77,7 +78,7 @@ namespace clawSoft.clawPDF.Core.Views
                             if (!visible)
                             {
                                 userCert = HttpSignRequest.GetUserCert();
-                                if (userCert.IsLogin && user.AccountNo != userCert.UserCertID)
+                                if (userCert.IsLogin && user.AccountNo.IsEmpty())
                                 {
                                     user.AccountNo = userCert.UserCertID;
                                     user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";

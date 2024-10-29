@@ -17,6 +17,7 @@ using NLog;
 using PdfToSvg;
 using SystemInterface.IO;
 using SystemWrapper.IO;
+using Log = clawPDF.Core.Log;
 
 namespace clawSoft.clawPDF.Core.Jobs
 {
@@ -243,21 +244,9 @@ namespace clawSoft.clawPDF.Core.Jobs
             {
                 Logger.Warn("Error while deleting job file: " + ex.Message);
             }
+            Log.Print("_cleanedUp");
             // delete output files
-            try
-            {
-                foreach (var item in OutputFiles)
-                {
-                    if (File.Exists(item))
-                    {
-                        ClearImage(item);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("删除文件错误：" + ex.Message);
-            }
+            ClearImage();
             _cleanedUp = true;
         }
 
@@ -265,27 +254,50 @@ namespace clawSoft.clawPDF.Core.Jobs
         /// 删除临时pdf文件
         /// </summary>
         /// <param name="file"></param>
-        public void ClearImage(string file)
+        public void ClearImage()
         {
-            // 删除签名文件
-            var signPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
-            if (File.Exists(signPath))
+            try
             {
-                File.Delete(signPath);
-            }
-
-            File.Delete(file);
-            var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
-            // 删除图片
-            if (Directory.Exists(directory))
-            {
-                var files = Directory.GetFiles(directory);
-                foreach (var item in files)
+                foreach (var file in OutputFiles)
                 {
-                    if (File.Exists(item))
-                        File.Delete(item);
+                    if (!File.Exists(file)) continue;
+
+                    var directory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
+                    // 删除图片
+                    if (Directory.Exists(directory))
+                    {
+                        var files = Directory.GetFiles(directory);
+                        foreach (var item in files)
+                        {
+                            if (File.Exists(item))
+                                File.Delete(item);
+                        }
+                        Directory.Delete(directory);
+                    }
+                    //// 删除签名文件
+                    //var signPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
+                    //if (File.Exists(signPath))
+                    //{
+                    //    File.Delete(signPath);
+                    //}
+                    //File.Delete(file);
+
+                    // 由于打印队列执行可能延后，本次不删除文件，只删除之前打印的文件
+                    var signPath = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + "_sign" + Path.GetExtension(file));
+                    var allfiles = Directory.GetFiles(Path.GetDirectoryName(file));
+                    foreach (var item in allfiles)
+                    {
+                        if (File.Exists(item) && item != signPath && item != file && item.EndsWith(".pdf"))
+                        {
+                            File.Delete(item);
+                        }
+                    }
                 }
-                Directory.Delete(directory);
+            }
+            catch (Exception ex)
+            {
+                //Logger.Warn("删除文件错误：" + ex.Message);
+                Log.Warn("删除文件错误：" + ex.Message);
             }
         }
 

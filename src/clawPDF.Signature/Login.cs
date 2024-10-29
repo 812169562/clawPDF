@@ -1,5 +1,4 @@
-﻿using clawSoft.clawPDF.Core.Settings;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -7,6 +6,7 @@ namespace clawPDF.Signature
 {
     public partial class Login : Form
     {
+        public static string accountNo;//accountNo
         public static string strCertId;//certId
         public static string strUserCert;//用户证书
         public static string strUserCertID;//用户证书Id
@@ -91,7 +91,7 @@ namespace clawPDF.Signature
             var certType = axXTXApp1.SOF_GetCertInfo(strUserCert, 3); // 证书类型 返回"RSA"或"SM2"
             oid = certType == "SM2" ? "1.2.156.112562.2.1.1.1" : "2.16.840.1.113732.2";
             strUserCertID = axXTXApp1.SOF_GetCertInfoByOid(strUserCert, oid); //注意oid的加密方式要对应才行
-            if (!string.IsNullOrEmpty(SystemConfig.LoginUser?.UserCertID) && SystemConfig.LoginUser?.UserCertID != strUserCertID)
+            if (!string.IsNullOrEmpty(accountNo) && accountNo != strUserCertID)
             {
                 msg.Text = "提示：插入的实体key与单机账号不匹配！";
             }
@@ -107,7 +107,7 @@ namespace clawPDF.Signature
         /// <param name="e"></param>
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(SystemConfig.LoginUser?.UserCertID) && SystemConfig.LoginUser?.UserCertID != strUserCertID)
+            if (!string.IsNullOrEmpty(accountNo) && accountNo != strUserCertID)
             {
                 msg.Text = "提示：插入的实体key与单机账号不匹配！";
                 return;

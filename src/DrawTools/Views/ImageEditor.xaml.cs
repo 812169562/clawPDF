@@ -84,7 +84,7 @@ namespace DrawTools.Views
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            file = FilePath;
+            file = FilePath; //= "D:\\szyx\\files\\A5纵向.pdf";
             if (!string.IsNullOrEmpty(SystemConfig.Setting.TextTemplate))
             {
                 var list = SystemConfig.Setting.TextTemplate.Split(',').ToList();
@@ -373,6 +373,8 @@ namespace DrawTools.Views
         {
             try
             {
+                //var list = new List<string>() { "D:\\szyx\\files\\A5纵向\\files00000.jpg" };
+                //ImageHelper.ToPDF(list, "D:\\szyx\\files\\1.pdf");
                 SaveFile();
                 MessageBox.Show("文件保存成功！");
             }
@@ -430,11 +432,14 @@ namespace DrawTools.Views
             var files = Directory.GetFiles(directory);
             List<string> list = files.ToList();
             var update = list.Where(t => t.Contains("_update")).ToList();
+            if (update == null || !update.Any())
+                return;
             foreach (var item in update)
             {
                 var name = item.Replace("_update", "");
                 list.Remove(name);
             }
+            //ImageHelper.PdfIText(list, file);
             ImageHelper.ToPDF(list, file);
         }
         /// <summary>

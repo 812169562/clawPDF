@@ -67,11 +67,21 @@ namespace clawSoft.clawPDF.Utilities
         /// <param name="image"></param>
         private static void DrawImage(int x, int y, PdfPage page, XImage image)
         {
-            double scale = 1;
-            int width = Convert.ToInt32(image.PixelWidth * scale);
-            int height = Convert.ToInt32(image.PixelHeight * scale);
+            //int width = 100;
+            //int height = 40;
+            //int pageHeight = Convert.ToInt32(page.Height);
+            //x = page.Width - width >= x ? x : Convert.ToInt32(page.Width - width);
+            //y = pageHeight - (page.Height - height >= y ? y : pageHeight - height) - 17;
+            //using (XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append))
+            //{
+            //    XRect pageRect = new XRect(x, y, width, height);
+            //    gfx.DrawImage(image, pageRect);
+            //}
+            int width = Convert.ToInt32(image.PixelWidth);
+            int height = Convert.ToInt32(image.PixelHeight);
+            int pageHeight = Convert.ToInt32(page.Height);
             x = page.Width - width >= x ? x : Convert.ToInt32(page.Width - width);
-            y = page.Height - height >= y ? Convert.ToInt32(page.Height - y) : Convert.ToInt32(page.Height - height);
+            y = pageHeight - (pageHeight - height >= y ? y : pageHeight - height);
             using (XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append))
             {
                 XRect pageRect = new XRect(x, y, width, height);

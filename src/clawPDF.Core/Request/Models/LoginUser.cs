@@ -17,6 +17,10 @@ namespace clawSoft.clawPDF.Core.Request.Models
         /// <summary>
         public string HiscaDepartmentId { get; set; }
         /// <summary>
+        ///HIS科室id,查询患者执行科室
+        /// <summary>
+        public string ExternalDepartmentId { get; set; }
+        /// <summary>
         /// 同步上传入参
         /// </summary>
         public string DepartmentId => this.HiscaDepartmentId;

@@ -74,10 +74,10 @@ namespace clawSoft.clawPDF
             {
                 Log.Debug("开始启动clawPDF.Signature");
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Signature", "clawPDF.Signature.exe");
-                Cmd.StartApp(path, SystemConfig.Setting.SignServer);
+                Cmd.StartApp(path, $"{false} {SystemConfig.Setting.SignServer}");
             }
 
-            //var client = new RestClient("https://betainner.51trust.com/ris/hospital/reportDoc/queryPatientInfo");
+            //var client = new RestClient("https");
             //var request = new RestRequest("", Method.POST);
             //client.Proxy = WebRequest.DefaultWebProxy;  // <== Add this line in your code?
             //IRestResponse result = client.Execute(request);

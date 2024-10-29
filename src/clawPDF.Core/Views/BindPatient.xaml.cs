@@ -113,7 +113,6 @@ namespace clawSoft.clawPDF.Core.Views
         {
             //var signatureFirm = HttpUploadRequest.GetSignatureFirm();
             //if (signatureFirm == null) return;
-            if (_user.SignType != 1 && _user.SignType != 2) return;
             var signbase64 = "";
             // 判断是否配置独立签名
             if (_signingProces.SignatureProcessConfigWay == 2)
@@ -139,7 +138,8 @@ namespace clawSoft.clawPDF.Core.Views
                     // 2-1、不一致，弹出登录框
                     Cmd.KillApp("clawPDF.Signature");
                     var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Signature", "clawPDF.Signature.exe");
-                    Cmd.StartApp(path, SystemConfig.Setting.SignServer, ProcessWindowStyle.Normal, false);
+                    string[] arguments = { "true", SystemConfig.Setting.SignServer, _user.AccountNo };
+                    Cmd.StartApp(path, string.Join(" ", arguments), ProcessWindowStyle.Normal, false);
                     var visible = true;
                     while (visible)
                     {
@@ -148,7 +148,11 @@ namespace clawSoft.clawPDF.Core.Views
                         if (!visible)
                         {
                             userCert = HttpSignRequest.GetUserCert();
-                            if (userCert.IsLogin && _user.AccountNo != userCert.UserCertID)
+                            // 未登录不签名直接上传
+                            if (!userCert.IsLogin)
+                                return;
+                            // 已登录未绑定，调用绑定
+                            if (_user.AccountNo.IsEmpty())
                             {
                                 _user.AccountNo = userCert.UserCertID;
                                 _user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
@@ -157,6 +161,10 @@ namespace clawSoft.clawPDF.Core.Views
                                 SystemSetting setting = SystemConfig.Setting;
                                 setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(_user));
                                 SystemConfig.Save(setting);
+                            }
+                            else if (_user.AccountNo != userCert.UserCertID)
+                            {
+                                throw new Exception("插入的实体key与单机账号不匹配!");
                             }
                         }
                     }
@@ -179,9 +187,12 @@ namespace clawSoft.clawPDF.Core.Views
                     }
                 };
             }
+            if (signbase64.IsNotEmpty())
+            {
+                var sign = HttpUploadRequest.GetSignSetting(_patient.CheckItem);
+                PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh, outPath);
+            }
             _patient.IsSign = true;
-            var sign = HttpUploadRequest.GetSignSetting(_patient.CheckItem);
-            PdfUtil.AddBase64Image(file, signbase64, sign.SignPage, sign.XWide, sign.YHigh, outPath);
         }
 
         /// <summary>

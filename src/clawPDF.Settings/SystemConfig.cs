@@ -134,14 +134,5 @@ namespace clawSoft.clawPDF.Core.Settings
         /// 密码（密文）
         /// </summary>
         public string Password { get; set; }
-
-        /// <summary>
-        ///证书用户唯一标识
-        /// <summary>
-        public string UserCertID { get; set; }
-        /// <summary>
-        ///签章
-        /// <summary>
-        public string Base64 { get; set; }
     }
 }

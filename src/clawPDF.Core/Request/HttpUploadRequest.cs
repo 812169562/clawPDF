@@ -166,7 +166,7 @@ namespace clawSoft.clawPDF.Core.Request
             LoginUser loginUser = GetLoginUser();
             if (loginUser == null)
                 throw new Exception("请选择登录账号！");
-            var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, loginUser.HiscaDepartmentId, guid };
+            var body = new { PatientName = patientName, RequestNum = requestNum, InpatientNum = inpatientNum, HiscaDepartmentId = loginUser.ExternalDepartmentId, guid };
             request.AddJsonBody(body);
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
