@@ -197,7 +197,7 @@ namespace clawPDF.Signature
             }
             IsLogin = true;
             this.Hide();
-            MessageBox.Show("登录成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            //MessageBox.Show("登录成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

@@ -501,8 +501,11 @@ namespace clawSoft.clawPDF.Core.Request
         /// 绑定签名账户
         /// </summary>
         /// <param name="user"></param>
+        /// <param name="accountNo"></param>
+        /// <param name="doctorInfo"></param>
+        /// <param name="signType"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public static void BindSignatureAccount(LoginUser user)
+        public static void BindSignatureAccount(LoginUser user, string accountNo, string doctorInfo, int signType)
         {
             try
             {
@@ -518,10 +521,10 @@ namespace clawSoft.clawPDF.Core.Request
                     uniqueId = user.UniqueId,
                     departmentId = user.HiscaDepartmentId,
                     accountName = user.AccountName,
-                    accountNo = user.AccountNo,
-                    doctorInfo = user.DoctorInfo,
+                    accountNo = accountNo,
+                    doctorInfo = doctorInfo,
                     phone = user.Phone,
-                    signType = user.SignType,
+                    signType = signType,
                 };
                 request.AddJsonBody(body);
                 IRestResponse response = client.Execute(request);
@@ -536,9 +539,12 @@ namespace clawSoft.clawPDF.Core.Request
                     Log.Error("绑定签名账户失败：" + model.Message);
                     throw new Exception(model.Message);
                 }
-                //SystemSetting setting = SystemConfig.Setting;
-                //setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
-                //SystemConfig.Save(setting);
+                user.AccountNo = accountNo;
+                user.DoctorInfo = doctorInfo;
+                user.SignType = signType;
+                SystemSetting setting = SystemConfig.Setting;
+                setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(user));
+                SystemConfig.Save(setting);
             }
             catch (Exception ex)
             {

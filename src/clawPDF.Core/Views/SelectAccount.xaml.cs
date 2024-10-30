@@ -80,10 +80,8 @@ namespace clawSoft.clawPDF.Core.Views
                                 userCert = HttpSignRequest.GetUserCert();
                                 if (userCert.IsLogin && user.AccountNo.IsEmpty())
                                 {
-                                    user.AccountNo = userCert.UserCertID;
-                                    user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
-                                    user.SignType = 2;
-                                    HttpUploadRequest.BindSignatureAccount(user);
+                                    HttpUploadRequest.BindSignatureAccount(user, userCert.UserCertID, $"{userCert.UserName}||{userCert.CertId}", 2);
+                                    return;
                                 }
                             }
                         }
@@ -96,7 +94,7 @@ namespace clawSoft.clawPDF.Core.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 

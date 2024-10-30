@@ -103,7 +103,7 @@ namespace clawSoft.clawPDF.Core.Views
             catch (System.Exception ex)
             {
                 Log.Error(ex);
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
         /// <summary>
@@ -154,13 +154,7 @@ namespace clawSoft.clawPDF.Core.Views
                             // 已登录未绑定，调用绑定
                             if (_user.AccountNo.IsEmpty())
                             {
-                                _user.AccountNo = userCert.UserCertID;
-                                _user.DoctorInfo = $"{userCert.UserName}||{userCert.CertId}";
-                                _user.SignType = 2;
-                                HttpUploadRequest.BindSignatureAccount(_user);
-                                SystemSetting setting = SystemConfig.Setting;
-                                setting.LoginUser = Encrypt.DesEncrypt(JsonConvert.SerializeObject(_user));
-                                SystemConfig.Save(setting);
+                                HttpUploadRequest.BindSignatureAccount(_user, userCert.UserCertID, $"{userCert.UserName}||{userCert.CertId}", 2);
                             }
                             else if (_user.AccountNo != userCert.UserCertID)
                             {
