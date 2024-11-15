@@ -31,9 +31,28 @@ namespace clawSoft.clawPDF.Core.Views
             this.WindowState = WindowState.Maximized;
             this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            this.Width = SystemParameters.MaximizedPrimaryScreenWidth;
+            this.Height = SystemParameters.MaximizedPrimaryScreenHeight;
+            // 禁用双击窗口操作
+            //SourceInitialized += new EventHandler(MainWindow_SourceInitialized);
             _user = HttpUploadRequest.GetLoginUser();
             _signingProces = HttpUploadRequest.GetSigningProces();
         }
+        //private void MainWindow_SourceInitialized(object sender, EventArgs e)
+        //{
+        //    HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
+        //    source.AddHook(new HwndSourceHook(WndProc));
+        //}
+
+        //private const int WM_NCLBUTTONDBLCLK = 0x00A3;
+        //private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        //{
+        //    if (msg == WM_NCLBUTTONDBLCLK)
+        //    {
+        //        handled = true; // 防止双击最大化窗口
+        //    }
+        //    return IntPtr.Zero;
+        //}
         /// <summary>
         /// 窗口加载
         /// </summary>
@@ -70,6 +89,11 @@ namespace clawSoft.clawPDF.Core.Views
         /// <param name="e"></param>
         private void clear1_Click(object sender, RoutedEventArgs e)
         {
+            if (_user == null)
+            {
+                MessageBox.Show("请选择医师账号！", "提示", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
+                return;
+            }
             _patient = null;
             ImageEditor.SavePdfFile();
             isUpload = true;

@@ -2,6 +2,7 @@
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace clawSoft.clawPDF.Utilities
@@ -30,6 +31,14 @@ namespace clawSoft.clawPDF.Utilities
                     MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
                     ms.Write(imageBytes, 0, imageBytes.Length);
                     XImage image = XImage.FromStream(ms);
+                    if (document.Pages[0].Orientation == PdfSharp.PageOrientation.Landscape)
+                    {
+                        Bitmap pageImage = new Bitmap(ms);
+                        pageImage.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        pageImage.Save("signImage.png");
+                        image = XImage.FromFile("signImage.png");
+                        pageImage.Dispose();
+                    }
                     if (signPage == 1)
                     {
                         PdfPage page = document.Pages[0];
@@ -51,6 +60,7 @@ namespace clawSoft.clawPDF.Utilities
                     image.Dispose();
                     document.Save(outPath);
                     document.Close();
+                    File.Delete("signImage.png");
                 }
             }
             catch (Exception ex)
@@ -77,15 +87,29 @@ namespace clawSoft.clawPDF.Utilities
             //    XRect pageRect = new XRect(x, y, width, height);
             //    gfx.DrawImage(image, pageRect);
             //}
+            int pageHeight = Convert.ToInt32(page.Height);
+            int pageWidth = Convert.ToInt32(page.Width);
             int width = Convert.ToInt32(image.PixelWidth);
             int height = Convert.ToInt32(image.PixelHeight);
-            int pageHeight = Convert.ToInt32(page.Height);
-            x = page.Width - width >= x ? x : Convert.ToInt32(page.Width - width);
-            y = pageHeight - (pageHeight - height >= y ? y : pageHeight - height);
+            //x = pageWidth - width >= x ? x : Convert.ToInt32(pageWidth - width);
+            //y = pageHeight - (pageHeight - height >= y ? y : pageHeight - height);
             using (XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append))
             {
-                XRect pageRect = new XRect(x, y, width, height);
-                gfx.DrawImage(image, pageRect);
+                if (page.Orientation == PdfSharp.PageOrientation.Landscape)
+                {
+                    int x1 = Convert.ToInt32(pageHeight - y - 9);
+                    int y1 = Convert.ToInt32(pageWidth - height - x);
+                    page.Orientation = PdfSharp.PageOrientation.Portrait;
+                    XRect pageRect = new XRect(x1, y1, width, height);
+                    gfx.DrawImage(image, pageRect);
+                }
+                else
+                {
+                    x = pageWidth - width >= x ? x : Convert.ToInt32(pageWidth - width);
+                    y = pageHeight - (pageHeight - height >= y ? y : pageHeight - height);
+                    XRect pageRect = new XRect(x, y, width, height);
+                    gfx.DrawImage(image, pageRect);
+                }
                 //gfx.DrawImage(image, x, y);
             }
         }

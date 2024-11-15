@@ -173,17 +173,21 @@ namespace clawSoft.clawPDF.Views
 
         private void PageOrientationComboBoxChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (PageOrientationComboBox.SelectedIndex == 0)
+            if (PageOrientationComboBox.SelectedIndex == 1)
             {
                 vm.SelectedProfile.PdfSettings.PageOrientation = PageOrientation.Automatic;
             }
-            else if (PageOrientationComboBox.SelectedIndex == 1)
+            else if (PageOrientationComboBox.SelectedIndex == 2)
             {
                 vm.SelectedProfile.PdfSettings.PageOrientation = PageOrientation.Portrait;
             }
-            else if (PageOrientationComboBox.SelectedIndex == 2)
+            else if (PageOrientationComboBox.SelectedIndex == 3)
             {
                 vm.SelectedProfile.PdfSettings.PageOrientation = PageOrientation.Landscape;
+            }
+            else if (PageOrientationComboBox.SelectedIndex == 0)
+            {
+                vm.SelectedProfile.PdfSettings.PageOrientation = PageOrientation.None;
             }
         }
 

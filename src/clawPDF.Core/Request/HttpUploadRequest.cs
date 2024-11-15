@@ -123,29 +123,37 @@ namespace clawSoft.clawPDF.Core.Request
         /// <returns></returns>
         public static bool GetPrintSetting()
         {
-            if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
-                return false;
-            var client = new RestClient(SystemConfig.Setting.RisUrl);
-            var request = new RestRequest(PrintSettingUrl, Method.GET);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("mac", GetMacByWMI());
-            request.AddParameter("guid", guid);
-            IRestResponse response = client.Execute(request);
-            Log.Info("获取打印流程配置返回：" + JsonConvert.SerializeObject(response.Content));
-            if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+            try
             {
-                Log.PrintError("获取打印流程配置失败：" + response.StatusDescription + response.ErrorMessage);
+                if (string.IsNullOrEmpty(SystemConfig.Setting.RisUrl))
+                    return false;
+                var client = new RestClient(SystemConfig.Setting.RisUrl);
+                var request = new RestRequest(PrintSettingUrl, Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("mac", GetMacByWMI());
+                request.AddParameter("guid", guid);
+                IRestResponse response = client.Execute(request);
+                Log.Info("获取打印流程配置返回：" + JsonConvert.SerializeObject(response.Content));
+                if (response.StatusCode != HttpStatusCode.OK || response.ResponseStatus != ResponseStatus.Completed)
+                {
+                    Log.PrintError("获取打印流程配置失败：" + response.StatusDescription + response.ErrorMessage);
+                    return false;
+                }
+                ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+                if (model.Status != "0")
+                {
+                    Log.PrintError("获取打印流程配置失败：" + model.Message);
+                    return false;
+                }
+                PrintSettingModel settingModel = JsonConvert.DeserializeObject<PrintSettingModel>(model.Data.ToString());
+                _equipmentId = settingModel.EquipmentId;
+                return settingModel.PrintProcess == 2;
+            }
+            catch (Exception ex)
+            {
+                Log.PrintError("获取打印流程配置异常：" + ex.Message);
                 return false;
             }
-            ResponseModel model = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
-            if (model.Status != "0")
-            {
-                Log.PrintError("获取打印流程配置失败：" + model.Message);
-                return false;
-            }
-            PrintSettingModel settingModel = JsonConvert.DeserializeObject<PrintSettingModel>(model.Data.ToString());
-            _equipmentId = settingModel.EquipmentId;
-            return settingModel.PrintProcess == 2;
         }
 
         /// <summary>
@@ -184,11 +192,10 @@ namespace clawSoft.clawPDF.Core.Request
         public static string Upload(string uploadUrl, string file, string fileName, PatientModel patient)
         {
             Log.Trace("上传单机系统--uploadUrl:" + uploadUrl + ",file:" + file + ",fileName:" + fileName);
-            LoginUser loginUser = null;
             object patientDto = null;
+            LoginUser loginUser = GetLoginUser();
             if (patient != null)
             {
-                loginUser = GetLoginUser();
                 if (loginUser == null)
                     throw new Exception("请选择登录账号！");
                 patientDto = new

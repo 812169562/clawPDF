@@ -453,10 +453,11 @@ namespace clawSoft.clawPDF.Core.Ghostscript.OutputDevices
                     parameters.Add("-dAutoRotatePages=/PageByPage");
                     parameters.Add("-dParseDSCComments=false"); //necessary for automatic rotation
                     break;
-                //case  PageOrientation.Portrait:
-                default:
+                case  PageOrientation.Portrait:
                     parameters.Add("-dAutoRotatePages=/None");
                     distillerDictonaries.Add("<</Orientation 0>> setpagedevice");
+                    break;
+                default:
                     break;
             }
         }

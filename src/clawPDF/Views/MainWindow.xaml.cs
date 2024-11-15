@@ -9,6 +9,7 @@ using clawSoft.clawPDF.Core.Views;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
 using clawSoft.clawPDF.Shared.Helper.Logging;
+using clawSoft.clawPDF.Utilities;
 
 namespace clawSoft.clawPDF.Views
 {
@@ -123,17 +124,20 @@ namespace clawSoft.clawPDF.Views
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            //HttpUploadRequest request = new HttpUploadRequest();
-            //string sourceFile = @"D:\资料\医学文档资料\合并PDF\合并PDF_13.pdf";
-            //request.Upload("http://localhost:8866/ris/hospital/fileUpload/part-upload", sourceFile, "11",null);
-            // 患者信息弹窗
-            BindPatient dialog = new BindPatient();
-            //dialog.WindowState = WindowState.Maximized;
-            //dialog.ResizeMode = ResizeMode.NoResize;
-            dialog.file = "D:\\szyx\\test-pdf\\sign\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
-            //dialog.Height = 800;
-            //dialog.Width = 1600;
-            dialog.ShowDialog();
+            ////HttpUploadRequest request = new HttpUploadRequest();
+            ////string sourceFile = @"D:\资料\医学文档资料\合并PDF\合并PDF_13.pdf";
+            ////request.Upload("http://localhost:8866/ris/hospital/fileUpload/part-upload", sourceFile, "11",null);
+            //// 患者信息弹窗
+            //BindPatient dialog = new BindPatient();
+            ////dialog.WindowState = WindowState.Maximized;
+            ////dialog.ResizeMode = ResizeMode.NoResize;
+            //dialog.file = "D:\\szyx\\test-pdf\\sign\\a8eccece20ac4f06bf304b56df2cc2bc.pdf";
+            ////dialog.Height = 800;
+            ////dialog.Width = 1600;
+            //dialog.ShowDialog();
+
+            var img = "R0lGODlhRQAaAPcAAP8AAP8AOv86AP86Ov8AZv86Zv9mAP9mOv9mZv86kP9mkP9mtv+QOv+QZv+2Zv+QkP+Qtv+2kP+2tv+Q2/+22/+2///bkP/btv//tv/b2//b////2////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABwALAAAAABFABoAAAj/ADkIHEiwoMGDCBMqXMiwocOHECNKnEjR4AUAAApQqFjwwQMNCTdI2DgwQwaJFjACmDDwAgKWER1gDADyIAaVGzcIABAA5kEDABYUZMCzpk6MPjncVMm0qUoCNQsuTTAQKE0OIklWdcq1aYWQO686nLqVgECgQQmi/SowJQCzCx0MYIs1bNS6K8923avSJ1qtZDnILHBXIFG+XJMKDMwBKFyEaBHPvLuU7lGxi58WZhw5rUGrdAPLBKBAgtG1Ay/fHVw4AoIHGEsjGOCU7lbMopnC7Sw5QIGDo5kOGI6gNAWTnyU7pdpgAGGCqhuOFgrx6GOlGKkKRsrwKADbCacrv3SpFe/13HkNBucLfqB4hEvT46UtWfHBDQcGQHC4vndNxtgBoN1o9knH037qceceRtTZxGBKGrlFHWsGuaXccwURSNB7B7k1gYV7QSXRYQUeZhuHCdIkYXLfTUTiT29lyGBCQFG1YkGoGRQfYvYt1aBAKBJ001U3qoVRew29KCNmQM54EFHUgdhVe7zxpdhR9gUp0AbODVTkVi2OqOBARBWopWBztVRcYRxE8EB5EF0wUkEWDADngj1xpOeeBwUEADs=";
+            PdfUtil.AddBase64Image("D:\\szyx\\files\\A5横向.pdf", img, 1, 200, 300, "D:\\szyx\\files\\2.pdf");
 
         }
     }

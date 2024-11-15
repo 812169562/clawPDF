@@ -6,7 +6,7 @@
              xmlns:tools="clr-namespace:DrawTools.Views;assembly=DrawTools"
              xmlns:local="clr-namespace:clawSoft.clawPDF.Core.Views"
              mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-             d:DesignHeight="450" d:DesignWidth="1600" ResizeMode="NoResize"
+             d:DesignHeight="450" d:DesignWidth="1600"
         Loaded="Window_Loaded" Title="单机设备文档管理系统采集引擎">
     <Window.Resources>
         <Style TargetType="DataGridRow" x:Key="patDataGridRow">
@@ -38,7 +38,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="45"></RowDefinition>
         </Grid.RowDefinitions>
@@ -56,24 +56,24 @@
         <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
             <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="16">请选择打印文件所属于患者，完成报告绑定：</TextBlock>
         </Grid>
-        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0">
-            <StackPanel Orientation="Horizontal" Margin="0 5 10 5">
-                <TextBlock VerticalAlignment="Center">门诊/住院号：</TextBlock>
-                <TextBox x:Name="txtNo" MinWidth="100"/>
-                <TextBlock VerticalAlignment="Center" Margin="10 0 0 0">患者姓名：</TextBlock>
-                <TextBox x:Name="txtName" MinWidth="100"/>
-                <TextBlock VerticalAlignment="Center" Margin="10 0 0 0">申请单号：</TextBlock>
-                <TextBox x:Name="txtAppNo" MinWidth="100"/>
+        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <WrapPanel Orientation="Horizontal" Margin="0 0 0 5">
+                <TextBlock VerticalAlignment="Center" Margin="0 5 0 0">门诊/住院号：</TextBlock>
+                <TextBox x:Name="txtNo" MinWidth="100" Margin="0 5 0 0"/>
+                <TextBlock VerticalAlignment="Center" Margin="5 5 0 0">患者姓名：</TextBlock>
+                <TextBox x:Name="txtName" MinWidth="100" Margin="0 5 0 0"/>
+                <TextBlock VerticalAlignment="Center" Margin="5 5 0 0">申请单号：</TextBlock>
+                <TextBox x:Name="txtAppNo" MinWidth="100" Margin="0 5 5 0"/>
                 <!--<StackPanel Orientation="Horizontal" Margin="0 5 10 5">
                     <TextBlock VerticalAlignment="Center" Width="78">执 行 科 室：</TextBlock>
                     <ComboBox x:Name="cbbExecDept" MinWidth="100" SelectedIndex="0"/>
                 </StackPanel>-->
-                <Button x:Name="query" Content="查询" Margin="10 0 0 0" MinWidth="60" Click="query_Click" />
-                <Button x:Name="clear" Content="清空" Margin="10 0 0 0" MinWidth="60" Click="clear_Click" Background="White" />
-            </StackPanel>
+                <Button x:Name="query" Content="查询" Margin="0 5 5 0" MinWidth="60" Click="query_Click" />
+                <Button x:Name="clear" Content="清空" Margin="0 5 0 0" MinWidth="60" Click="clear_Click" Background="White" />
+            </WrapPanel>
         </Grid>
         <Grid Grid.Row="2">
-            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" HeadersVisibility ="Column" LoadingRow="dataGrid_LoadingRow" IsReadOnly="True" CanUserAddRows="False" MouseDoubleClick="dataGrid_MouseDoubleClick" AlternationCount="2" RowStyle="{StaticResource patDataGridRow}" SelectionMode="Single" SelectionUnit="FullRow">
+            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" HeadersVisibility ="Column" LoadingRow="dataGrid_LoadingRow" IsReadOnly="True" CanUserAddRows="False" MouseDoubleClick="dataGrid_MouseDoubleClick" AlternationCount="2" RowStyle="{StaticResource patDataGridRow}" SelectionMode="Single" SelectionUnit="FullRow" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <DataGrid.Resources>
                     <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="#909399" />
