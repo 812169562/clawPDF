@@ -708,6 +708,12 @@ namespace clawSoft.clawPDF.Core.Jobs
                     return;
 
             }
+            if (!b && SystemConfig.Setting.LoginUser != null)
+            {
+                SystemSetting setting = SystemConfig.Setting;
+                setting.LoginUser = null;
+                SystemConfig.Save(setting);
+            }
             foreach (var action in JobActions)
             {
                 Logger.Trace("Calling Action {0}", action.GetType().Name);
